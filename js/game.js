@@ -147,19 +147,18 @@
             if (!container) return;
             var vw = window.innerWidth;
             var vh = window.innerHeight;
-            // Scale the fixed-size container to fit viewport
             var scaleX = vw / W.CANVAS_W;
             var scaleY = vh / W.CANVAS_H;
             var scale = Math.min(scaleX, scaleY);
             container.style.width = W.CANVAS_W + 'px';
             container.style.height = W.CANVAS_H + 'px';
             container.style.transform = 'scale(' + scale + ')';
-            container.style.transformOrigin = 'top left';
-            // Center the scaled container
-            var scaledW = W.CANVAS_W * scale;
-            var scaledH = W.CANVAS_H * scale;
-            container.style.marginLeft = ((vw - scaledW) / 2) + 'px';
-            container.style.marginTop = ((vh - scaledH) / 2) + 'px';
+            container.style.transformOrigin = 'center center';
+            container.style.position = 'fixed';
+            container.style.left = '50%';
+            container.style.top = '50%';
+            container.style.marginLeft = -(W.CANVAS_W / 2) + 'px';
+            container.style.marginTop = -(W.CANVAS_H / 2) + 'px';
         }
 
         showStartScreen() {
