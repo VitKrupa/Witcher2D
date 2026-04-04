@@ -266,16 +266,13 @@
                 this.player.hp = this.player.maxHp;
             }
 
-            // Show story intro text (only on first visit, not respawn)
-            if (storyData.storyText && !this._levelVisited) {
-                this._levelVisited = {};
-            }
-            if (storyData.storyText && (!this._levelVisited || !this._levelVisited[index])) {
+            // Show story intro text (only on first visit)
+            if (!this._levelVisited) this._levelVisited = {};
+            if (storyData.storyText && !this._levelVisited[index]) {
                 this.showingStoryText = true;
-                this.storyTextTimer = 180;
+                this.storyTextTimer = 120; // 2 seconds, shorter
                 this._storyText = storyData.storyText;
                 this._storyTitle = storyData.name || ('Level ' + (index + 1));
-                if (!this._levelVisited) this._levelVisited = {};
                 this._levelVisited[index] = true;
             }
 
@@ -301,10 +298,14 @@
             }
             this.lastTime = timestamp;
 
-            if (!this.paused) {
-                this.update(dt);
+            try {
+                if (!this.paused) {
+                    this.update(dt);
+                }
+                this.draw();
+            } catch(e) {
+                console.error('Game loop error:', e);
             }
-            this.draw();
 
             requestAnimationFrame(this._loopBound);
         }
@@ -316,11 +317,14 @@
         update(dt) {
             // Story text overlay countdown
             if (this.showingStoryText) {
-                this.storyTextTimer -= dt * 60; // frame-based decrement
-                if (this.storyTextTimer <= 0) {
+                this.storyTextTimer -= dt * 60;
+                // Dismiss on any key/touch OR after timer expires
+                var anyKey = false;
+                for (var k in this.keys) { if (this.keys[k]) anyKey = true; }
+                if (this.storyTextTimer <= 0 || (anyKey && this.storyTextTimer < 150)) {
                     this.showingStoryText = false;
                 }
-                return; // freeze gameplay while showing text
+                return;
             }
 
             // Level transition fade
