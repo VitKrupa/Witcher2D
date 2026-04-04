@@ -628,12 +628,18 @@
 
             for (var i = 0; i < this.enemies.length; i++) {
                 var enemy = this.enemies[i];
-                if (!enemy.attackBox || enemy.state !== 'attack') continue;
+                if (enemy.state !== 'attack') {
+                    enemy._attackHit = false; // reset hit tracking when not attacking
+                    continue;
+                }
+                if (enemy._attackHit) continue; // already hit player this attack cycle
+                var atkBox = enemy.attackBox;
+                if (!atkBox) continue;
 
                 var playerHitbox = this.player.hitbox;
                 if (!playerHitbox) continue;
 
-                if (W.boxCollision(enemy.attackBox, playerHitbox)) {
+                if (W.boxCollision(atkBox, playerHitbox)) {
                     var damage = enemy.damage || 8;
 
                     // Check if player is blocking
@@ -664,8 +670,8 @@
                         this.camera.shake(damage * 0.5, 8);
                     }
 
-                    // Clear the enemy's attack box so it doesn't hit every frame
-                    enemy.attackBox = null;
+                    // Mark this attack cycle as having hit (once per attack)
+                    enemy._attackHit = true;
                 }
             }
         }
