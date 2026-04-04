@@ -6,7 +6,7 @@ const C = W.Colors;
 W.Ghoul = class extends W.Enemy {
     constructor(x, y) {
         super(x, y, {
-            w: 36, h: 48, hp: 50, damage: 10, speed: 2.8,
+            w: 36, h: 48, hp: 50, damage: 10, speed: 1.8,
             attackRange: 40, attackCooldown: 45, category: 'creature',
             scoreLoot: 70, name: 'Ghoul', aggroRange: 320
         });

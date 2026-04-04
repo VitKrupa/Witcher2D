@@ -6,7 +6,7 @@ const C = W.Colors;
 W.NoblemanThug = class extends W.Enemy {
     constructor(x, y) {
         super(x, y, {
-            w: 28, h: 52, hp: 35, damage: 9, speed: 2.2,
+            w: 28, h: 52, hp: 35, damage: 9, speed: 1.5,
             attackRange: 30, attackCooldown: 35, category: 'human',
             scoreLoot: 60, name: 'Nobleman', aggroRange: 280
         });

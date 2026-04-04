@@ -75,12 +75,27 @@
             this.setupStartScreen();
             W.Mobile.init();
 
+            // Check sessionStorage for previous age confirmation
+            var savedAge = sessionStorage.getItem('witcher2d_age');
+            if (savedAge) {
+                this._ageConfirmed = true;
+                W.Gore.setFromAge(parseInt(savedAge, 10));
+            }
+
             // Show age gate first (if not already confirmed)
             if (!this._ageConfirmed) {
                 var ageGate = document.getElementById('ageGate');
                 if (ageGate) ageGate.style.display = 'flex';
                 document.getElementById('startScreen').style.display = 'none';
             } else {
+                var ageGate = document.getElementById('ageGate');
+                if (ageGate) ageGate.style.display = 'none';
+                // Update gore indicator
+                var indicator = document.getElementById('goreIndicator');
+                if (indicator) {
+                    indicator.innerHTML = 'Violence level: <span style="color:' +
+                        W.Gore.getLevelColor() + '">' + W.Gore.getLevelName() + '</span>';
+                }
                 this.showStartScreen();
             }
         }
@@ -98,6 +113,7 @@
             W.Gore.setFromAge(age);
             this._ageConfirmed = true;
             this._playerAge = age;
+            sessionStorage.setItem('witcher2d_age', age.toString());
 
             // Hide age gate, show start screen
             var ageGate = document.getElementById('ageGate');

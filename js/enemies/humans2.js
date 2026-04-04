@@ -6,7 +6,7 @@ const C = W.Colors;
 W.WildHuntWarrior = class extends W.Enemy {
     constructor(x, y) {
         super(x, y, {
-            w: 36, h: 58, hp: 80, damage: 14, speed: 1.8,
+            w: 36, h: 58, hp: 80, damage: 14, speed: 1.2,
             attackRange: 45, attackCooldown: 65, category: 'human',
             scoreLoot: 150, name: 'Wild Hunt', aggroRange: 350
         });

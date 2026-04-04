@@ -6,7 +6,7 @@ const C = W.Colors;
 W.Nekker = class extends W.Enemy {
     constructor(x, y) {
         super(x, y, {
-            w: 24, h: 30, hp: 25, damage: 5, speed: 2.5,
+            w: 24, h: 30, hp: 25, damage: 5, speed: 1.6,
             attackRange: 25, attackCooldown: 40, category: 'creature',
             scoreLoot: 30, name: 'Nekker', aggroRange: 250
         });

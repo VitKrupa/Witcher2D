@@ -136,8 +136,8 @@ W.Player = class {
         this.h = 56;
         this.vx = 0;
         this.vy = 0;
-        this.speed = 3.2;
-        this.jumpForce = -9.5;
+        this.speed = 2.2;
+        this.jumpForce = -8.5;
         this.hp = 100;
         this.maxHp = 100;
         this.facing = 1;
@@ -151,7 +151,7 @@ W.Player = class {
         this.score = 0;
         this.onGround = false;
         this.attackHitbox = null;
-        this.rollSpeed = 5.5;
+        this.rollSpeed = 4.0;
         this.comboCount = 0;
     }
 
@@ -173,7 +173,12 @@ W.Player = class {
             case States.IDLE:
             case States.RUN:
                 this.handleMovement(keys, spd);
-                if (keys['w'] || keys['arrowup']) this.jump();
+                // Jump only on fresh press (not held)
+                if ((keys['w'] || keys['arrowup']) && !this._jumpHeld) {
+                    this.jump();
+                    this._jumpHeld = true;
+                }
+                if (!keys['w'] && !keys['arrowup']) this._jumpHeld = false;
                 if (keys['s'] || keys['arrowdown']) this.rollDodge();
                 if (keys['shift']) { this.state = States.BLOCK; }
                 break;
@@ -435,12 +440,15 @@ W.Player = class {
         const foreLen = 10;
 
         if (isAttack) {
-            // Sword arm swings forward during attack
-            const swing = atkProgress * Math.PI * 1.2 - 0.7;
-            rArmAngle = swing;
-            rElbowAngle = Math.max(0, Math.sin(atkProgress * Math.PI) * 0.8);
-            lArmAngle = -0.3 - atkProgress * 0.3;
-            lElbowAngle = 0.5;
+            // Sword arm: controlled slash from raised to forward
+            // Match the sword swing arc
+            const easedAtk = atkProgress < 0.5
+                ? 2 * atkProgress * atkProgress
+                : 1 - Math.pow(-2 * atkProgress + 2, 2) / 2;
+            rArmAngle = -0.6 + easedAtk * 0.9; // raised → forward
+            rElbowAngle = 0.3 - easedAtk * 0.2; // slight extension
+            lArmAngle = -0.2 - easedAtk * 0.15; // off-hand back slightly
+            lElbowAngle = 0.4;
         } else if (isBlock) {
             rArmAngle = -0.8; rElbowAngle = 1.2;
             lArmAngle = -0.5; lElbowAngle = 0.8;
@@ -619,12 +627,17 @@ W.Player = class {
 
     drawSwordSwing(ctx, handX, handY, progress) {
         const isSilver = this.activeSword === 'silver';
-        const swordLen = 32;
+        const swordLen = 28;
 
-        // Sword angle — sweeping arc
-        const startAngle = -Math.PI * 0.8;
-        const swingRange = Math.PI * 1.4;
-        const currentAngle = startAngle + swingRange * progress;
+        // Sword angle — controlled slash arc (not a full spin)
+        // Starts raised above head, slashes down to hip level
+        const startAngle = -Math.PI * 0.65; // raised behind
+        const swingRange = Math.PI * 0.8;    // ~140° arc (not 360!)
+        // Ease-in-out for snappy slash feel
+        const easedProgress = progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        const currentAngle = startAngle + swingRange * easedProgress;
 
         const tipX = handX + Math.cos(currentAngle) * swordLen;
         const tipY = handY + Math.sin(currentAngle) * swordLen;

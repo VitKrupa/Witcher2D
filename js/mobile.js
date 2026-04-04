@@ -65,13 +65,13 @@ W.Mobile = {
         joyBase.id = 'joyBase';
         joyBase.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
             'width:100px;height:100px;border-radius:50%;' +
-            'background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.15);';
+            'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);';
 
         var joyKnob = document.createElement('div');
         joyKnob.id = 'joyKnob';
         joyKnob.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
             'width:40px;height:40px;border-radius:50%;' +
-            'background:rgba(200,160,50,0.35);border:2px solid rgba(200,160,50,0.5);' +
+            'background:rgba(200,160,50,0.2);border:1px solid rgba(200,160,50,0.35);' +
             'transition:none;';
 
         // Direction arrows overlay
@@ -88,32 +88,20 @@ W.Mobile = {
         joyArea.appendChild(joyBase);
         container.appendChild(joyArea);
 
-        // === RIGHT SIDE: Action Buttons (diamond layout, smaller) ===
+        // === RIGHT SIDE: Two BIG sword attack buttons ===
         var btnArea = document.createElement('div');
         btnArea.id = 'btnArea';
-        btnArea.style.cssText = 'position:absolute;right:5px;bottom:5px;width:160px;height:130px;pointer-events:all;';
+        btnArea.style.cssText = 'position:absolute;right:5px;bottom:5px;width:180px;height:120px;pointer-events:all;';
 
-        // Silver sword (left)
-        var silverBtn = this.makeButton('silverTouch', '⚔', 'SILVER',
-            'rgba(30,30,80,0.7)', '#8888cc', 0, 40);
-        // Iron sword (right)
-        var ironBtn = this.makeButton('ironTouch', '🗡', 'IRON',
-            'rgba(80,40,20,0.7)', '#cc8844', 105, 40);
-        // Jump (top center)
-        var jumpBtn = this.makeButton('jumpTouch', '⬆', 'JUMP',
-            'rgba(40,60,40,0.7)', '#66aa66', 52, 0);
-        // Roll (bottom center)
-        var rollBtn = this.makeButton('rollTouch', '↻', 'ROLL',
-            'rgba(50,50,30,0.7)', '#aaaa66', 52, 80);
-        // Block (far left, smaller)
-        var blockBtn = this.makeButton('blockTouch', '🛡', 'BLK',
-            'rgba(60,60,60,0.7)', '#999', -45, 60);
+        // Silver sword (left, big)
+        var silverBtn = this.makeBigButton('silverTouch', '⚔', 'SILVER', 'Monsters',
+            'rgba(25,25,70,0.75)', '#8888cc', 0, 10);
+        // Iron sword (right, big)
+        var ironBtn = this.makeBigButton('ironTouch', '🗡', 'IRON', 'Humans',
+            'rgba(70,35,15,0.75)', '#cc8844', 95, 10);
 
         btnArea.appendChild(silverBtn);
         btnArea.appendChild(ironBtn);
-        btnArea.appendChild(jumpBtn);
-        btnArea.appendChild(blockBtn);
-        btnArea.appendChild(rollBtn);
         container.appendChild(btnArea);
 
         document.getElementById('gameContainer').appendChild(container);
@@ -133,6 +121,24 @@ W.Mobile = {
             'box-shadow:0 0 8px rgba(0,0,0,0.5);';
         btn.innerHTML = '<span style="font-size:18px;line-height:1;">' + icon + '</span>' +
                         '<span style="font-size:7px;margin-top:1px;">' + label + '</span>';
+        this.buttons[id] = btn;
+        return btn;
+    },
+
+    makeBigButton: function(id, icon, label, sublabel, bg, borderColor, offsetX, offsetY) {
+        var btn = document.createElement('div');
+        btn.id = id;
+        btn.style.cssText = 'position:absolute;width:80px;height:95px;border-radius:16px;' +
+            'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+            'background:' + bg + ';border:2px solid ' + borderColor + ';' +
+            'color:' + borderColor + ';font-weight:bold;' +
+            'left:' + offsetX + 'px;top:' + offsetY + 'px;' +
+            'user-select:none;-webkit-user-select:none;' +
+            'box-shadow:0 0 12px rgba(0,0,0,0.4);' +
+            'opacity:0.45;'; // more transparent so game is visible
+        btn.innerHTML = '<span style="font-size:28px;line-height:1;">' + icon + '</span>' +
+                        '<span style="font-size:11px;margin-top:3px;">' + label + '</span>' +
+                        '<span style="font-size:8px;opacity:0.6;">' + sublabel + '</span>';
         this.buttons[id] = btn;
         return btn;
     },
@@ -189,22 +195,9 @@ W.Mobile = {
             }
         }, { passive: false });
 
-        // === ACTION BUTTONS ===
+        // === ACTION BUTTONS (two big sword buttons only) ===
         this.bindButton('silverTouch', function() { if (window.game) game.attack('silver'); });
         this.bindButton('ironTouch', function() { if (window.game) game.attack('iron'); });
-        this.bindButton('jumpTouch', function() {
-            if (window.game && game.keys) game.keys['w'] = true;
-            setTimeout(function() { if (window.game && game.keys) game.keys['w'] = false; }, 150);
-        });
-        this.bindButton('rollTouch', function() {
-            if (window.game && game.keys) game.keys['s'] = true;
-            setTimeout(function() { if (window.game && game.keys) game.keys['s'] = false; }, 150);
-        });
-        this.bindButton('blockTouch', function() {
-            if (window.game && game.keys) game.keys['shift'] = true;
-        }, function() {
-            if (window.game && game.keys) game.keys['shift'] = false;
-        });
     },
 
     bindButton: function(id, onDown, onUp) {
