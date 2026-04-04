@@ -8,229 +8,140 @@ W.StoryLevel3 = {
     bgTheme: 'castle',
     storyText: 'Captured documents reveal Nilfgaard funds the Witch Hunters. Their base: an old fortress.',
     platforms: [
-        // ===== ROOM 1: Gate Room (x:0–960) =====
-        // Floor
-        {x:0, y:340, w:960, h:60},
-        // Ceiling
-        {x:0, y:80, w:960, h:16},
-        // Left wall (level edge)
-        {x:0, y:80, w:16, h:260},
-        // Right wall (portcullis divider — gap at floor level for passage)
-        {x:944, y:80, w:16, h:200},
-        // Inner portcullis columns
+        // ===== ROOM 1: Gate Room (x:0-960) =====
+        {x:0, y:340, w:960, h:60},                     // floor (solid)
+        {x:0, y:80, w:960, h:16},                      // ceiling
+        {x:0, y:80, w:16, h:260},                      // left wall
+        {x:944, y:80, w:16, h:200},                    // right wall upper
+        // Inner portcullis columns (walls)
         {x:300, y:80, w:16, h:120},
         {x:620, y:80, w:16, h:120},
-        // Raised stone ledge (portcullis feel)
-        {x:160, y:280, w:140, h:16},
-        {x:480, y:260, w:160, h:16},
-        {x:760, y:290, w:120, h:16},
+        // Thick stone shelf
+        {x:200, y:240, w:500, h:40},                   // thick portcullis ledge
 
-        // ===== ROOM 2: Entry Hall (x:960–1920) =====
-        // Floor
-        {x:960, y:340, w:960, h:60},
-        // Ceiling (tall room)
-        {x:960, y:80, w:960, h:16},
-        // Left wall
-        {x:960, y:80, w:16, h:200},
-        // Right wall
-        {x:1904, y:80, w:16, h:200},
-        // Balcony at y:160 (left side)
-        {x:976, y:160, w:280, h:16},
-        // Balcony at y:160 (right side)
-        {x:1620, y:160, w:280, h:16},
-        // Chandelier platform
-        {x:1320, y:120, w:200, h:16},
-        // Mid-height stepping ledge
-        {x:1180, y:240, w:120, h:16},
-        {x:1560, y:240, w:120, h:16},
+        // ===== ROOM 2: Entry Hall (x:960-1920) =====
+        {x:960, y:340, w:960, h:60},                   // floor (solid)
+        {x:960, y:80, w:960, h:16},                    // ceiling
+        {x:960, y:80, w:16, h:200},                    // left wall
+        {x:1904, y:80, w:16, h:200},                   // right wall
+        // Thick 2nd floor balcony (gap 1256-1620 for climbing)
+        {x:976, y:180, w:280, h:40},                   // balcony left (thick)
+        {x:1620, y:180, w:280, h:40},                  // balcony right (thick)
+        // Climbing ledge
+        {x:1256, y:260, w:60, h:30},                   // stepping block
 
-        // ===== ROOM 3: Staircase Room (x:1920–2880) =====
-        // Floor
-        {x:1920, y:340, w:960, h:60},
-        // Ceiling
-        {x:1920, y:80, w:960, h:16},
-        // Left wall
-        {x:1920, y:80, w:16, h:260},
-        // Right wall
-        {x:2864, y:80, w:16, h:260},
-        // Diagonal stepping platforms (y:340 up to y:100)
-        {x:1960, y:300, w:120, h:16},
-        {x:2100, y:260, w:120, h:16},
-        {x:2240, y:220, w:120, h:16},
-        {x:2380, y:180, w:120, h:16},
-        {x:2520, y:140, w:120, h:16},
-        {x:2680, y:100, w:160, h:16},
+        // ===== ROOM 3: Staircase Room (x:1920-2880) =====
+        {x:1920, y:340, w:960, h:60},                  // floor (solid)
+        {x:1920, y:80, w:960, h:16},                   // ceiling
+        {x:1920, y:80, w:16, h:260},                   // left wall
+        {x:2864, y:80, w:16, h:260},                   // right wall
+        // Thick staircase floors (3 levels)
+        {x:1960, y:270, w:300, h:40},                  // floor 2 (low)
+        {x:2300, y:190, w:300, h:40},                  // floor 3 (mid)
+        {x:2600, y:120, w:260, h:40},                  // floor 4 (top)
 
-        // ===== ROOM 4: Upper Corridor (x:2880–3840) =====
-        // Floor (raised — tight corridor)
-        {x:2880, y:240, w:960, h:60},
-        // Low ceiling
-        {x:2880, y:140, w:960, h:16},
-        // Left wall
-        {x:2880, y:140, w:16, h:100},
-        // Right wall
-        {x:3824, y:140, w:16, h:100},
-        // Small obstacle crates
+        // ===== ROOM 4: Upper Corridor (x:2880-3840) =====
+        {x:2880, y:240, w:960, h:60},                  // raised floor (thick)
+        {x:2880, y:140, w:960, h:16},                  // low ceiling
+        {x:2880, y:140, w:16, h:100},                  // left wall
+        {x:3824, y:140, w:16, h:100},                  // right wall
+        // Obstacle crates (already thick)
         {x:3100, y:210, w:60, h:30},
         {x:3400, y:210, w:60, h:30},
-        // Overhead ledge (barely reachable)
-        {x:3200, y:170, w:140, h:16},
 
-        // ===== ROOM 5: Great Hall (x:3840–4800) =====
-        // Floor
-        {x:3840, y:340, w:960, h:60},
-        // High ceiling
-        {x:3840, y:60, w:960, h:16},
-        // Left wall
-        {x:3840, y:60, w:16, h:280},
-        // Right wall
-        {x:4784, y:60, w:16, h:280},
-        // Interior columns (thin walls)
+        // ===== ROOM 5: Great Hall (x:3840-4800) =====
+        {x:3840, y:340, w:960, h:60},                  // floor (solid)
+        {x:3840, y:60, w:960, h:16},                   // ceiling (high)
+        {x:3840, y:60, w:16, h:280},                   // left wall
+        {x:4784, y:60, w:16, h:280},                   // right wall
+        // Interior columns (walls)
         {x:4080, y:60, w:16, h:200},
         {x:4320, y:60, w:16, h:200},
         {x:4560, y:60, w:16, h:200},
-        // Upper balcony left
-        {x:3860, y:160, w:200, h:16},
-        // Upper balcony right
-        {x:4580, y:160, w:200, h:16},
-        // Mid-level platforms between columns
-        {x:4100, y:220, w:200, h:16},
-        {x:4340, y:220, w:200, h:16},
-        // High centre perch
-        {x:4200, y:120, w:160, h:16},
+        // Thick 2nd floor (gap 4260-4340 for climbing)
+        {x:3860, y:200, w:400, h:40},                  // upper floor left
+        {x:4400, y:200, w:380, h:40},                  // upper floor right
+        // Climbing ledge
+        {x:4260, y:280, w:60, h:30},                   // stepping block
 
-        // ===== ROOM 6: Kitchen / Storage (x:4800–5760) =====
-        // Floor
-        {x:4800, y:340, w:960, h:60},
-        // Low ceiling
-        {x:4800, y:240, w:960, h:16},
-        // Left wall
-        {x:4800, y:240, w:16, h:100},
-        // Right wall
-        {x:5744, y:240, w:16, h:100},
-        // Crate stacks
+        // ===== ROOM 6: Kitchen / Storage (x:4800-5760) =====
+        {x:4800, y:340, w:960, h:60},                  // floor (solid)
+        {x:4800, y:240, w:960, h:16},                  // low ceiling
+        {x:4800, y:240, w:16, h:100},                  // left wall
+        {x:5744, y:240, w:16, h:100},                  // right wall
+        // Thick crate stacks (already thick h:30-50)
         {x:4900, y:300, w:80, h:40},
-        {x:5050, y:310, w:60, h:30},
-        {x:5200, y:290, w:100, h:50},
-        {x:5400, y:300, w:80, h:40},
-        {x:5560, y:310, w:60, h:30},
+        {x:5100, y:290, w:200, h:50},
+        {x:5400, y:300, w:160, h:40},
 
-        // ===== ROOM 7: Dungeon Descent (x:5760–6720) =====
-        // Upper entry floor (short)
-        {x:5760, y:340, w:300, h:60},
-        // Ceiling
-        {x:5760, y:80, w:960, h:16},
-        // Left wall
-        {x:5760, y:80, w:16, h:400},
-        // Right wall
-        {x:6704, y:80, w:16, h:400},
-        // Deep pit floor at y:420
-        {x:6060, y:420, w:660, h:60},
-        // Ledges to climb down
-        {x:5900, y:280, w:120, h:16},
-        {x:6080, y:340, w:120, h:16},
-        {x:6260, y:380, w:120, h:16},
-        {x:6460, y:340, w:120, h:16},
-        // Mid ledge
-        {x:6300, y:260, w:100, h:16},
+        // ===== ROOM 7: Dungeon Descent (x:5760-6720) =====
+        {x:5760, y:340, w:300, h:60},                  // upper entry floor
+        {x:5760, y:80, w:960, h:16},                   // ceiling
+        {x:5760, y:80, w:16, h:400},                   // left wall
+        {x:6704, y:80, w:16, h:400},                   // right wall
+        {x:6060, y:420, w:660, h:60},                  // deep pit floor
+        // Thick descent ledges
+        {x:5800, y:250, w:300, h:40},                  // thick ledge upper
+        {x:6200, y:340, w:400, h:40},                  // thick ledge mid
+        {x:6400, y:380, w:60, h:30},                   // climbing block
 
-        // ===== ROOM 8: Dungeon Cells (x:6720–7680) =====
-        // Underground floor
-        {x:6720, y:420, w:960, h:60},
-        // Low ceiling (underground)
-        {x:6720, y:340, w:960, h:16},
-        // Left wall
-        {x:6720, y:340, w:16, h:80},
-        // Right wall
-        {x:7664, y:340, w:16, h:80},
+        // ===== ROOM 8: Dungeon Cells (x:6720-7680) =====
+        {x:6720, y:420, w:960, h:60},                  // underground floor (solid)
+        {x:6720, y:340, w:960, h:16},                  // low ceiling
+        {x:6720, y:340, w:16, h:80},                   // left wall
+        {x:7664, y:340, w:16, h:80},                   // right wall
         // Cell divider walls
         {x:7000, y:340, w:16, h:60},
         {x:7300, y:340, w:16, h:60},
-        // Tiny cell ledges
-        {x:6780, y:390, w:80, h:16},
-        {x:7080, y:380, w:80, h:16},
-        {x:7380, y:390, w:80, h:16},
 
-        // ===== ROOM 9: Dungeon Exit (x:7680–8640) =====
-        // Deep floor
-        {x:7680, y:420, w:300, h:60},
-        // Ceiling
-        {x:7680, y:80, w:960, h:16},
-        // Left wall
-        {x:7680, y:80, w:16, h:400},
-        // Right wall
-        {x:8624, y:80, w:16, h:260},
-        // Stepping stones climbing from y:420 to y:160
-        {x:7800, y:380, w:100, h:16},
-        {x:7940, y:340, w:100, h:16},
-        {x:8080, y:290, w:100, h:16},
-        {x:8220, y:240, w:100, h:16},
-        {x:8360, y:200, w:100, h:16},
-        {x:8500, y:160, w:140, h:16},
+        // ===== ROOM 9: Dungeon Exit (x:7680-8640) =====
+        {x:7680, y:420, w:300, h:60},                  // deep floor
+        {x:7680, y:80, w:960, h:16},                   // ceiling
+        {x:7680, y:80, w:16, h:400},                   // left wall
+        {x:8624, y:80, w:16, h:260},                   // right wall
+        // Thick ascending floors
+        {x:7800, y:340, w:300, h:40},                  // floor 2
+        {x:8150, y:260, w:300, h:40},                  // floor 3
+        {x:8450, y:180, w:200, h:40},                  // floor 4 (exit level)
 
-        // ===== ROOM 10: Tower Climb (x:8640–9600) =====
-        // Floor
-        {x:8640, y:340, w:960, h:60},
-        // Ceiling (very high)
-        {x:8640, y:60, w:960, h:16},
-        // Left wall
-        {x:8640, y:60, w:16, h:280},
-        // Right wall
-        {x:9584, y:60, w:16, h:280},
-        // Ledges every ~60px from y:340 up to y:60
-        {x:8680, y:280, w:100, h:16},
-        {x:9460, y:280, w:100, h:16},
-        {x:8780, y:220, w:120, h:16},
-        {x:9340, y:220, w:120, h:16},
-        {x:8880, y:160, w:100, h:16},
-        {x:9240, y:160, w:100, h:16},
-        {x:9000, y:100, w:140, h:16},
-        {x:9380, y:100, w:100, h:16},
-        // Top platform
-        {x:9100, y:80, w:200, h:16},
+        // ===== ROOM 10: Tower Climb (x:8640-9600) =====
+        {x:8640, y:340, w:960, h:60},                  // floor (solid)
+        {x:8640, y:60, w:960, h:16},                   // ceiling (high)
+        {x:8640, y:60, w:16, h:280},                   // left wall
+        {x:9584, y:60, w:16, h:280},                   // right wall
+        // Thick intermediate floors (3 levels)
+        {x:8660, y:260, w:880, h:40},                  // floor 2 (full width)
+        // Floor 3 (gap 9060-9200 for climbing)
+        {x:8660, y:180, w:400, h:40},                  // floor 3 left
+        {x:9200, y:180, w:380, h:40},                  // floor 3 right
+        // Floor 4 (top)
+        {x:8900, y:100, w:400, h:40},                  // floor 4 top
 
-        // ===== ROOM 11: Sky Bridge (x:9600–10560) =====
-        // HIGH floor — no ground below!
-        {x:9600, y:120, w:960, h:16},
-        // Left wall
-        {x:9600, y:80, w:16, h:56},
-        // Right wall
-        {x:10544, y:80, w:16, h:56},
-        // Ceiling
-        {x:9600, y:80, w:960, h:16},
-        // Narrow bridge segments (gaps for danger)
-        {x:9700, y:120, w:200, h:16},
-        {x:9960, y:120, w:180, h:16},
-        {x:10200, y:120, w:200, h:16},
-        {x:10460, y:120, w:80, h:16},
+        // ===== ROOM 11: Sky Bridge (x:9600-10560) =====
+        // Thick bridge floor sections with gaps
+        {x:9600, y:120, w:960, h:40},                  // bridge base (thick)
+        {x:9600, y:80, w:16, h:56},                    // left wall
+        {x:10544, y:80, w:16, h:56},                   // right wall
+        {x:9600, y:80, w:960, h:16},                   // ceiling
 
-        // ===== ROOM 12: Boss Chamber (x:10560–11520) =====
-        // Floor
-        {x:10560, y:340, w:960, h:60},
-        // Ceiling
-        {x:10560, y:80, w:960, h:16},
-        // Left wall
-        {x:10560, y:80, w:16, h:260},
-        // Right wall (level edge)
-        {x:11504, y:80, w:16, h:260},
-        // Arena interior walls (multi-level pillars)
+        // ===== ROOM 12: Boss Chamber (x:10560-11520) =====
+        {x:10560, y:340, w:960, h:60},                 // floor (solid)
+        {x:10560, y:80, w:960, h:16},                  // ceiling
+        {x:10560, y:80, w:16, h:260},                  // left wall
+        {x:11504, y:80, w:16, h:260},                  // right wall
+        // Arena pillars (walls)
         {x:10800, y:80, w:16, h:160},
         {x:11200, y:80, w:16, h:160},
-        // Lower platforms
-        {x:10620, y:280, w:160, h:16},
-        {x:10880, y:280, w:160, h:16},
-        {x:11240, y:280, w:160, h:16},
-        // Upper platforms
-        {x:10700, y:180, w:140, h:16},
-        {x:11000, y:160, w:200, h:16},
-        {x:11300, y:180, w:140, h:16},
-        // High centre perch
-        {x:10950, y:100, w:160, h:16},
+        // Thick 2nd floor (gap 10900-11100 for climbing)
+        {x:10580, y:210, w:320, h:40},                 // upper floor left
+        {x:11100, y:210, w:400, h:40},                 // upper floor right
+        // Climbing ledge
+        {x:10900, y:280, w:60, h:30},                  // stepping block
 
         // SECRET 1: Hidden dungeon alcove (room 8 area)
-        {x:7100, y:460, w:160, h:16},
+        {x:7100, y:460, w:160, h:40},
         // SECRET 2: Hidden armory above great hall (room 5 area)
-        {x:4200, y:90, w:160, h:16},
+        {x:4200, y:90, w:160, h:40},
     ],
     rooms: [
         // Room 1: Gate Room
