@@ -206,7 +206,7 @@
                 // Wave mode
                 this.level = W.createWaveLevel();
                 this.waveManager = new W.WaveManager();
-                this.player = new W.Player(100, 280);
+                this.player = new W.Player(100, W.GROUND_Y - 60);
                 this.player.score = 0;
                 var waveDisp = document.getElementById('waveDisplay');
                 if (waveDisp) waveDisp.textContent = 'Wave 1';
@@ -258,11 +258,11 @@
 
             // Create / reposition player
             if (!this.player) {
-                this.player = new W.Player(100, 280);
+                this.player = new W.Player(100, W.GROUND_Y - 60);
                 this.player.score = 0;
             } else {
                 this.player.x = 100;
-                this.player.y = 280;
+                this.player.y = W.GROUND_Y - 60;
                 this.player.vx = 0;
                 this.player.vy = 0;
                 this.player.hp = this.player.maxHp;
