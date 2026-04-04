@@ -18,137 +18,104 @@ W.StoryLevel1 = {
     platforms: [
         // ==============================
         // ROOM 1: Alley Entrance (0-960)
-        // Tight corridor, crates to climb, bandit guards
+        // Solid floor, walls, ceiling. One thick shelf for climbing.
         // ==============================
-        {x:R1, y:340, w:960, h:60},                   // floor
+        {x:R1, y:340, w:960, h:60},                   // floor (solid, room-wide)
         {x:R1, y:60, w:16, h:280},                    // left wall
         {x:R1, y:60, w:960, h:16},                    // ceiling
         {x:R1+944, y:60, w:16, h:200},                // right wall upper (gap 260-340 = doorway)
-        // Internal platforms
-        {x:R1+100, y:280, w:80, h:16},                // low crate
-        {x:R1+160, y:220, w:60, h:16},                // mid crate
-        {x:R1+300, y:260, w:100, h:16, type:'wood'},   // wooden shelf
-        {x:R1+500, y:200, w:120, h:16},               // upper walkway
-        {x:R1+700, y:160, w:100, h:16},               // high ledge
-        {x:R1+800, y:260, w:120, h:16, type:'wood'},   // shelf near exit
+        // Thick shelf for vertical interest
+        {x:R1+300, y:240, w:200, h:40, type:'wood'},   // wooden shelf (thick)
+        {x:R1+700, y:200, w:160, h:40},               // stone ledge (thick, near exit)
 
         // ==============================
         // ROOM 2: House Interior (960-1920)
-        // Two floors connected by ledge climb, drowner in cellar
+        // Two floors: ground + thick 2nd floor wall-to-wall (gap for climbing)
         // ==============================
-        {x:R2, y:340, w:960, h:60},                   // floor
+        {x:R2, y:340, w:960, h:60},                   // ground floor (solid)
         {x:R2, y:60, w:16, h:200},                    // left wall upper (gap matches R1 doorway)
         {x:R2, y:60, w:960, h:16},                    // ceiling
         {x:R2+944, y:60, w:16, h:200},                // right wall upper
-        // Second floor divides room upper/lower
-        {x:R2+100, y:220, w:500, h:16, type:'wood'},   // 2nd floor left
-        {x:R2+700, y:220, w:244, h:16, type:'wood'},   // 2nd floor right (gap to climb)
-        // Internal details
-        {x:R2+80, y:300, w:80, h:16},                 // cellar crate
-        {x:R2+620, y:280, w:60, h:16},                // stepping stone to 2nd floor
-        {x:R2+400, y:160, w:100, h:16},               // upper shelf
-        {x:R2+750, y:140, w:80, h:16},                // attic ledge
+        // Thick 2nd floor spanning room (gap 600-700 for climbing between floors)
+        {x:R2+16, y:210, w:584, h:40, type:'wood'},    // 2nd floor left section
+        {x:R2+700, y:210, w:244, h:40, type:'wood'},   // 2nd floor right section
+        // Wall-attached climbing ledge
+        {x:R2+600, y:280, w:60, h:30},                // stepping block to 2nd floor
 
         // ==============================
         // ROOM 3: Courtyard (1920-2880)
-        // Semi-open (no ceiling), vertical well shaft
+        // Semi-open (no ceiling), well pit in floor
         // ==============================
-        {x:R3, y:340, w:400, h:60},                   // floor left
-        {x:R3+500, y:340, w:460, h:60},               // floor right (100px well gap)
+        {x:R3, y:340, w:400, h:60},                   // floor left (solid)
+        {x:R3+500, y:340, w:460, h:60},               // floor right (100px well gap = pit)
         {x:R3, y:80, w:16, h:260},                    // left wall
         {x:R3+944, y:80, w:16, h:180},                // right wall upper
         // NO ceiling - open courtyard
-        // Well shaft platforms
-        {x:R3+410, y:370, w:80, h:16},                // shaft ledge
-        {x:R3+420, y:310, w:60, h:16},                // shaft stepping stone
-        // Vertical elements
-        {x:R3+150, y:240, w:120, h:16},               // low balcony
-        {x:R3+200, y:160, w:100, h:16},               // upper balcony
-        {x:R3+600, y:240, w:100, h:16, type:'wood'},   // scaffold
-        {x:R3+750, y:160, w:120, h:16, type:'wood'},   // high scaffold
+        // One thick upper floor section for balcony
+        {x:R3+100, y:200, w:300, h:40},               // thick stone balcony
+        {x:R3+600, y:200, w:300, h:40, type:'wood'},   // thick wooden scaffold
 
         // ==============================
         // ROOM 4: Church Interior (2880-3840)
-        // Tall room, 3 internal floors, bandits on each
+        // Tall room, 2 thick internal floors
         // ==============================
-        {x:R4, y:340, w:960, h:60},                   // floor
+        {x:R4, y:340, w:960, h:60},                   // ground floor (solid)
         {x:R4, y:40, w:16, h:300},                    // left wall (tall)
         {x:R4, y:40, w:960, h:16},                    // ceiling (high vaulted)
         {x:R4+944, y:40, w:16, h:220},                // right wall upper
-        // Three internal floors
-        {x:R4+60, y:270, w:300, h:16},                // floor 1 left
-        {x:R4+500, y:270, w:300, h:16},               // floor 1 right
-        {x:R4+120, y:200, w:250, h:16},               // floor 2 left
-        {x:R4+550, y:200, w:200, h:16},               // floor 2 right
-        {x:R4+250, y:130, w:400, h:16},               // floor 3 choir loft
-        // Vertical connections
-        {x:R4+420, y:300, w:60, h:16},                // step ground to 1
-        {x:R4+400, y:230, w:50, h:16},                // step 1 to 2
-        {x:R4+800, y:160, w:80, h:16},                // side ledge
+        // Thick intermediate floor (gap 380-520 for climbing)
+        {x:R4+16, y:240, w:364, h:40},                // floor 2 left section
+        {x:R4+520, y:240, w:424, h:40},               // floor 2 right section
+        // Thick choir loft (upper floor)
+        {x:R4+200, y:140, w:500, h:40},               // floor 3 choir loft (thick)
+        // Climbing ledge attached to wall
+        {x:R4+16, y:300, w:60, h:30},                 // wall ledge ground to floor 2
 
         // ==============================
         // ROOM 5: Market Cellar (3840-4800)
-        // Underground, nekkers, low ceiling
+        // Underground, nekkers, low ceiling. One thick shelf.
         // ==============================
-        {x:R5, y:340, w:960, h:60},                   // floor
+        {x:R5, y:340, w:960, h:60},                   // floor (solid)
         {x:R5, y:100, w:16, h:240},                   // left wall
         {x:R5, y:100, w:960, h:16},                   // ceiling (low cellar)
         {x:R5+944, y:100, w:16, h:160},               // right wall upper
-        // Barrels and crates
-        {x:R5+120, y:280, w:100, h:16, type:'wood'},   // barrel platform
-        {x:R5+300, y:240, w:80, h:16, type:'wood'},    // crate stack
-        {x:R5+500, y:200, w:120, h:16, type:'wood'},   // shelf
-        {x:R5+700, y:260, w:100, h:16, type:'wood'},   // barrel right
-        {x:R5+400, y:160, w:80, h:16},                // high shelf near ceiling
+        // Thick storage shelf spanning most of room
+        {x:R5+100, y:220, w:700, h:40, type:'wood'},   // thick wooden shelf
 
         // ==============================
         // ROOM 6: Damaged Building (4800-5760)
-        // Broken floors creating vertical maze
+        // Broken floor with gap, thick upper floor section
         // ==============================
-        {x:R6, y:340, w:400, h:60},                   // floor left (right collapsed)
-        {x:R6+600, y:340, w:360, h:60},               // floor right section
+        {x:R6, y:340, w:400, h:60},                   // floor left (solid)
+        {x:R6+600, y:340, w:360, h:60},               // floor right section (200px collapse gap)
         {x:R6, y:60, w:16, h:280},                    // left wall
         {x:R6, y:60, w:960, h:16},                    // ceiling
         {x:R6+944, y:60, w:16, h:200},                // right wall upper
-        // Broken floor pieces
-        {x:R6+420, y:300, w:60, h:16},                // chunk 1
-        {x:R6+500, y:260, w:50, h:16},                // chunk 2
-        {x:R6+560, y:320, w:40, h:16},                // chunk 3
-        // Upper structure
-        {x:R6+100, y:220, w:200, h:16},               // intact upper left
-        {x:R6+400, y:180, w:150, h:16},               // mid section
-        {x:R6+650, y:140, w:200, h:16},               // upper right
-        {x:R6+300, y:120, w:80, h:16},                // high perch
+        // Thick upper floor sections
+        {x:R6+16, y:200, w:400, h:40},                // intact upper left
+        {x:R6+550, y:200, w:394, h:40},               // intact upper right
 
         // ==============================
         // ROOM 7: Nekker Nest (5760-6720)
-        // Cave room, low ceiling, spikes on floor
+        // Cave room, low ceiling. Solid floor only.
         // ==============================
-        {x:R7, y:340, w:960, h:60},                   // floor
+        {x:R7, y:340, w:960, h:60},                   // floor (solid)
         {x:R7, y:120, w:16, h:220},                   // left wall
         {x:R7, y:120, w:960, h:16},                   // ceiling (low cave)
         {x:R7+944, y:120, w:16, h:140},               // right wall upper
-        // Cave platforms
-        {x:R7+150, y:280, w:100, h:16},               // rock shelf
-        {x:R7+320, y:240, w:80, h:16},                // stalagmite platform
-        {x:R7+500, y:200, w:120, h:16},               // cave ledge
-        {x:R7+700, y:250, w:100, h:16},               // rock outcrop
-        {x:R7+350, y:170, w:80, h:16},                // high nook
+        // Thick rock shelf
+        {x:R7+300, y:230, w:300, h:40},               // thick cave ledge
 
         // ==============================
         // ROOM 8: Swamp Gate (6720-7680)
-        // Boss drowner room, exit right
+        // Boss drowner room, exit right. Open arena.
         // ==============================
-        {x:R8, y:340, w:960, h:60},                   // floor
+        {x:R8, y:340, w:960, h:60},                   // floor (solid)
         {x:R8, y:80, w:16, h:260},                    // left wall
         {x:R8, y:80, w:960, h:16},                    // ceiling
         // NO right wall - level exit
-        // Boss arena platforms
-        {x:R8+150, y:260, w:120, h:16},               // low left
-        {x:R8+400, y:200, w:160, h:16},               // center elevated
-        {x:R8+700, y:260, w:120, h:16},               // low right
-        {x:R8+300, y:140, w:100, h:16},               // high left
-        {x:R8+600, y:140, w:100, h:16},               // high right
+        // Thick elevated platform for boss arena
+        {x:R8+350, y:220, w:250, h:40},               // center thick platform
     ],
     enemies: [
         // Room 1: Bandit guards (2)
