@@ -48,17 +48,17 @@ W.Camera = class Camera {
      */
     follow(target, levelWidth) {
         var targetOffsetX = target.x - W.CANVAS_W / 2;
-        // Center player at 60% of screen height (slightly above center)
-        var targetOffsetY = target.y - W.CANVAS_H * 0.6;
+        // Keep player in lower third of screen
+        var targetOffsetY = target.y - W.CANVAS_H * 0.65;
 
-        // Smooth lerp toward the desired position
+        // Smooth lerp
         this.offsetX = W.lerp(this.offsetX, targetOffsetX, 0.08);
-        this.offsetY = W.lerp(this.offsetY, targetOffsetY, 0.06);
+        this.offsetY = W.lerp(this.offsetY, targetOffsetY, 0.05);
 
-        // Clamp to level bounds
+        // Clamp
         this.offsetX = W.clamp(this.offsetX, 0, Math.max(0, levelWidth - W.CANVAS_W));
-        // Allow vertical movement but clamp so sky doesn't go too far
-        this.offsetY = W.clamp(this.offsetY, -50, 150);
+        // Vertical: only shift down slightly when player jumps high, never shift up past ground view
+        this.offsetY = W.clamp(this.offsetY, -20, 80);
     }
 
     /**
