@@ -334,28 +334,25 @@ W.StoryLevel4 = {
     bgTheme: 'battlefield',
     storyText: 'An ancient battlefield where Nilfgaard performs a dark ritual to bind a griffin as weapon.',
     platforms: [
-        // ===== ROOM 1: Trench Entrance (x:0–960) =====
-        // Drop down to trench floor y:380, low ceiling y:300. Tight.
+        // ===== ROOM 1: Trench Entrance (x:0-960) =====
         {x:0, y:340, w:200, h:60},              // entry ledge before drop
         {x:0, y:80, w:16, h:260},               // left wall (full height)
-        {x:200, y:380, w:744, h:60},             // trench floor (sunken)
+        {x:200, y:380, w:744, h:60},             // trench floor (sunken, solid)
         {x:0, y:300, w:960, h:16},              // low ceiling
         {x:944, y:300, w:16, h:140},            // right wall
-        {x:400, y:350, w:100, h:16},            // small step in trench
-        {x:650, y:350, w:80, h:16},             // small step
+        // Thick step in trench
+        {x:400, y:340, w:300, h:40},            // thick trench shelf
 
-        // ===== ROOM 2: Trench Corridor (x:960–1920) =====
-        // Long low trench continues. Spikes on floor.
-        {x:960, y:380, w:960, h:60},            // trench floor
+        // ===== ROOM 2: Trench Corridor (x:960-1920) =====
+        {x:960, y:380, w:960, h:60},            // trench floor (solid)
         {x:960, y:300, w:960, h:16},            // low ceiling
         {x:960, y:300, w:16, h:140},            // left wall
         {x:1904, y:300, w:16, h:140},           // right wall
-        {x:1200, y:350, w:80, h:16},            // step over spikes
-        {x:1500, y:350, w:80, h:16},            // step over spikes
-        {x:1750, y:350, w:80, h:16},            // step
+        // Thick stepping shelves over spikes
+        {x:1150, y:340, w:200, h:40},           // thick shelf 1
+        {x:1500, y:340, w:200, h:40},           // thick shelf 2
 
-        // ===== ROOM 3: Surface Breakout (x:1920–2880) =====
-        // Climb up from trench y:380 to surface y:200. Open top.
+        // ===== ROOM 3: Surface Breakout (x:1920-2880) =====
         {x:1920, y:380, w:200, h:60},           // trench start
         {x:1920, y:80, w:16, h:360},            // left wall
         {x:2864, y:80, w:16, h:260},            // right wall
