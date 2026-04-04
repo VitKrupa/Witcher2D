@@ -9,25 +9,7 @@
 
 ---
 
-```
-    ╔══════════════════════════════════════════════════════════════════════╗
-    ║  GERALT OF RIVIA           ❤️❤️❤️❤️❤️❤️❤️           Score: 1250  ║
-    ║  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░  HP                       Wave 3          ║
-    ╠══════════════════════════════════════════════════════════════════════╣
-    ║                                                                    ║
-    ║        ☁                           ☁              ☁               ║
-    ║                    ☁                                               ║
-    ║   ⛰️         ⛰️              🌙                    ⛰️             ║
-    ║                                                                    ║
-    ║                                                 👹                 ║
-    ║                    ⚔️🧔                        ╔═══╗              ║
-    ║   ╔══════╗       ╔══╩══════════╗    ╔═══╗     ║   ║   ╔═══╗     ║
-    ║   ║▒▒▒▒▒▒║       ║▓▓▓▓▓▓▓▓▓▓▓▓║    ║▒▒▒║     ║▓▓▓║   ║▒▒▒║     ║
-    ║   ║▒▒▒▒▒▒║       ║▓▓▓▓▓▓▓▓▓▓▓▓║    ║▒▒▒║     ║▓▓▓║   ║▒▒▒║     ║
-    ╠══════════════════════════════════════════════════════════════════════╣
-    ║  🔵 SILVER [Q]  Monsters     |     🟠 IRON [E]  Humans            ║
-    ╚══════════════════════════════════════════════════════════════════════╝
-```
+![Title Screen](screenshots/01_title_screen.png)
 
 ---
 
@@ -89,6 +71,8 @@ Choosing the wrong sword means a fight takes three times as long — and enemies
 
 ## 👹 Enemy Types
 
+![Bestiary](screenshots/06_bestiary.png)
+
 ### Creatures — Use Silver Sword (Q)
 
 | Enemy | HP | Damage | Speed | Difficulty | Description |
@@ -113,6 +97,14 @@ Choosing the wrong sword means a fight takes three times as long — and enemies
 
 ## 🗺️ Story Levels
 
+### Level 2 — *The Swamp Depths*
+
+> Geralt fights creatures in the murky swamp with the Silver Sword
+
+![Combat vs Creatures](screenshots/02_combat_creatures.png)
+
+---
+
 ### Level 1 — *The Blighted Village*
 > *"A village plagued by drowners... The alderman's contract seems straightforward, but something feels wrong."*
 
@@ -134,6 +126,8 @@ Choosing the wrong sword means a fight takes three times as long — and enemies
 ### Level 3 — *The Abandoned Keep*
 > *"Captured documents reveal Nilfgaard funds the Witch Hunters. Their base: an old fortress."*
 
+![Castle Combat](screenshots/03_combat_humans.png)
+
 **Theme:** Dark castle interior with stone walls, torch-lit corridors, and vertical platforming.  
 **Enemies:** Nilfgaardian Soldiers, Witch Hunters, Wraiths  
 **Length:** 12 screens (11,520 px)
@@ -143,6 +137,8 @@ Choosing the wrong sword means a fight takes three times as long — and enemies
 ### Level 4 — *The Cursed Battlefield*
 > *"An ancient battlefield where Nilfgaard performs a dark ritual to bind a griffin as weapon."*
 
+![Battlefield](screenshots/04_battlefield.png)
+
 **Theme:** Blood-red sky over war-torn fields with ember particles drifting through the air.  
 **Enemies:** Ghouls, Wraiths, Nilfgaardian Soldiers, Wild Hunt Warriors  
 **Length:** 10 screens (9,600 px)
@@ -151,6 +147,8 @@ Choosing the wrong sword means a fight takes three times as long — and enemies
 
 ### Level 5 — *The Summit*
 > *"The mountain peak. The bound griffin must be freed — but the Wild Hunt wants it as a weapon."*
+
+![Griffin Boss](screenshots/05_griffin_boss.png)
 
 **Theme:** Snow-capped peaks with icy platforms, aurora borealis shimmering in the sky.  
 **Enemies:** Wild Hunt Warriors, Wraiths, Nekkers + **Griffin Boss**  
