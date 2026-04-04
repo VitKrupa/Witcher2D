@@ -376,16 +376,24 @@
             // --- Remove dead enemies ---
             for (var i = this.enemies.length - 1; i >= 0; i--) {
                 var enemy = this.enemies[i];
-                if (enemy.dead || (!enemy.alive && enemy.state === 'dead')) {
-                    // Score
-                    if (this.player) {
-                        this.player.score += (enemy.scoreLoot || 10);
+                if (!enemy.alive && enemy.state === 'dead') {
+                    // On first frame of death, trigger effects and score
+                    if (!enemy._deathHandled) {
+                        enemy._deathHandled = true;
+                        enemy._deathTimer = 30; // frames for fade-out animation
+                        // Score
+                        if (this.player) {
+                            this.player.score += (enemy.scoreLoot || 10);
+                        }
+                        // Gore-scaled death effect
+                        var dir = this.player ? (this.player.facing || 1) : 1;
+                        W.Gore.onEnemyDeath(this.particles, enemy, dir);
                     }
-                    // Gore-scaled death effect
-                    var dir = this.player ? (this.player.facing || 1) : 1;
-                    W.Gore.onEnemyDeath(this.particles, enemy, dir);
-
-                    this.enemies.splice(i, 1);
+                    // Count down death animation
+                    enemy._deathTimer -= dt * 60;
+                    if (enemy._deathTimer <= 0) {
+                        this.enemies.splice(i, 1);
+                    }
                 }
             }
 
@@ -489,17 +497,29 @@
             });
             var animT = this.lastTime * 0.001 || 0;
             for (var i = 0; i < sortedEnemies.length; i++) {
-                sortedEnemies[i].draw(ctx);
-                if (W.Effects) W.Effects.drawEnemyEffects(ctx, sortedEnemies[i], animT);
+                try {
+                    ctx.save();
+                    sortedEnemies[i].draw(ctx);
+                    ctx.restore();
+                    if (W.Effects) { ctx.save(); W.Effects.drawEntityEffects(ctx, sortedEnemies[i], animT); ctx.restore(); }
+                } catch(e) { ctx.restore(); }
             }
 
             // Player
             if (this.player) {
-                this.player.draw(ctx);
-                if (W.Effects) {
-                    W.Effects.drawPlayerEffects(ctx, this.player, animT, this.enemies);
-                    W.Effects.drawWeaponEffects(ctx, this.player, animT);
-                }
+                try {
+                    ctx.save();
+                    this.player.draw(ctx);
+                    ctx.restore();
+                } catch(e) { ctx.restore(); console.error('Player draw error:', e); }
+                try {
+                    if (W.Effects) {
+                        ctx.save();
+                        W.Effects.drawPlayerEffects(ctx, this.player, animT, this.enemies);
+                        W.Effects.drawWeaponEffects(ctx, this.player, animT);
+                        ctx.restore();
+                    }
+                } catch(e) { ctx.restore(); }
             }
 
             // Projectiles
@@ -591,9 +611,9 @@
                         this.addFloatingText(enemy.x, enemy.y - 30, '-' + damage, dmgColor);
                     }
 
-                    // Check if enemy died
+                    // Camera shake on kill
                     if (enemy.hp <= 0) {
-                        enemy.dead = true;
+                        this.camera.shake(4, 6);
                     }
                 }
             }
@@ -655,12 +675,13 @@
         // -----------------------------------------------------------
 
         handleProjectiles(dt) {
+            var spd = dt * 60;
             for (var i = this.projectiles.length - 1; i >= 0; i--) {
                 var proj = this.projectiles[i];
 
-                // Update position
-                proj.x += proj.vx * dt;
-                proj.y += (proj.vy || 0) * dt;
+                // Update position (vx/vy are per-frame values)
+                proj.x += proj.vx * spd;
+                proj.y += (proj.vy || 0) * spd;
 
                 // Check collision with player
                 if (this.player && this.player.hitbox) {
