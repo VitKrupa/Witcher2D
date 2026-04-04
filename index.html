@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Witcher 2D - Prince of Persia Style</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+        #gameContainer {
+            position: relative;
+            border: 3px solid #333;
+            border-radius: 4px;
+            box-shadow: 0 0 40px rgba(200, 160, 50, 0.3), inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+        }
+        #ui-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .health-bar-container {
+            width: 200px;
+            height: 20px;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #555;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .health-bar {
+            height: 100%;
+            background: linear-gradient(180deg, #ff4444, #cc0000);
+            transition: width 0.3s;
+        }
+        .sword-buttons {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            gap: 12px;
+            pointer-events: all;
+            z-index: 10;
+        }
+        .sword-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            user-select: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        .sword-btn:active {
+            transform: scale(0.92);
+        }
+        #silverSwordBtn {
+            background: linear-gradient(135deg, #1a1a3e, #2a2a5e, #3a3a7e);
+            border: 3px solid #8888cc;
+            color: #c0c0ff;
+            box-shadow: 0 0 20px rgba(100, 100, 220, 0.5), inset 0 0 15px rgba(150, 150, 255, 0.2);
+        }
+        #silverSwordBtn:hover {
+            box-shadow: 0 0 30px rgba(100, 100, 220, 0.8), inset 0 0 20px rgba(150, 150, 255, 0.4);
+            border-color: #aaaaff;
+        }
+        #silverSwordBtn .sword-icon {
+            font-size: 28px;
+            filter: drop-shadow(0 0 6px rgba(180, 180, 255, 0.8));
+        }
+        #ironSwordBtn {
+            background: linear-gradient(135deg, #3e2a1a, #5e3a2a, #7e4a2a);
+            border: 3px solid #cc8844;
+            color: #ffd4a0;
+            box-shadow: 0 0 20px rgba(220, 140, 50, 0.5), inset 0 0 15px rgba(255, 180, 80, 0.2);
+        }
+        #ironSwordBtn:hover {
+            box-shadow: 0 0 30px rgba(220, 140, 50, 0.8), inset 0 0 20px rgba(255, 180, 80, 0.4);
+            border-color: #ffaa66;
+        }
+        #ironSwordBtn .sword-icon {
+            font-size: 28px;
+            filter: drop-shadow(0 0 6px rgba(255, 180, 80, 0.8));
+        }
+        .sword-key {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 10px;
+            opacity: 0.7;
+            background: rgba(0,0,0,0.4);
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+        .info-panel {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            color: #ccc;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 10;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #444;
+        }
+        .info-panel .active-sword {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        #startScreen, #gameOverScreen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.85);
+            z-index: 100;
+            color: #ddd;
+        }
+        #startScreen h1 {
+            font-size: 48px;
+            color: #c8a032;
+            text-shadow: 0 0 20px rgba(200, 160, 50, 0.6);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+        #startScreen .subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+        .start-btn {
+            padding: 14px 50px;
+            font-size: 20px;
+            background: linear-gradient(135deg, #8B6914, #c8a032);
+            border: 2px solid #daa520;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            transition: all 0.2s;
+        }
+        .start-btn:hover {
+            background: linear-gradient(135deg, #c8a032, #daa520);
+            box-shadow: 0 0 20px rgba(200, 160, 50, 0.5);
+        }
+        .controls-info {
+            font-size: 13px;
+            color: #777;
+            line-height: 1.8;
+            text-align: center;
+        }
+        .controls-info span { color: #c8a032; }
+        #gameOverScreen h2 {
+            font-size: 42px;
+            color: #cc2222;
+            text-shadow: 0 0 20px rgba(200, 0, 0, 0.5);
+            margin-bottom: 15px;
+        }
+        #gameOverScreen .score-text {
+            font-size: 20px;
+            color: #c8a032;
+            margin-bottom: 30px;
+        }
+        #waveAnnounce {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: #c8a032;
+            text-shadow: 0 0 20px rgba(200, 160, 50, 0.8);
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            letter-spacing: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui-overlay">
+            <div>
+                <div style="color:#c8a032; font-size:13px; margin-bottom:4px; font-weight:bold;">GERALT OF RIVIA</div>
+                <div class="health-bar-container">
+                    <div class="health-bar" id="healthBar"></div>
+                </div>
+                <div style="color:#888; font-size:11px; margin-top:3px;" id="scoreDisplay">Score: 0</div>
+            </div>
+            <div style="color:#888; font-size:13px; text-align:right;" id="waveDisplay">Wave 1</div>
+        </div>
+        <div class="sword-buttons">
+            <div class="sword-btn" id="silverSwordBtn" onmousedown="game.attack('silver')" ontouchstart="game.attack('silver')">
+                <span class="sword-key">Q</span>
+                <span class="sword-icon">⚔</span>
+                <span>SILVER</span>
+                <span style="font-size:9px; opacity:0.7;">Monsters</span>
+            </div>
+            <div class="sword-btn" id="ironSwordBtn" onmousedown="game.attack('iron')" ontouchstart="game.attack('iron')">
+                <span class="sword-key">E</span>
+                <span class="sword-icon">🗡</span>
+                <span>IRON</span>
+                <span style="font-size:9px; opacity:0.7;">Humans</span>
+            </div>
+        </div>
+        <div class="info-panel">
+            <div class="active-sword" id="activeSwordDisplay">Silver Sword</div>
+            <div id="enemyHint" style="font-size:11px; color:#999;">Use the right sword!</div>
+        </div>
+        <div id="waveAnnounce"></div>
+        <div id="startScreen">
+            <h1>THE WITCHER 2D</h1>
+            <div class="subtitle">A Prince of Persia Tribute</div>
+            <button class="start-btn" onclick="game.start()">BEGIN HUNT</button>
+            <div class="controls-info">
+                <span>A/D</span> or <span>←/→</span> — Move &nbsp;|&nbsp; <span>W</span> or <span>↑</span> — Jump<br>
+                <span>Q</span> — Silver Sword (monsters) &nbsp;|&nbsp; <span>E</span> — Iron Sword (humans)<br>
+                <span>S</span> or <span>↓</span> — Roll/Dodge &nbsp;|&nbsp; <span>SHIFT</span> — Block<br>
+                <span style="color:#888;">Silver sword for creatures, Iron sword for humans!</span>
+            </div>
+        </div>
+        <div id="gameOverScreen" style="display:none;">
+            <h2>YOU DIED</h2>
+            <div class="score-text" id="finalScore">Score: 0</div>
+            <button class="start-btn" onclick="game.restart()">HUNT AGAIN</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
