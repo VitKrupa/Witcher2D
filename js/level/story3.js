@@ -303,7 +303,7 @@ W.StoryLevel5 = {
     ],
     secrets: [
         {
-            x: 6150, y: 90, w: 160, h: 16,
+            x: 6150, y: 90, w: 160, h: 40,
             triggerX: 6200, triggerY: 90,
             reward: 400,
             enemies: [
