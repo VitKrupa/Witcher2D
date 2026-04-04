@@ -726,6 +726,26 @@ W.Player = class {
                         }
                     }
                 }
+                // Side collision (walls)
+                if (this.y + this.h > pr.y + 4 && this.y < pr.y + pr.h - 4) {
+                    // Hitting wall from left
+                    if (this.vx > 0 && this.x + this.w > pr.x && this.x + this.w < pr.x + 16) {
+                        this.x = pr.x - this.w;
+                        this.vx = 0;
+                    }
+                    // Hitting wall from right
+                    if (this.vx < 0 && this.x < pr.x + pr.w && this.x > pr.x + pr.w - 16) {
+                        this.x = pr.x + pr.w;
+                        this.vx = 0;
+                    }
+                }
+                // Ceiling collision (head bonk)
+                if (this.vy < 0 && this.x + this.w > pr.x && this.x < pr.x + pr.w) {
+                    if (this.y < pr.y + pr.h && this.y > pr.y + pr.h - 10) {
+                        this.y = pr.y + pr.h;
+                        this.vy = 0;
+                    }
+                }
             }
 
             // Coyote time: 6 frames after leaving ground you can still jump

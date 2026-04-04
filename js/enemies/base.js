@@ -124,6 +124,17 @@ W.Enemy = class {
                         this.onGround = true;
                     }
                 }
+                // Side collision (walls) — enemies bounce off walls
+                if (this.y + this.h > pr.y + 4 && this.y < pr.y + pr.h - 4) {
+                    if (this.vx > 0 && this.x + this.w > pr.x && this.x + this.w < pr.x + 16) {
+                        this.x = pr.x - this.w;
+                        this.vx = 0;
+                    }
+                    if (this.vx < 0 && this.x < pr.x + pr.w && this.x > pr.x + pr.w - 16) {
+                        this.x = pr.x + pr.w;
+                        this.vx = 0;
+                    }
+                }
             }
         }
     }
