@@ -1,121 +1,198 @@
 (function() {
 'use strict';
 
-// Level 1: The Blighted Village (8 screens = 7680px)
-// VERTICAL DESIGN: ground → rooftops → underground → back up
+// Level 1: The Blighted Village (8 rooms, Prince-of-Persia style)
+// ROOM-BASED: walled rooms ~800px each, doorways = gaps in walls
 W.StoryLevel1 = {
     name: 'The Blighted Village',
-    width: 7680,
+    width: 6400,
     bgTheme: 'village',
     storyText: 'A village plagued by drowners... The alderman\'s contract seems straightforward, but something feels wrong.',
     platforms: [
-        // === SCREEN 1: Village entrance — road + first building ===
-        {x:0, y:340, w:400, h:60},           // ground
-        {x:80, y:260, w:100, h:16},           // crate stack
-        {x:250, y:180, w:120, h:16},          // building 1st floor
-        {x:300, y:100, w:80, h:16},           // building rooftop
-        // Building wall (tall pillar for visual)
-        {x:370, y:100, w:16, h:240},          // right wall
+        // ============================================================
+        // ROOM 1: ALLEY (x:0-800) — floor, walls, ceiling, crates
+        // ============================================================
+        // Floor
+        {x:0, y:340, w:800, h:60},
+        // Ceiling
+        {x:0, y:80, w:800, h:16},
+        // Left wall (solid, no door)
+        {x:0, y:80, w:16, h:260},
+        // Right wall — gap (doorway) from y:200 to y:340
+        {x:784, y:80, w:16, h:120},           // upper right wall
+        // Crates to climb
+        {x:200, y:260, w:80, h:16},           // crate 1 (low)
+        {x:300, y:180, w:80, h:16},           // crate 2 (high)
+        // Ledge near ceiling
+        {x:500, y:120, w:120, h:16},          // upper ledge
 
-        // === SCREEN 2: Two-story houses, rooftop path ===
-        {x:450, y:340, w:300, h:60},          // ground
-        {x:500, y:240, w:140, h:16},          // house 1 upper floor
-        {x:500, y:340, w:140, h:16},          // house 1 ground (inside)
-        {x:680, y:180, w:100, h:16},          // rooftop bridge
-        {x:820, y:240, w:120, h:16},          // house 2 upper floor
-        {x:820, y:340, w:120, h:60},          // house 2 ground
+        // ============================================================
+        // ROOM 2: HOUSE GROUND FLOOR (x:800-1600) — shelf, stairs up
+        // ============================================================
+        // Floor
+        {x:800, y:340, w:800, h:60},
+        // Left wall — gap (doorway) matching room 1 exit
+        {x:800, y:80, w:16, h:120},           // upper left wall
+        // Right wall — gap (doorway) from y:80 to y:200 (upper exit)
+        {x:1584, y:200, w:16, h:140},         // lower right wall
+        // Internal shelf
+        {x:900, y:240, w:200, h:16},          // shelf
+        // Stairs going up: platforms ascending right
+        {x:1100, y:240, w:100, h:16},         // stair step 1
+        {x:1250, y:160, w:120, h:16},         // stair step 2 (upper floor)
+        // Vertical pillar (interior wall segment)
+        {x:1050, y:160, w:16, h:100},         // interior pillar
 
-        // === SCREEN 3: Vertical shaft down + back up ===
-        {x:980, y:340, w:200, h:60},          // ground before pit
-        // PIT: no ground from 1180-1380
-        {x:1200, y:380, w:120, h:20},         // underground ledge (below ground!)
-        {x:1240, y:310, w:80, h:16},          // stepping stone up
-        {x:1300, y:240, w:100, h:16},         // mid platform
-        {x:1380, y:170, w:120, h:16},         // upper exit
-        {x:1380, y:340, w:200, h:60},         // ground continues
+        // ============================================================
+        // ROOM 3: HOUSE UPPER + COURTYARD DROP (x:1600-2400)
+        // ============================================================
+        // Upper floor continues from room 2
+        {x:1600, y:160, w:300, h:16},         // upper floor
+        // Left wall — gap at top (doorway from room 2 upper exit)
+        {x:1600, y:200, w:16, h:140},         // lower left wall
+        // Courtyard floor (drop down)
+        {x:1600, y:340, w:800, h:60},         // ground floor
+        // Corridor walls
+        {x:1900, y:80, w:16, h:260},          // mid wall (corridor divider)
+        // Gap in mid wall at bottom: y:280-340 for passage
+        // Platforms on right side
+        {x:2000, y:260, w:120, h:16},         // right side ledge
+        {x:2150, y:180, w:100, h:16},         // right side upper
+        // Right wall — doorway at ground level y:240-340
+        {x:2384, y:80, w:16, h:160},          // upper right wall
 
-        // === SCREEN 4: Church area — tower climb ===
-        {x:1620, y:340, w:400, h:60},         // church ground
-        {x:1650, y:270, w:80, h:16},          // church ledge 1
-        {x:1700, y:200, w:60, h:16},          // church ledge 2
-        {x:1750, y:130, w:70, h:16},          // church ledge 3
-        {x:1820, y:70, w:100, h:16},          // church tower top!
-        // Descent on other side
-        {x:1920, y:140, w:80, h:16},          // step down 1
-        {x:1960, y:210, w:80, h:16},          // step down 2
-        {x:2020, y:280, w:100, h:16},         // step down 3
+        // ============================================================
+        // ROOM 4: CHURCH (x:2400-3200) — tall room, tower climb
+        // ============================================================
+        // Floor
+        {x:2400, y:340, w:800, h:60},
+        // Left wall — doorway at ground y:240-340
+        {x:2400, y:80, w:16, h:160},          // upper left wall
+        // Right wall — doorway at ground y:260-340
+        {x:3184, y:80, w:16, h:180},          // upper right wall
+        // NO ceiling (tall room, open to sky)
+        // Tower ledges — climbing sequence
+        {x:2500, y:280, w:80, h:16},          // ledge 1
+        {x:2620, y:220, w:80, h:16},          // ledge 2
+        {x:2500, y:160, w:80, h:16},          // ledge 3
+        {x:2620, y:100, w:100, h:16},         // ledge 4 (near top)
+        {x:2750, y:80, w:120, h:16},          // tower top platform
+        // Descent on right side
+        {x:2950, y:140, w:80, h:16},          // step down 1
+        {x:3050, y:220, w:100, h:16},         // step down 2
 
-        // === SCREEN 5: Marketplace — multi-level stalls ===
-        {x:2080, y:340, w:600, h:60},         // main ground
-        {x:2150, y:260, w:100, h:16, type:'wood'}, // stall roof 1
-        {x:2300, y:200, w:120, h:16, type:'wood'}, // stall roof 2 (higher)
-        {x:2450, y:260, w:100, h:16, type:'wood'}, // stall roof 3
-        {x:2350, y:130, w:80, h:16},          // watchtower platform
-        {x:2550, y:180, w:80, h:16},          // elevated walkway
+        // ============================================================
+        // ROOM 5: MARKET CELLAR (x:3200-4000) — drop underground
+        // ============================================================
+        // Ground level entry (partial floor)
+        {x:3200, y:340, w:200, h:60},         // entry ground
+        // Left wall — doorway at ground y:260-340
+        {x:3200, y:80, w:16, h:180},          // upper left wall
+        // DROP: no floor from x:3400-3700
+        // Underground platforms
+        {x:3350, y:380, w:150, h:16},         // underground ledge 1
+        {x:3500, y:420, w:200, h:16},         // deep floor
+        // Low ceiling over underground section
+        {x:3300, y:300, w:500, h:16},         // cellar ceiling
+        // Climb back up
+        {x:3700, y:360, w:80, h:16},          // step up 1
+        {x:3780, y:300, w:80, h:16},          // step up 2
+        {x:3850, y:240, w:100, h:16},         // step up 3
+        // Exit ground
+        {x:3800, y:340, w:200, h:60},         // exit ground
+        // Right wall — doorway y:240-340
+        {x:3984, y:80, w:16, h:160},          // upper right wall
 
-        // === SCREEN 6: Damaged district — crumbling floors ===
-        {x:2740, y:340, w:300, h:60},         // ground
-        {x:2800, y:250, w:60, h:16},          // broken floor 1
-        {x:2880, y:180, w:80, h:16},          // broken floor 2
-        {x:2970, y:250, w:60, h:16},          // broken floor 3
-        {x:3040, y:340, w:250, h:60},         // ground continues
-        {x:3060, y:170, w:100, h:16},         // upper walkway
-        {x:3160, y:100, w:80, h:16},          // high ruin
+        // ============================================================
+        // ROOM 6: DAMAGED BUILDING (x:4000-4800) — broken floors
+        // ============================================================
+        // Floor
+        {x:4000, y:340, w:800, h:60},
+        // Left wall — doorway y:240-340
+        {x:4000, y:80, w:16, h:160},          // upper left wall
+        // Right wall — doorway y:280-340
+        {x:4784, y:80, w:16, h:200},          // upper right wall
+        // Broken floors at 3 heights
+        {x:4080, y:280, w:150, h:16},         // broken floor low
+        {x:4280, y:200, w:120, h:16},         // broken floor mid
+        {x:4480, y:130, w:140, h:16},         // broken floor high
+        // Interior walls creating tight corridors
+        {x:4230, y:200, w:16, h:140},         // interior wall 1
+        {x:4450, y:130, w:16, h:140},         // interior wall 2
+        // Connecting ledge
+        {x:4600, y:220, w:100, h:16},         // connector
 
-        // === SCREEN 7: Nekker nest — underground ===
-        {x:3350, y:340, w:200, h:60},         // ground before descent
-        {x:3400, y:380, w:160, h:20},         // cave floor 1 (below ground)
-        {x:3450, y:420, w:200, h:20},         // deep cave floor
-        {x:3550, y:360, w:80, h:16},          // cave stepping stone
-        {x:3620, y:300, w:100, h:16},         // cave exit ledge
-        {x:3700, y:240, w:80, h:16},          // cave exit upper
-        {x:3780, y:340, w:200, h:60},         // back to surface
+        // ============================================================
+        // ROOM 7: NEKKER CAVE (x:4800-5600) — underground, tight
+        // ============================================================
+        // Ceiling (low, oppressive)
+        {x:4800, y:280, w:800, h:16},
+        // Floor
+        {x:4800, y:380, w:800, h:20},
+        // Left wall — small doorway y:280-380
+        {x:4800, y:80, w:16, h:200},          // upper left wall (above ceiling)
+        // Right wall — doorway y:300-380
+        {x:5584, y:280, w:16, h:20},          // right wall above door
+        // Interior obstacles
+        {x:4950, y:340, w:80, h:16},          // raised rock 1
+        {x:5150, y:320, w:100, h:16},         // raised rock 2
+        {x:5350, y:340, w:60, h:16},          // raised rock 3
+        // Ceiling stalactites (narrow platforms above)
+        {x:5050, y:300, w:60, h:16},          // stalactite ledge 1
+        {x:5250, y:300, w:60, h:16},          // stalactite ledge 2
 
-        // === SCREEN 8: Swamp edge — boss approach (vertical) ===
-        {x:4040, y:340, w:400, h:60},         // ground
-        {x:4100, y:260, w:100, h:16},         // elevated 1
-        {x:4200, y:180, w:120, h:16},         // elevated 2
-        {x:4350, y:260, w:80, h:16},          // side platform
-        {x:4480, y:340, w:600, h:60},         // boss arena ground
-        {x:4550, y:240, w:100, h:16},         // boss arena upper
-        {x:4700, y:160, w:80, h:16},          // boss arena high
-        // Extended to end
-        {x:5140, y:340, w:2540, h:60},
+        // ============================================================
+        // ROOM 8: EXIT CORRIDOR (x:5600-6400) — ground level, final
+        // ============================================================
+        // Floor
+        {x:5600, y:340, w:800, h:60},
+        // Left wall — doorway y:300-380 matching cave exit
+        {x:5600, y:80, w:16, h:220},          // upper left wall
+        // Right wall (solid, level end)
+        {x:6384, y:80, w:16, h:260},
+        // Ceiling (partial)
+        {x:5600, y:80, w:400, h:16},
+        // Vertical elements
+        {x:5700, y:260, w:100, h:16},         // ledge low
+        {x:5850, y:180, w:120, h:16},         // ledge mid
+        {x:6050, y:260, w:100, h:16},         // ledge low 2
+        {x:6200, y:180, w:120, h:16},         // ledge mid 2
+        // Interior pillar
+        {x:5980, y:180, w:16, h:160},         // corridor pillar
     ],
     enemies: [
-        // Screen 2: drowners on ground + rooftop bandit
-        {type:'drowner', x:500, y:280},
-        {type:'bandit', x:700, y:120},
-        {type:'drowner', x:850, y:280},
-        // Screen 3: underground drowner
-        {type:'drowner', x:1230, y:320},
-        // Screen 4: bandits guarding church
-        {type:'bandit', x:1700, y:280},
-        {type:'bandit', x:1850, y:10},        // church tower guard!
-        // Screen 5: marketplace mix
-        {type:'drowner', x:2200, y:280},
-        {type:'nobleman', x:2350, y:70},       // watchtower
-        {type:'bandit', x:2500, y:280},
-        // Screen 6: damaged area
-        {type:'bandit', x:2850, y:280},
-        {type:'drowner', x:3080, y:280},
-        // Screen 7: nekker underground nest
-        {type:'nekker', x:3430, y:360},
-        {type:'nekker', x:3480, y:360},
-        {type:'nekker', x:3520, y:360},
-        {type:'nekker', x:3600, y:300},
-        // Screen 8: boss drowners
-        {type:'drowner', x:4550, y:280},
-        {type:'drowner', x:4650, y:280},
-        {type:'drowner', x:4750, y:280},
+        // Room 1: Alley — 1 bandit
+        {type:'bandit', x:600, y:280},
+        // Room 2: House ground floor — 2 drowners
+        {type:'drowner', x:950, y:280},
+        {type:'drowner', x:1200, y:180},
+        // Room 3: (no enemies, traversal challenge)
+        // Room 4: Church — 1 bandit at top, 1 at bottom
+        {type:'bandit', x:2780, y:20},         // tower top guard
+        {type:'bandit', x:2550, y:280},        // ground patrol
+        // Room 5: Market cellar — nekkers underground
+        {type:'nekker', x:3450, y:360},
+        {type:'nekker', x:3550, y:360},
+        // Room 6: Damaged building — 2 bandits in corridors
+        {type:'bandit', x:4180, y:280},
+        {type:'bandit', x:4520, y:70},
+        // Room 7: Nekker cave — 3 nekkers (tight)
+        {type:'nekker', x:4950, y:320},
+        {type:'nekker', x:5150, y:320},
+        {type:'nekker', x:5350, y:320},
+        // Room 8: Exit corridor — 3 drowners
+        {type:'drowner', x:5800, y:280},
+        {type:'drowner', x:6000, y:280},
+        {type:'drowner', x:6200, y:280},
     ],
     spikes: [
-        {x:1200, y:430, w:100, direction:'up'},     // pit bottom
-        {x:3450, y:440, w:80, direction:'up'},       // deep cave
+        {x:3500, y:440, w:120, direction:'up'},     // cellar deep floor
+        {x:5050, y:370, w:80, direction:'up'},       // nekker cave floor
+        {x:5250, y:370, w:80, direction:'up'},       // nekker cave floor 2
     ],
     secrets: [
-        {triggerX:1850, triggerY:70, reward:200,
-         enemies:[{type:'nobleman',x:1870,y:10},{type:'nobleman',x:1900,y:10}]},
+        {triggerX:2780, triggerY:80, reward:200,
+         enemies:[{type:'nobleman',x:2800,y:20},{type:'nobleman',x:2850,y:20}]},
     ]
 };
 
