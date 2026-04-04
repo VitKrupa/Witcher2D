@@ -26,6 +26,25 @@
             display: block;
             image-rendering: pixelated;
         }
+        @media (max-width: 970px) {
+            #gameContainer {
+                width: 100vw !important;
+                border: none;
+                border-radius: 0;
+            }
+            canvas {
+                width: 100vw;
+                height: auto;
+            }
+        }
+        @media (max-height: 560px) and (orientation: landscape) {
+            body { justify-content: flex-start; }
+            canvas {
+                width: 100vw;
+                height: 100vh;
+                object-fit: contain;
+            }
+        }
         #ui-overlay {
             position: absolute;
             top: 0; left: 0; right: 0;
@@ -275,6 +294,7 @@
     <script src="js/rendering.js"></script>
     <script src="js/particles.js"></script>
     <script src="js/gore.js"></script>
+    <script src="js/mobile.js"></script>
     <script src="js/player.js"></script>
     <script src="js/enemies/base.js"></script>
     <script src="js/enemies/creatures1.js"></script>

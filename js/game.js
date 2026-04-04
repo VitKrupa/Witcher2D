@@ -73,6 +73,7 @@
 
             this.bindInput();
             this.setupStartScreen();
+            W.Mobile.init();
 
             // Show age gate first (if not already confirmed)
             if (!this._ageConfirmed) {
@@ -157,6 +158,7 @@
             // Hide overlays
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('gameOverScreen').style.display = 'none';
+            W.Mobile.show();
 
             // Reset state
             this.enemies = [];
@@ -287,6 +289,9 @@
                 this.handleLevelTransition(dt);
                 return;
             }
+
+            // --- Mobile joystick → keys ---
+            W.Mobile.applyToKeys(this.keys);
 
             // --- Player ---
             if (this.player && this.level) {
@@ -966,6 +971,7 @@
 
         gameOver() {
             this.running = false;
+            W.Mobile.hide();
 
             var overScreen = document.getElementById('gameOverScreen');
             var title = overScreen.querySelector('h2');
