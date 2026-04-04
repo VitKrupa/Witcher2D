@@ -55,21 +55,18 @@
         }
         @media (max-width: 970px) and (orientation: landscape) {
             #rotatePrompt { display: none !important; }
+            body {
+                background: #000;
+                overflow: hidden;
+                display: block;
+            }
             #gameContainer {
                 display: block !important;
                 border: none !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
-                overflow: hidden;
-            }
-            canvas {
-                display: block;
-            }
-            body {
-                justify-content: center;
-                align-items: center;
-                background: #000;
-                overflow: hidden;
+                position: absolute !important;
+                top: 0; left: 0;
             }
             #startScreen h1, #ageGate h1 { font-size: 28px !important; }
             .start-btn { padding: 10px 30px !important; font-size: 16px !important; margin-bottom: 10px !important; }
