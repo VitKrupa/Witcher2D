@@ -430,13 +430,19 @@
             var sortedEnemies = this.enemies.slice().sort(function (a, b) {
                 return a.y - b.y;
             });
+            var animT = this.lastTime * 0.001 || 0;
             for (var i = 0; i < sortedEnemies.length; i++) {
                 sortedEnemies[i].draw(ctx);
+                if (W.Effects) W.Effects.drawEnemyEffects(ctx, sortedEnemies[i], animT);
             }
 
             // Player
             if (this.player) {
                 this.player.draw(ctx);
+                if (W.Effects) {
+                    W.Effects.drawPlayerEffects(ctx, this.player, animT, this.enemies);
+                    W.Effects.drawWeaponEffects(ctx, this.player, animT);
+                }
             }
 
             // Projectiles
