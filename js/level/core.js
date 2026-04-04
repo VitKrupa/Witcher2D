@@ -29,11 +29,16 @@ W.Level = class {
     }
 
     drawPlatforms(ctx) {
+        // Draw rooms (visual rendering of walls, floors, ceilings)
         for (var i = 0; i < this.rooms.length; i++) this.rooms[i].draw(ctx);
-        for (const p of this.platforms) {
-            try { p.draw(ctx); } catch(e) { /* fallback: simple rect */
-                ctx.fillStyle = '#6b4226';
-                ctx.fillRect(p.x, p.y, p.w, p.h);
+        // Platforms are INVISIBLE collision geometry when rooms exist
+        // Only draw platforms if no rooms defined (wave mode fallback)
+        if (this.rooms.length === 0) {
+            for (const p of this.platforms) {
+                try { p.draw(ctx); } catch(e) {
+                    ctx.fillStyle = '#6b4226';
+                    ctx.fillRect(p.x, p.y, p.w, p.h);
+                }
             }
         }
         for (const s of this.spikes) s.draw(ctx);
