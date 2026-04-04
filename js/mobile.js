@@ -271,9 +271,17 @@ W.Mobile = {
             keys['d'] = false;
         }
 
-        // Vertical: up = jump, down = roll
+        // Vertical: up = jump (pulse, not hold), down = roll
         if (this.joyY < -0.5) {
-            keys['w'] = true;
+            if (!this._joyJumpSent) {
+                keys['w'] = true;
+                this._joyJumpSent = true;
+                // Release after one frame so _jumpHeld resets
+                var k = keys;
+                setTimeout(function() { k['w'] = false; }, 60);
+            }
+        } else {
+            this._joyJumpSent = false;
         }
         if (this.joyY > 0.5) {
             keys['s'] = true;
