@@ -379,18 +379,12 @@
             // --- Particles ---
             this.particles.update(dt);
 
-            // --- Collect enemy projectiles (e.g. Witch Hunter bolts) ---
-            for (var i = 0; i < this.enemies.length; i++) {
-                var enemy = this.enemies[i];
-                if (enemy.projectiles && enemy.projectiles.length > 0) {
-                    for (var j = 0; j < enemy.projectiles.length; j++) {
-                        this.projectiles.push(enemy.projectiles[j]);
-                    }
-                    enemy.projectiles = [];
-                }
-            }
+            // --- Projectiles: check enemy projectiles for player hits ---
+            // NOTE: projectiles stay on the enemy for proper rendering (e.g. WitchHunter bolts).
+            // We iterate them here only for collision detection with the player.
+            this.handleEnemyProjectiles(dt);
 
-            // --- Projectiles ---
+            // --- Game-level projectiles (if any remain from old logic) ---
             this.handleProjectiles(dt);
 
             // --- Combat ---
@@ -737,6 +731,32 @@
         // -----------------------------------------------------------
         // handleProjectiles
         // -----------------------------------------------------------
+
+        handleEnemyProjectiles(dt) {
+            if (!this.player || !this.player.hitbox) return;
+            for (var i = 0; i < this.enemies.length; i++) {
+                var enemy = this.enemies[i];
+                if (!enemy.projectiles || enemy.projectiles.length === 0) continue;
+                for (var j = enemy.projectiles.length - 1; j >= 0; j--) {
+                    var proj = enemy.projectiles[j];
+                    var projBox = { x: proj.x - 3, y: proj.y - 2, w: 6, h: 4 };
+                    if (W.boxCollision(projBox, this.player.hitbox)) {
+                        var damage = proj.damage || 5;
+                        if (this.player.state === 'block') {
+                            damage = Math.floor(damage * 0.25);
+                            W.Emitters.sparks(this.particles, this.player.x, this.player.y - 15);
+                        }
+                        this.player.takeDamage(damage);
+                        this.addFloatingText(
+                            this.player.x, this.player.y - 25,
+                            '-' + damage, W.Colors.DAMAGE_RED
+                        );
+                        W.Emitters.sparks(this.particles, proj.x, proj.y);
+                        enemy.projectiles.splice(j, 1);
+                    }
+                }
+            }
+        }
 
         handleProjectiles(dt) {
             var spd = dt * 60;

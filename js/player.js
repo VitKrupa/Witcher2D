@@ -529,6 +529,7 @@ W.Player = class {
         this.rollCooldown = 0;
         this.comboCount = 0;
         this.jumpConsumed = false; // prevents repeated jumps while key/joystick held
+        this._drawTimer = 0; // continuous timer for smooth visual animations (never resets)
     }
 
     get alive() { return this.hp > 0; }
@@ -678,8 +679,8 @@ W.Player = class {
                 return;
         }
 
-        // Gravity
-        if (!this.onGround) {
+        // Gravity (skip during hang/climb — player is stationary on ledge)
+        if (!this.onGround && this.state !== States.HANG && this.state !== States.CLIMB) {
             this.vy += W.GRAVITY * spd;
             if (this.vy > 12) this.vy = 12;
         }
@@ -688,31 +689,40 @@ W.Player = class {
         this.x += this.vx * spd;
         this.y += this.vy * spd;
 
-        // Platform collision
-        var wasOnGround = this.onGround;
-        this.onGround = false;
-        for (const p of platforms) {
-            const pr = p.rect || p;
-            if (this.x + this.w > pr.x && this.x < pr.x + pr.w) {
-                // Landing on top
-                if (this.vy >= 0 && this.y + this.h > pr.y && this.y + this.h < pr.y + pr.h + 10) {
-                    this.y = pr.y - this.h;
-                    this.vy = 0;
-                    this.onGround = true;
-                    if (this.state === States.JUMP || this.state === States.FALL) {
-                        this.state = States.IDLE;
+        // Platform collision (skip during hang/climb — player is locked to ledge)
+        if (this.state === States.HANG || this.state === States.CLIMB) {
+            // Skip platform collision; player position is managed by state handler
+        } else {
+            var wasOnGround = this.onGround;
+            this.onGround = false;
+            for (const p of platforms) {
+                const pr = p.rect || p;
+                if (this.x + this.w > pr.x && this.x < pr.x + pr.w) {
+                    // Landing on top
+                    if (this.vy >= 0 && this.y + this.h > pr.y && this.y + this.h < pr.y + pr.h + 10) {
+                        this.y = pr.y - this.h;
+                        this.vy = 0;
+                        this.onGround = true;
+                        if (this.state === States.JUMP || this.state === States.FALL) {
+                            this.state = States.IDLE;
+                        }
                     }
                 }
             }
-        }
 
-        // Coyote time: 6 frames after leaving ground you can still jump
-        if (this.onGround) {
-            this._coyoteFrames = 6;
-        } else if (wasOnGround) {
-            this._coyoteFrames = 6;
-        } else if (this._coyoteFrames > 0) {
-            this._coyoteFrames -= spd;
+            // Coyote time: 6 frames after leaving ground you can still jump
+            if (this.onGround) {
+                this._coyoteFrames = 6;
+            } else if (wasOnGround) {
+                this._coyoteFrames = 6;
+            } else if (this._coyoteFrames > 0) {
+                this._coyoteFrames -= spd;
+            }
+
+            // Jump -> fall transition
+            if (this.state === States.JUMP && this.vy > 0) {
+                this.state = States.FALL;
+            }
         }
 
         // Fall off screen death
@@ -723,11 +733,6 @@ W.Player = class {
 
         // Clamp to level bounds (0 minimum)
         if (this.x < 0) this.x = 0;
-
-        // Jump -> fall transition
-        if (this.state === States.JUMP && this.vy > 0) {
-            this.state = States.FALL;
-        }
 
         // Animation timer
         this.animTimer += spd;
@@ -778,7 +783,8 @@ W.Player = class {
 
     attack(swordType) {
         if (this.state === States.ATTACK || this.state === States.ROLL ||
-            this.state === States.HURT || this.state === States.DEAD) return;
+            this.state === States.HURT || this.state === States.DEAD ||
+            this.state === States.HANG || this.state === States.CLIMB) return;
         this.activeSword = swordType;
         this.state = States.ATTACK;
         this.stateTimer = 22;
@@ -786,7 +792,8 @@ W.Player = class {
     }
 
     rollDodge() {
-        if (this.state === States.ROLL || this.state === States.DEAD) return;
+        if (this.state === States.ROLL || this.state === States.DEAD ||
+            this.state === States.HANG || this.state === States.CLIMB) return;
         if (this.rollCooldown > 0) return;
         this.state = States.ROLL;
         this.stateTimer = 10;
@@ -815,7 +822,8 @@ W.Player = class {
 
     draw(ctx) {
         ctx.save();
-        const t = this.animTimer;
+        this._drawTimer = (this._drawTimer || 0) + 1;
+        const t = this._drawTimer; // continuous timer for smooth animations
         const f = this.facing;
         // Invincibility flicker
         if (this.invincible && Math.floor(t) % 3 === 0) ctx.globalAlpha = 0.4;

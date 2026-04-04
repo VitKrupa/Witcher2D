@@ -47,6 +47,7 @@ W.Enemy = class {
         if (this.hp <= 0) {
             this.hp = 0;
             this.state = 'dead';
+            this.stateTimer = 30; // initialize fade-out timer for draw()
             return { result: 'dead', dmg, effective };
         }
         this.state = 'hit';

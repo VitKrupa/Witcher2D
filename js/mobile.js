@@ -205,11 +205,12 @@ W.Mobile = {
     bindButton: function(id, onDown, onUp) {
         var btn = this.buttons[id];
         if (!btn) return;
+        var originalOpacity = btn.style.opacity || '0.45';
 
         btn.addEventListener('touchstart', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            btn.style.opacity = '0.6';
+            btn.style.opacity = '0.7';
             btn.style.transform = 'scale(0.9)';
             if (onDown) onDown();
         }, { passive: false });
@@ -217,13 +218,13 @@ W.Mobile = {
         btn.addEventListener('touchend', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            btn.style.opacity = '1';
+            btn.style.opacity = originalOpacity;
             btn.style.transform = 'scale(1)';
             if (onUp) onUp();
         }, { passive: false });
 
         btn.addEventListener('touchcancel', function(e) {
-            btn.style.opacity = '1';
+            btn.style.opacity = originalOpacity;
             btn.style.transform = 'scale(1)';
             if (onUp) onUp();
         });
