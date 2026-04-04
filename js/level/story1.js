@@ -193,6 +193,40 @@ W.StoryLevel1 = {
     secrets: [
         {triggerX:2780, triggerY:80, reward:200,
          enemies:[{type:'nobleman',x:2800,y:20},{type:'nobleman',x:2850,y:20}]},
+    ],
+    rooms: [
+        // Room 1: Alley (x:0-800)
+        {x:0, y:80, w:800, h:320, theme:'village',
+         doors:[{side:'right', offset:200, size:140}],
+         features:[{type:'torch',x:400,y:100}, {type:'cobweb',x:20,y:20}, {type:'cobweb',x:740,y:20}]},
+        // Room 2: House Ground Floor (x:800-1600)
+        {x:800, y:80, w:800, h:320, theme:'village',
+         doors:[{side:'left', offset:200, size:140}, {side:'right', offset:0, size:120}],
+         features:[{type:'torch',x:100,y:120}, {type:'shelf',x:100,y:160,w:200}, {type:'torch',x:600,y:120}]},
+        // Room 3: House Upper + Courtyard Drop (x:1600-2400)
+        {x:1600, y:80, w:800, h:320, theme:'village',
+         doors:[{side:'left', offset:120, size:140}, {side:'right', offset:160, size:160}],
+         features:[{type:'torch',x:100,y:100}, {type:'window',x:400,y:100}, {type:'cobweb',x:750,y:20}]},
+        // Room 4: Church (x:2400-3200) — tall, no ceiling
+        {x:2400, y:80, w:800, h:320, theme:'village',
+         doors:[{side:'left', offset:160, size:160}, {side:'right', offset:180, size:160}],
+         features:[{type:'torch',x:100,y:120}, {type:'torch',x:680,y:120}, {type:'banner',x:400,y:90}, {type:'window',x:200,y:100}, {type:'window',x:600,y:100}]},
+        // Room 5: Market Cellar (x:3200-4000)
+        {x:3200, y:80, w:800, h:380, theme:'village',
+         doors:[{side:'left', offset:180, size:160}, {side:'right', offset:160, size:160}],
+         features:[{type:'torch',x:100,y:240}, {type:'cobweb',x:300,y:20}, {type:'shelf',x:600,y:200,w:80}, {type:'chains',x:400,y:260}]},
+        // Room 6: Damaged Building (x:4000-4800)
+        {x:4000, y:80, w:800, h:320, theme:'village',
+         doors:[{side:'left', offset:160, size:160}, {side:'right', offset:200, size:120}],
+         features:[{type:'torch',x:200,y:100}, {type:'cobweb',x:20,y:20}, {type:'cobweb',x:750,y:20}, {type:'shelf',x:500,y:160,w:60}]},
+        // Room 7: Nekker Cave (x:4800-5600)
+        {x:4800, y:80, w:800, h:320, theme:'village',
+         doors:[{side:'left', offset:200, size:180}, {side:'right', offset:220, size:160}],
+         features:[{type:'cobweb',x:100,y:220}, {type:'cobweb',x:400,y:220}, {type:'chains',x:600,y:240}, {type:'torch',x:700,y:250}]},
+        // Room 8: Exit Corridor (x:5600-6400)
+        {x:5600, y:80, w:800, h:320, theme:'village',
+         doors:[{side:'left', offset:220, size:160}],
+         features:[{type:'torch',x:200,y:100}, {type:'torch',x:600,y:100}, {type:'banner',x:400,y:90}, {type:'cobweb',x:750,y:20}]}
     ]
 };
 
@@ -407,6 +441,48 @@ W.StoryLevel2 = {
         // Room 6: hidden loot on high lookout
         {triggerX:4950, triggerY:130, reward:250,
          enemies:[{type:'wraith',x:4970,y:80},{type:'ghoul',x:5010,y:80}]},
+    ],
+    rooms: [
+        // Room 1: Swamp Entrance Hut (x:0-960)
+        {x:0, y:140, w:960, h:260, theme:'swamp',
+         doors:[{side:'right', offset:0, size:200}],
+         features:[{type:'torch',x:200,y:40}, {type:'roots',x:800,y:180}, {type:'cobweb',x:20,y:20}]},
+        // Room 2: Hollow Tree (x:960-1920)
+        {x:960, y:100, w:960, h:300, theme:'swamp',
+         doors:[{side:'left', offset:0, size:240}, {side:'right', offset:0, size:240}],
+         features:[{type:'roots',x:100,y:40}, {type:'roots',x:800,y:40}, {type:'cobweb',x:480,y:20}, {type:'roots',x:400,y:200}]},
+        // Room 3: Canopy Bridge (x:1920-2880)
+        {x:1920, y:120, w:960, h:220, theme:'swamp',
+         doors:[{side:'left', offset:0, size:220}, {side:'right', offset:0, size:220}],
+         features:[{type:'roots',x:100,y:20}, {type:'roots',x:860,y:20}, {type:'cobweb',x:480,y:10}]},
+        // Room 4: Cave Entrance (x:2880-3840)
+        {x:2880, y:140, w:960, h:300, theme:'swamp',
+         doors:[{side:'left', offset:0, size:260}, {side:'right', offset:0, size:260}],
+         features:[{type:'roots',x:100,y:20}, {type:'cobweb',x:800,y:20}, {type:'torch',x:480,y:180}, {type:'roots',x:600,y:200}]},
+        // Room 5: Cave Tunnel (x:3840-4800)
+        {x:3840, y:140, w:960, h:260, theme:'swamp',
+         doors:[{side:'left', offset:0, size:260}, {side:'right', offset:0, size:260}],
+         features:[{type:'cobweb',x:100,y:150}, {type:'cobweb',x:500,y:150}, {type:'roots',x:800,y:160}, {type:'crystals',x:300,y:160}]},
+        // Room 6: Witch Hunter Stockade (x:4800-5760)
+        {x:4800, y:100, w:960, h:300, theme:'swamp',
+         doors:[{side:'left', offset:0, size:300}, {side:'right', offset:0, size:300}],
+         features:[{type:'torch',x:150,y:40}, {type:'torch',x:800,y:40}, {type:'torch',x:480,y:120}, {type:'banner',x:480,y:30}]},
+        // Room 7: Prison Room (x:5760-6560)
+        {x:5760, y:100, w:800, h:300, theme:'swamp',
+         doors:[{side:'left', offset:0, size:240}, {side:'right', offset:0, size:240}],
+         features:[{type:'chains',x:200,y:120}, {type:'chains',x:600,y:120}, {type:'cobweb',x:400,y:20}, {type:'torch',x:400,y:160}]},
+        // Room 8: Underground River (x:6560-7520)
+        {x:6560, y:120, w:960, h:280, theme:'swamp',
+         doors:[{side:'left', offset:0, size:280}, {side:'right', offset:0, size:280}],
+         features:[{type:'roots',x:100,y:20}, {type:'cobweb',x:800,y:20}, {type:'torch',x:480,y:40}, {type:'crystals',x:300,y:200}]},
+        // Room 9: Boss Approach (x:7520-8480)
+        {x:7520, y:120, w:960, h:280, theme:'swamp',
+         doors:[{side:'left', offset:0, size:280}, {side:'right', offset:0, size:280}],
+         features:[{type:'torch',x:200,y:40}, {type:'torch',x:760,y:40}, {type:'cobweb',x:480,y:150}, {type:'roots',x:600,y:180}]},
+        // Room 10: Boss Cavern (x:8480-9600)
+        {x:8480, y:60, w:1120, h:340, theme:'swamp',
+         doors:[{side:'left', offset:0, size:340}],
+         features:[{type:'torch',x:200,y:40}, {type:'torch',x:920,y:40}, {type:'torch',x:560,y:40}, {type:'roots',x:100,y:20}, {type:'roots',x:1020,y:20}, {type:'crystals',x:560,y:260}]}
     ]
 };
 
