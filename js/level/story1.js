@@ -136,6 +136,15 @@ W.StoryLevel2 = {
         // SECRET: Hidden area under the witch hunter camp
         {x:2550, y:360, w:160, h:16, type:'wood'},
     ],
+    spikes: [
+        // Edge of first floating log
+        {x: 520, y: 384, w: 48},
+        // Between floating log sections
+        {x: 1000, y: 384, w: 48},
+        // Witch hunter camp traps
+        {x: 2400, y: 324, w: 60},
+        {x: 3300, y: 324, w: 48},
+    ],
     secrets: [
         {
             x: 2550, y: 360, w: 160, h: 16,
