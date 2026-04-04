@@ -77,7 +77,7 @@ W.StoryLevel2 = {
     storyText: 'The trail leads deep into the swamp. Witch Hunter camps dot the mire — they\'re driving monsters toward the village.',
     platforms: [
         // Screen 1: swamp entrance
-        {x:0, y:480, w:500, h:60},
+        {x:0, y:480, w:520, h:60},
         {x:300, y:400, w:80, h:16, type:'wood'},
         // Floating logs over void
         {x:580, y:460, w:100, h:12, type:'wood'},
@@ -85,30 +85,30 @@ W.StoryLevel2 = {
         {x:880, y:420, w:110, h:12, type:'wood'},
         // Screen 2-3: more floating
         {x:1050, y:450, w:80, h:12, type:'wood'},
-        {x:1200, y:430, w:120, h:12, type:'wood'},
-        {x:1400, y:460, w:100, h:12, type:'wood'},
-        {x:1560, y:440, w:80, h:12, type:'wood'},
+        {x:1190, y:430, w:120, h:12, type:'wood'},
+        {x:1370, y:460, w:100, h:12, type:'wood'},
+        {x:1530, y:440, w:80, h:12, type:'wood'},
         // Screen 4: solid ground patch
-        {x:1700, y:480, w:600, h:60},
+        {x:1670, y:480, w:630, h:60},
         {x:1800, y:380, w:100, h:16},
         {x:2000, y:340, w:120, h:16},
         // Screen 5-6: witch hunter camp (solid ground)
-        {x:2400, y:480, w:900, h:60},
+        {x:2360, y:480, w:940, h:60},
         {x:2500, y:390, w:100, h:16, type:'wood'},
         {x:2700, y:350, w:140, h:16, type:'wood'},
         {x:2950, y:390, w:100, h:16, type:'wood'},
         // Screen 7: back to floating
-        {x:3400, y:460, w:100, h:12, type:'wood'},
-        {x:3560, y:440, w:90, h:12, type:'wood'},
-        {x:3720, y:420, w:110, h:12, type:'wood'},
+        {x:3360, y:460, w:100, h:12, type:'wood'},
+        {x:3520, y:440, w:90, h:12, type:'wood'},
+        {x:3670, y:420, w:110, h:12, type:'wood'},
         // Screen 8: drowner ambush ground
-        {x:3900, y:480, w:500, h:60},
+        {x:3840, y:480, w:560, h:60},
         {x:4000, y:390, w:80, h:16},
         // Screen 9-10: final approach + boss
-        {x:4500, y:480, w:600, h:60},
+        {x:4460, y:480, w:640, h:60},
         {x:4600, y:380, w:120, h:16},
         {x:4800, y:340, w:100, h:16},
-        {x:5200, y:480, w:960, h:60},
+        {x:5160, y:480, w:1000, h:60},
         {x:5400, y:370, w:140, h:16},
         // Extended to end
         {x:6200, y:480, w:3400, h:60},
