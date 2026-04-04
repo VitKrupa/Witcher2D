@@ -241,6 +241,8 @@
             if (!storyData) return;
 
             this.currentLevelIndex = index;
+            this._lastCheckpointX = 0; // reset checkpoint for new level
+            this._checkpointLevel = index;
             this.level = new W.Level(storyData);
             this.enemies = [];
             this.projectiles = [];
@@ -408,11 +410,12 @@
             // --- Floating texts ---
             this.updateFloatingTexts(dt);
 
-            // --- Checkpoint tracking (every 480px = half screen) ---
+            // --- Checkpoint tracking (every 480px, per level) ---
             if (this.player && this.player.onGround && this.gameMode === 'story') {
                 var screenPos = Math.floor(this.player.x / 480) * 480;
-                if (!this._lastCheckpointX || screenPos > this._lastCheckpointX) {
+                if (screenPos > (this._lastCheckpointX || 0)) {
                     this._lastCheckpointX = screenPos;
+                    this._checkpointLevel = this.currentLevelIndex;
                 }
             }
 
@@ -1093,10 +1096,13 @@
             this.player.vx = 0;
             this.player.vy = 0;
             this.player.invincible = false;
-            // Move to checkpoint (last safe X position rounded to screen start)
-            var checkpointX = Math.max(100, Math.floor(this._lastCheckpointX || 100));
+            // Move to checkpoint — only if it's for the current level
+            var checkpointX = 100; // default: start of level
+            if (this._checkpointLevel === this.currentLevelIndex && this._lastCheckpointX > 0) {
+                checkpointX = this._lastCheckpointX;
+            }
             this.player.x = checkpointX;
-            this.player.y = 280;
+            this.player.y = W.GROUND_Y - this.player.h - 10;
 
             // Don't show story text on respawn
             this.showingStoryText = false;
