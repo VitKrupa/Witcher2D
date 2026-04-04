@@ -1251,6 +1251,145 @@ W.Player = class {
             ctx.globalAlpha = 1;
         }
     }
+
+    drawHang(ctx, cx, cy, t) {
+        const breathe = wave(t, 0.06, 1.5);
+
+        // Cape behind
+        Body.cape(ctx, cx, cy, t, 0);
+
+        // Body hangs lower — torso shifted down
+        const bodyY = cy + 8;
+
+        // Arms reaching up to ledge
+        const lShX = cx - 7, rShX = cx + 7;
+        const shoulderY = bodyY;
+        // Hands grip the ledge above (at roughly cy - 8)
+        const ledgeY = cy - 10;
+        const lHandX = cx - 6, lHandY = ledgeY;
+        const rHandX = cx + 6, rHandY = ledgeY;
+        // Elbows between shoulders and hands
+        const lElbX = lShX - 2, lElbY = shoulderY - 8;
+        const rElbX = rShX + 2, rElbY = shoulderY - 8;
+
+        // Back arm
+        drawLimb(ctx, rShX, shoulderY, rElbX, rElbY, 5, '#c09060', 3.5);
+        drawJoint(ctx, rElbX, rElbY, 2.2, ARMOR);
+        drawLimb(ctx, rElbX, rElbY, rHandX, rHandY, 3.5, '#c09060', 2.5);
+        drawJoint(ctx, rHandX, rHandY, 2.5, '#4a3a2a');
+
+        // Torso (stretched)
+        Body.torso(ctx, cx, bodyY, 0.5);
+
+        // Legs dangling — slight sway
+        const sway = breathe * 0.5;
+        const hipY = bodyY + 16;
+        const lKneeX = cx - 4 + sway, lKneeY = hipY + 12;
+        const lFootX = cx - 5 + sway * 1.5, lFootY = hipY + 24;
+        const rKneeX = cx + 4 + sway, rKneeY = hipY + 11;
+        const rFootX = cx + 3 + sway * 1.5, rFootY = hipY + 23;
+
+        // Back leg
+        drawLimb(ctx, cx + 3, hipY, rKneeX, rKneeY, 6, '#2a2018', 4.5);
+        drawJoint(ctx, rKneeX, rKneeY, 2.5, '#222');
+        drawLimb(ctx, rKneeX, rKneeY, rFootX, rFootY, 4.5, '#2a2018', 3);
+        drawBoot(ctx, rFootX, rFootY, 0);
+
+        // Front leg
+        drawLimb(ctx, cx - 3, hipY, lKneeX, lKneeY, 6, ARMOR, 4.5);
+        drawJoint(ctx, lKneeX, lKneeY, 2.5, '#222');
+        drawLimb(ctx, lKneeX, lKneeY, lFootX, lFootY, 4.5, '#3a2a18', 3);
+        drawBoot(ctx, lFootX, lFootY, 0);
+
+        // Front arm
+        drawLimb(ctx, lShX, shoulderY, lElbX, lElbY, 5, SKIN, 3.5);
+        drawJoint(ctx, lElbX, lElbY, 2.2, ARMOR);
+        drawLimb(ctx, lElbX, lElbY, lHandX, lHandY, 3.5, SKIN, 2.5);
+        drawJoint(ctx, lHandX, lHandY, 2.8, '#4a3a2a');
+
+        // Fingers gripping ledge
+        ctx.fillStyle = SKIN;
+        ctx.fillRect(lHandX - 2, lHandY - 1, 4, 2);
+        ctx.fillRect(rHandX - 2, rHandY - 1, 4, 2);
+
+        // Head
+        const headY = bodyY - 10 + breathe * 0.3;
+        Body.head(ctx, cx - 2, headY, t, States.HANG);
+    }
+
+    drawClimb(ctx, cx, cy, t) {
+        const progress = 1 - (this.stateTimer / 12);
+        // Body rises from hanging position to standing on platform
+        const bodyY = cy + 8 - progress * 22;
+        const armLift = Math.min(progress * 2, 1); // arms push down first half
+
+        // Cape behind
+        Body.cape(ctx, cx, cy - progress * 15, t, 1);
+
+        const shoulderY = bodyY;
+        const lShX = cx - 7, rShX = cx + 7;
+        const ledgeY = cy - 10;
+
+        // Arms transition: from gripping ledge to pushing down on it
+        var lHandY, rHandY, lElbY, rElbY;
+        if (progress < 0.5) {
+            // Pushing up phase — hands on ledge, arms straighten
+            lHandY = ledgeY;
+            rHandY = ledgeY;
+            lElbY = ledgeY + (shoulderY - ledgeY) * (1 - armLift);
+            rElbY = ledgeY + (shoulderY - ledgeY) * (1 - armLift);
+        } else {
+            // Swinging legs up phase — hands release, arms come to sides
+            var lateProgress = (progress - 0.5) * 2;
+            lHandY = ledgeY + lateProgress * 10;
+            rHandY = ledgeY + lateProgress * 10;
+            lElbY = ledgeY + lateProgress * 5;
+            rElbY = ledgeY + lateProgress * 5;
+        }
+
+        var lHandX = cx - 6, rHandX = cx + 6;
+        var lElbX = lShX - 2, rElbX = rShX + 2;
+
+        // Back arm
+        drawLimb(ctx, rShX, shoulderY, rElbX, rElbY, 5, '#c09060', 3.5);
+        drawJoint(ctx, rElbX, rElbY, 2.2, ARMOR);
+        drawLimb(ctx, rElbX, rElbY, rHandX, rHandY, 3.5, '#c09060', 2.5);
+        drawJoint(ctx, rHandX, rHandY, 2.5, '#4a3a2a');
+
+        // Torso
+        Body.torso(ctx, cx, bodyY, 0.5);
+
+        // Legs — tuck up during climb, then extend down
+        const hipY = bodyY + 16;
+        var legTuck = progress < 0.6 ? progress / 0.6 : 1 - (progress - 0.6) / 0.4;
+        var kneeUp = legTuck * 10;
+        var lKneeX = cx - 3, lKneeY = hipY + 12 - kneeUp;
+        var lFootX = cx - 4, lFootY = hipY + 24 - kneeUp * 1.5;
+        var rKneeX = cx + 3, rKneeY = hipY + 11 - kneeUp;
+        var rFootX = cx + 2, rFootY = hipY + 23 - kneeUp * 1.5;
+
+        // Back leg
+        drawLimb(ctx, cx + 3, hipY, rKneeX, rKneeY, 6, '#2a2018', 4.5);
+        drawJoint(ctx, rKneeX, rKneeY, 2.5, '#222');
+        drawLimb(ctx, rKneeX, rKneeY, rFootX, rFootY, 4.5, '#2a2018', 3);
+        drawBoot(ctx, rFootX, rFootY, 0);
+
+        // Front leg
+        drawLimb(ctx, cx - 3, hipY, lKneeX, lKneeY, 6, ARMOR, 4.5);
+        drawJoint(ctx, lKneeX, lKneeY, 2.5, '#222');
+        drawLimb(ctx, lKneeX, lKneeY, lFootX, lFootY, 4.5, '#3a2a18', 3);
+        drawBoot(ctx, lFootX, lFootY, 0);
+
+        // Front arm
+        drawLimb(ctx, lShX, shoulderY, lElbX, lElbY, 5, SKIN, 3.5);
+        drawJoint(ctx, lElbX, lElbY, 2.2, ARMOR);
+        drawLimb(ctx, lElbX, lElbY, lHandX, lHandY, 3.5, SKIN, 2.5);
+        drawJoint(ctx, lHandX, lHandY, 2.8, '#4a3a2a');
+
+        // Head
+        const headY = bodyY - 10;
+        Body.head(ctx, cx - 2, headY, t, States.CLIMB);
+    }
 };
 
 })();

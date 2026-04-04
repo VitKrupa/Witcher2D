@@ -366,4 +366,54 @@ W.Platform = class {
     }
 };
 
+W.Spike = class {
+    constructor(x, y, w, direction) {
+        this.x = x; this.y = y;
+        this.w = w || 48;  // width of spike strip
+        this.h = 16;       // spike height
+        this.direction = direction || 'up'; // 'up', 'down', 'left', 'right'
+        this.damage = 25;  // damage per hit
+        this.cooldown = 0; // prevent continuous damage
+    }
+    get rect() {
+        return {x: this.x, y: this.y, w: this.w, h: this.h};
+    }
+    draw(ctx) {
+        var n = Math.floor(this.w / 12); // number of spike points
+        ctx.fillStyle = '#555';
+        ctx.fillRect(this.x, this.y + this.h - 4, this.w, 4); // base
+        // Draw individual spikes
+        ctx.fillStyle = '#888';
+        for (var i = 0; i < n; i++) {
+            var sx = this.x + i * 12 + 2;
+            ctx.beginPath();
+            if (this.direction === 'up') {
+                ctx.moveTo(sx, this.y + this.h - 4);
+                ctx.lineTo(sx + 5, this.y);
+                ctx.lineTo(sx + 10, this.y + this.h - 4);
+            } else { // down
+                ctx.moveTo(sx, this.y + 4);
+                ctx.lineTo(sx + 5, this.y + this.h);
+                ctx.lineTo(sx + 10, this.y + 4);
+            }
+            ctx.fill();
+        }
+        // Metallic highlight
+        ctx.strokeStyle = 'rgba(200,200,200,0.4)';
+        ctx.lineWidth = 0.5;
+        for (var i = 0; i < n; i++) {
+            var sx = this.x + i * 12 + 2;
+            ctx.beginPath();
+            ctx.moveTo(sx + 4, this.y + (this.direction === 'up' ? 2 : this.h - 2));
+            ctx.lineTo(sx + 5, this.y + (this.direction === 'up' ? this.h - 5 : 5));
+            ctx.stroke();
+        }
+        // Blood stains (subtle)
+        ctx.fillStyle = 'rgba(100,0,0,0.3)';
+        for (var i = 0; i < n; i += 2) {
+            ctx.fillRect(this.x + i * 12 + 4, this.y + (this.direction === 'up' ? 4 : this.h - 6), 3, 2);
+        }
+    }
+};
+
 })();

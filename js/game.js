@@ -342,7 +342,30 @@
 
             // --- Player ---
             if (this.player && this.level) {
-                this.player.update(dt, this.keys, this.level.platforms);
+                this.player.update(dt, this.keys, this.level.platforms, this.enemies);
+            }
+
+            // --- Spike hazards ---
+            if (this.player && this.level && this.level.spikes) {
+                var playerBox = this.player.hitbox;
+                for (var si = 0; si < this.level.spikes.length; si++) {
+                    var spike = this.level.spikes[si];
+                    // Decrement cooldown
+                    if (spike.cooldown > 0) spike.cooldown -= dt * 60;
+                    // Check collision
+                    if (spike.cooldown <= 0 && W.boxCollision(playerBox, spike.rect)) {
+                        var hit = this.player.takeDamage(spike.damage);
+                        if (hit) {
+                            spike.cooldown = 60;
+                            this.camera.shake(3, 5);
+                            this.addFloatingText(
+                                this.player.x, this.player.y - 40,
+                                '-' + spike.damage, '#ff4444'
+                            );
+                            W.Gore.onPlayerHit(this.particles, this.player.x, this.player.y - 15, this.player.facing || 1, spike.damage);
+                        }
+                    }
+                }
             }
 
             // --- Enemies ---
@@ -416,6 +439,28 @@
                 if (screenPos > (this._lastCheckpointX || 0)) {
                     this._lastCheckpointX = screenPos;
                     this._checkpointLevel = this.currentLevelIndex;
+                }
+            }
+
+            // --- Secret arena detection ---
+            if (this.level && this.level.secrets) {
+                for (var s = 0; s < this.level.secrets.length; s++) {
+                    var secret = this.level.secrets[s];
+                    if (!secret.found && Math.abs(this.player.x - secret.triggerX) < 40 &&
+                        Math.abs(this.player.y - secret.triggerY) < 40) {
+                        secret.found = true;
+                        this.player.score += secret.reward || 200;
+                        this.addFloatingText(this.player.x, this.player.y - 50, 'SECRET FOUND!', '#ffcc00');
+                        this.addFloatingText(this.player.x, this.player.y - 30, '+' + (secret.reward || 200), '#c8a032');
+                        // Spawn secret enemies
+                        if (secret.enemies) {
+                            for (var e = 0; e < secret.enemies.length; e++) {
+                                var def = secret.enemies[e];
+                                var enemy = W.createEnemy(def.type, def.x, def.y);
+                                if (enemy) this.enemies.push(enemy);
+                            }
+                        }
+                    }
                 }
             }
 

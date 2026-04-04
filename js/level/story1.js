@@ -42,6 +42,19 @@ W.StoryLevel1 = {
         {x:5300, y:280, w:160, h:16},
         // Extended ground to end
         {x:5980, y:340, w:1700, h:60},
+        // SECRET: Hidden rooftop platform high above the village
+        {x:2250, y:160, w:140, h:16, type:'wood'},
+    ],
+    secrets: [
+        {
+            x: 2250, y: 160, w: 140, h: 16,
+            triggerX: 2300, triggerY: 160,
+            reward: 200,
+            enemies: [
+                {type: 'nobleman', x: 2280, y: 140},
+                {type: 'nobleman', x: 2350, y: 140}
+            ]
+        }
     ],
     enemies: [
         // Screen 2-3: drowners
@@ -112,6 +125,20 @@ W.StoryLevel2 = {
         {x:5400, y:300, w:140, h:16},
         // Extended to end
         {x:6200, y:340, w:3400, h:60},
+        // SECRET: Hidden area under the witch hunter camp
+        {x:2550, y:360, w:160, h:16, type:'wood'},
+    ],
+    secrets: [
+        {
+            x: 2550, y: 360, w: 160, h: 16,
+            triggerX: 2600, triggerY: 360,
+            reward: 250,
+            enemies: [
+                {type: 'wraith', x: 2570, y: 340},
+                {type: 'ghoul', x: 2640, y: 340},
+                {type: 'ghoul', x: 2690, y: 340}
+            ]
+        }
     ],
     enemies: [
         // Ghouls screens 1,3,4

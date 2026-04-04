@@ -62,6 +62,18 @@ W.StoryLevel5 = {
         {x:7940, y:280, w:120, h:16, type:'ice'},
         // Extended to end
         {x:9480, y:340, w:3960, h:60, type:'ice'},
+        // SECRET: Dragon's cache - very high platform
+        {x:5950, y:150, w:160, h:16, type:'ice'},
+    ],
+    secrets: [
+        {
+            x: 5950, y: 150, w: 160, h: 16,
+            triggerX: 6000, triggerY: 150,
+            reward: 400,
+            enemies: [
+                {type: 'griffin', x: 5980, y: 130}
+            ]
+        }
     ],
     enemies: [
         // Screens 3-6: Wild Hunt + Wraiths

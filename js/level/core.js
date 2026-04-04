@@ -10,7 +10,14 @@ W.Level = class {
         this.platforms = (config.platforms || []).map(p =>
             p instanceof W.Platform ? p : new W.Platform(p.x, p.y, p.w, p.h, p.type)
         );
+        this.spikes = (config.spikes || []).map(function(s) {
+            return s instanceof W.Spike ? s : new W.Spike(s.x, s.y, s.w, s.direction);
+        });
         this.enemySpawns = config.enemies || [];
+        this.secrets = (config.secrets || []).map(function(s) {
+            return {x: s.x, y: s.y, w: s.w, h: s.h, triggerX: s.triggerX, triggerY: s.triggerY,
+                    enemies: s.enemies || [], found: false, reward: s.reward || 200};
+        });
     }
 
     drawBackground(ctx, cameraX) {
@@ -27,6 +34,7 @@ W.Level = class {
                 ctx.fillRect(p.x, p.y, p.w, p.h);
             }
         }
+        for (const s of this.spikes) s.draw(ctx);
     }
 
     drawForeground(ctx, cameraX) {

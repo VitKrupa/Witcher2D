@@ -60,6 +60,31 @@ W.StoryLevel3 = {
         {x:8500, y:300, w:120, h:16},
         // Extended to end
         {x:8780, y:340, w:2740, h:60},
+        // SECRET 1: Hidden dungeon below main path
+        {x:4950, y:380, w:160, h:16},
+        // SECRET 2: Hidden armory high platform
+        {x:7950, y:170, w:160, h:16},
+    ],
+    secrets: [
+        {
+            x: 4950, y: 380, w: 160, h: 16,
+            triggerX: 5000, triggerY: 380,
+            reward: 300,
+            enemies: [
+                {type: 'wraith', x: 4970, y: 360},
+                {type: 'nilfSoldier', x: 5050, y: 360}
+            ]
+        },
+        {
+            x: 7950, y: 170, w: 160, h: 16,
+            triggerX: 8000, triggerY: 170,
+            reward: 350,
+            enemies: [
+                {type: 'nilfSoldier', x: 7970, y: 150},
+                {type: 'nilfSoldier', x: 8030, y: 150},
+                {type: 'nilfSoldier', x: 8090, y: 150}
+            ]
+        }
     ],
     enemies: [
         // Nilfgaardians screens 2,4,6,8
@@ -137,6 +162,19 @@ W.StoryLevel4 = {
         {x:6720, y:300, w:120, h:16},
         // Extended to end
         {x:7180, y:340, w:2420, h:60},
+        // SECRET: Buried treasure pit
+        {x:3950, y:380, w:160, h:16},
+    ],
+    secrets: [
+        {
+            x: 3950, y: 380, w: 160, h: 16,
+            triggerX: 4000, triggerY: 380,
+            reward: 300,
+            enemies: [
+                {type: 'wildHunt', x: 3970, y: 360},
+                {type: 'wildHunt', x: 4060, y: 360}
+            ]
+        }
     ],
     enemies: [
         // Wraiths screens 1,3,5
