@@ -9,39 +9,39 @@ W.StoryLevel1 = {
     storyText: 'A village plagued by drowners... The alderman\'s contract seems straightforward, but something feels wrong.',
     platforms: [
         // Screen 1: entrance road
-        {x:0, y:200, w:800, h:60},
-        {x:200, y:260, w:100, h:16}, // crate
+        {x:0, y:340, w:800, h:60},
+        {x:200, y:290, w:100, h:16}, // crate
         // Screen 2: houses with rooftops
-        {x:860, y:200, w:500, h:60},
-        {x:900, y:230, w:120, h:16}, // rooftop
-        {x:1050, y:250, w:100, h:16}, // higher roof
+        {x:860, y:340, w:500, h:60},
+        {x:900, y:300, w:120, h:16}, // rooftop
+        {x:1050, y:280, w:100, h:16}, // higher roof
         // Screen 3: bridge area
-        {x:1420, y:200, w:460, h:60},
-        {x:1600, y:250, w:80, h:16},
+        {x:1420, y:340, w:460, h:60},
+        {x:1600, y:280, w:80, h:16},
         // Screen 4: gap then more village
-        {x:1940, y:200, w:600, h:60},
-        {x:2000, y:240, w:140, h:16},
-        {x:2180, y:250, w:100, h:16},
+        {x:1940, y:340, w:600, h:60},
+        {x:2000, y:290, w:140, h:16},
+        {x:2180, y:280, w:100, h:16},
         // Screen 5: marketplace
-        {x:2600, y:200, w:700, h:60},
-        {x:2700, y:260, w:80, h:16, type:'wood'},
-        {x:2840, y:260, w:100, h:16, type:'wood'},
-        {x:3100, y:260, w:80, h:16, type:'wood'},
+        {x:2600, y:340, w:700, h:60},
+        {x:2700, y:270, w:80, h:16, type:'wood'},
+        {x:2840, y:270, w:100, h:16, type:'wood'},
+        {x:3100, y:270, w:80, h:16, type:'wood'},
         // Screen 6: damaged area
-        {x:3360, y:200, w:560, h:60},
-        {x:3500, y:240, w:120, h:16},
-        {x:3680, y:250, w:100, h:16},
+        {x:3360, y:340, w:560, h:60},
+        {x:3500, y:290, w:120, h:16},
+        {x:3680, y:280, w:100, h:16},
         // Screen 7: nekker nest area
-        {x:3980, y:200, w:860, h:60},
-        {x:4200, y:250, w:100, h:16},
-        {x:4360, y:260, w:80, h:16},
-        {x:4600, y:250, w:100, h:16},
+        {x:3980, y:340, w:860, h:60},
+        {x:4200, y:280, w:100, h:16},
+        {x:4360, y:270, w:80, h:16},
+        {x:4600, y:280, w:100, h:16},
         // Screen 8: swamp edge - boss
-        {x:4900, y:200, w:1020, h:60},
-        {x:5100, y:240, w:140, h:16},
-        {x:5300, y:250, w:160, h:16},
+        {x:4900, y:340, w:1020, h:60},
+        {x:5100, y:290, w:140, h:16},
+        {x:5300, y:280, w:160, h:16},
         // Extended ground to end
-        {x:5980, y:200, w:1700, h:60},
+        {x:5980, y:340, w:1700, h:60},
     ],
     enemies: [
         // Screen 2-3: drowners
@@ -59,9 +59,9 @@ W.StoryLevel1 = {
         {type:'nobleman', x:3750, y:280},
         {type:'bandit', x:3850, y:280},
         // Screen 7: nekker pack
-        {type:'nekker', x:4250, y:160},
-        {type:'nekker', x:4350, y:160},
-        {type:'nekker', x:4450, y:160},
+        {type:'nekker', x:4250, y:280},
+        {type:'nekker', x:4350, y:280},
+        {type:'nekker', x:4450, y:280},
         // Screen 8: boss drowner
         {type:'drowner', x:5300, y:280},
         {type:'drowner', x:5500, y:280},
@@ -77,46 +77,46 @@ W.StoryLevel2 = {
     storyText: 'The trail leads deep into the swamp. Witch Hunter camps dot the mire — they\'re driving monsters toward the village.',
     platforms: [
         // Screen 1: swamp entrance
-        {x:0, y:200, w:520, h:60},
-        {x:300, y:260, w:80, h:16, type:'wood'},
+        {x:0, y:340, w:520, h:60},
+        {x:300, y:270, w:80, h:16, type:'wood'},
         // Floating logs over void
-        {x:580, y:180, w:100, h:12, type:'wood'},
-        {x:740, y:160, w:90, h:12, type:'wood'},
-        {x:880, y:280, w:110, h:12, type:'wood'},
+        {x:580, y:320, w:100, h:12, type:'wood'},
+        {x:740, y:300, w:90, h:12, type:'wood'},
+        {x:880, y:320, w:110, h:12, type:'wood'},
         // Screen 2-3: more floating
-        {x:1050, y:170, w:80, h:12, type:'wood'},
-        {x:1190, y:290, w:120, h:12, type:'wood'},
-        {x:1370, y:180, w:100, h:12, type:'wood'},
-        {x:1530, y:160, w:80, h:12, type:'wood'},
+        {x:1050, y:310, w:80, h:12, type:'wood'},
+        {x:1190, y:320, w:120, h:12, type:'wood'},
+        {x:1370, y:310, w:100, h:12, type:'wood'},
+        {x:1530, y:300, w:80, h:12, type:'wood'},
         // Screen 4: solid ground patch
-        {x:1670, y:200, w:630, h:60},
-        {x:1800, y:240, w:100, h:16},
-        {x:1960, y:255, w:120, h:16},
+        {x:1670, y:340, w:630, h:60},
+        {x:1800, y:290, w:100, h:16},
+        {x:1960, y:280, w:120, h:16},
         // Screen 5-6: witch hunter camp (solid ground)
-        {x:2360, y:200, w:940, h:60},
-        {x:2500, y:250, w:100, h:16, type:'wood'},
-        {x:2660, y:255, w:140, h:16, type:'wood'},
-        {x:2950, y:250, w:100, h:16, type:'wood'},
+        {x:2360, y:340, w:940, h:60},
+        {x:2500, y:280, w:100, h:16, type:'wood'},
+        {x:2660, y:280, w:140, h:16, type:'wood'},
+        {x:2950, y:280, w:100, h:16, type:'wood'},
         // Screen 7: back to floating
-        {x:3360, y:180, w:100, h:12, type:'wood'},
-        {x:3520, y:160, w:90, h:12, type:'wood'},
-        {x:3670, y:280, w:110, h:12, type:'wood'},
+        {x:3360, y:320, w:100, h:12, type:'wood'},
+        {x:3520, y:300, w:90, h:12, type:'wood'},
+        {x:3670, y:320, w:110, h:12, type:'wood'},
         // Screen 8: drowner ambush ground
-        {x:3840, y:200, w:560, h:60},
-        {x:4000, y:250, w:80, h:16},
+        {x:3840, y:340, w:560, h:60},
+        {x:4000, y:280, w:80, h:16},
         // Screen 9-10: final approach + boss
-        {x:4460, y:200, w:640, h:60},
-        {x:4600, y:240, w:120, h:16},
-        {x:4780, y:255, w:100, h:16},
-        {x:5160, y:200, w:1000, h:60},
-        {x:5400, y:230, w:140, h:16},
+        {x:4460, y:340, w:640, h:60},
+        {x:4600, y:290, w:120, h:16},
+        {x:4780, y:280, w:100, h:16},
+        {x:5160, y:340, w:1000, h:60},
+        {x:5400, y:300, w:140, h:16},
         // Extended to end
-        {x:6200, y:200, w:3400, h:60},
+        {x:6200, y:340, w:3400, h:60},
     ],
     enemies: [
         // Ghouls screens 1,3,4
         {type:'ghoul', x:350, y:280},
-        {type:'ghoul', x:1300, y:230},
+        {type:'ghoul', x:1300, y:260},
         {type:'ghoul', x:1850, y:280},
         // Drowners from water screens 2,8
         {type:'drowner', x:800, y:260},
