@@ -271,14 +271,18 @@ W.Mobile = {
             keys['d'] = false;
         }
 
-        // Vertical: up = jump (edge-triggered: fires once per push)
+        // Vertical: up = jump (edge-triggered, held for a few frames)
         var wantJump = this.joyY < -0.4;
         if (wantJump && !this._prevJoyUp) {
+            this._jumpFrames = 5; // hold for 5 frames to ensure it registers
+        }
+        this._prevJoyUp = wantJump;
+        if (this._jumpFrames > 0) {
             keys['w'] = true;
+            this._jumpFrames--;
         } else {
             keys['w'] = false;
         }
-        this._prevJoyUp = wantJump;
         if (this.joyY > 0.5) {
             keys['s'] = true;
             // Brief press for roll

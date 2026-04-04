@@ -148,7 +148,7 @@
             var vw = window.innerWidth;
             var vh = window.innerHeight;
             var screenRatio = vw / vh;
-            var gameH = W.CANVAS_H; // always 540
+            var gameH = 540; // fixed height, never changes
             // Adjust canvas width to match screen aspect ratio
             var gameW = Math.round(gameH * screenRatio);
             gameW = Math.max(gameW, 800);  // minimum width
