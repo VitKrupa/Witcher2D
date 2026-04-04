@@ -27,10 +27,9 @@ W.GROUND_Y = 480; // default ground level (pixels from top)
  */
 W.Camera = class Camera {
     constructor() {
-        /** Horizontal scroll offset (world units). */
         this.offsetX = 0;
-        /** Vertical scroll offset (world units). */
         this.offsetY = 0;
+        this.zoom = 1.4; // zoom in — everything appears 40% bigger
 
         // Screen-shake state
         this.shakeX         = 0;
@@ -47,18 +46,17 @@ W.Camera = class Camera {
      * @param {number} levelWidth - Total width of the current level in pixels.
      */
     follow(target, levelWidth) {
-        var targetOffsetX = target.x - W.CANVAS_W / 2;
-        // Keep player in lower third of screen
-        var targetOffsetY = target.y - W.CANVAS_H * 0.65;
+        // Visible area is canvas size / zoom
+        var visW = W.CANVAS_W / this.zoom;
+        var visH = W.CANVAS_H / this.zoom;
+        var targetOffsetX = target.x - visW / 2;
+        var targetOffsetY = target.y - visH * 0.6;
 
-        // Smooth lerp
         this.offsetX = W.lerp(this.offsetX, targetOffsetX, 0.08);
         this.offsetY = W.lerp(this.offsetY, targetOffsetY, 0.05);
 
-        // Clamp
-        this.offsetX = W.clamp(this.offsetX, 0, Math.max(0, levelWidth - W.CANVAS_W));
-        // Vertical: only shift down slightly when player jumps high, never shift up past ground view
-        this.offsetY = W.clamp(this.offsetY, -20, 80);
+        this.offsetX = W.clamp(this.offsetX, 0, Math.max(0, levelWidth - visW));
+        this.offsetY = W.clamp(this.offsetY, -20, 100);
     }
 
     /**
@@ -100,9 +98,10 @@ W.Camera = class Camera {
      */
     apply(ctx) {
         ctx.save();
+        ctx.scale(this.zoom, this.zoom);
         ctx.translate(
             -this.offsetX + this.shakeX,
-            this.shakeY
+            -this.offsetY + this.shakeY
         );
     }
 
