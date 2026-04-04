@@ -241,9 +241,19 @@
             <div id="enemyHint" style="font-size:11px; color:#999;">Use the right sword!</div>
         </div>
         <div id="waveAnnounce"></div>
-        <div id="startScreen">
+        <div id="ageGate" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.95);z-index:200;color:#ddd;">
+            <h1 style="font-size:42px;color:#c8a032;text-shadow:0 0 20px rgba(200,160,50,0.6);margin-bottom:8px;letter-spacing:4px;">THE WITCHER 2D</h1>
+            <div style="font-size:16px;color:#888;margin-bottom:30px;font-style:italic;">A Prince of Persia Tribute</div>
+            <div style="font-size:15px;color:#aaa;margin-bottom:15px;">This game contains combat violence. Enter your age:</div>
+            <input type="number" id="ageInput" min="1" max="120" value="" placeholder="Your age"
+                style="width:120px;padding:10px 15px;font-size:22px;text-align:center;background:#1a1a1a;border:2px solid #555;color:#fff;border-radius:6px;margin-bottom:20px;outline:none;">
+            <button class="start-btn" onclick="game.confirmAge()" id="ageConfirmBtn">CONFIRM</button>
+            <div id="ageWarning" style="margin-top:15px;font-size:12px;color:#666;max-width:350px;text-align:center;"></div>
+        </div>
+        <div id="startScreen" style="display:none;">
             <h1>THE WITCHER 2D</h1>
             <div class="subtitle">A Prince of Persia Tribute</div>
+            <div id="goreIndicator" style="font-size:12px;color:#666;margin-bottom:12px;"></div>
             <div style="display:flex; gap:15px; margin-bottom:20px;">
                 <button class="start-btn" onclick="game.start('story')" style="margin-bottom:0;">STORY MODE</button>
                 <button class="start-btn" onclick="game.start('wave')" style="margin-bottom:0; background:linear-gradient(135deg, #4a1a1a, #8a2222); border-color:#aa3333;">WAVE MODE</button>
@@ -264,6 +274,7 @@
     <script src="js/core.js"></script>
     <script src="js/rendering.js"></script>
     <script src="js/particles.js"></script>
+    <script src="js/gore.js"></script>
     <script src="js/player.js"></script>
     <script src="js/enemies/base.js"></script>
     <script src="js/enemies/creatures1.js"></script>

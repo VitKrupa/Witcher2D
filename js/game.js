@@ -73,6 +73,42 @@
 
             this.bindInput();
             this.setupStartScreen();
+
+            // Show age gate first (if not already confirmed)
+            if (!this._ageConfirmed) {
+                var ageGate = document.getElementById('ageGate');
+                if (ageGate) ageGate.style.display = 'flex';
+                document.getElementById('startScreen').style.display = 'none';
+            } else {
+                this.showStartScreen();
+            }
+        }
+
+        confirmAge() {
+            var input = document.getElementById('ageInput');
+            var age = parseInt(input.value, 10);
+            var warning = document.getElementById('ageWarning');
+
+            if (!age || age < 1 || age > 120) {
+                if (warning) warning.textContent = 'Please enter a valid age (1-120).';
+                return;
+            }
+
+            W.Gore.setFromAge(age);
+            this._ageConfirmed = true;
+            this._playerAge = age;
+
+            // Hide age gate, show start screen
+            var ageGate = document.getElementById('ageGate');
+            if (ageGate) ageGate.style.display = 'none';
+
+            // Show gore level indicator on start screen
+            var indicator = document.getElementById('goreIndicator');
+            if (indicator) {
+                indicator.innerHTML = 'Violence level: <span style="color:' +
+                    W.Gore.getLevelColor() + '">' + W.Gore.getLevelName() + '</span>';
+            }
+
             this.showStartScreen();
         }
 
@@ -127,6 +163,7 @@
             this.projectiles = [];
             this.floatingTexts = [];
             this.particles.clear();
+            W.Gore.clear();
             this.camera = new W.Camera();
             this.currentLevelIndex = 0;
             this.levelTransition = false;
@@ -285,6 +322,9 @@
             this.resolveCombat();
             this.resolveEnemyAttacks();
 
+            // --- Update gore system ---
+            W.Gore.update(dt);
+
             // --- Remove dead enemies ---
             for (var i = this.enemies.length - 1; i >= 0; i--) {
                 var enemy = this.enemies[i];
@@ -293,11 +333,9 @@
                     if (this.player) {
                         this.player.score += (enemy.scoreLoot || 10);
                     }
-                    // Death burst particles
-                    var deathColors = enemy.deathColors || [
-                        W.Colors.BLOOD, W.Colors.BLOOD_BRIGHT, '#660000'
-                    ];
-                    W.Emitters.deathBurst(this.particles, enemy.x, enemy.y, deathColors);
+                    // Gore-scaled death effect
+                    var dir = this.player ? (this.player.facing || 1) : 1;
+                    W.Gore.onEnemyDeath(this.particles, enemy, dir);
 
                     this.enemies.splice(i, 1);
                 }
@@ -386,6 +424,9 @@
             // Platforms
             this.level.drawPlatforms(ctx);
 
+            // Blood pools (under entities)
+            W.Gore.drawPools(ctx);
+
             // Enemies sorted by y for depth
             var sortedEnemies = this.enemies.slice().sort(function (a, b) {
                 return a.y - b.y;
@@ -408,6 +449,9 @@
 
             // Particles
             this.particles.draw(ctx);
+
+            // Flying gibs (over particles)
+            W.Gore.drawGibs(ctx);
 
             // Floating texts (world space)
             this.drawFloatingTexts(ctx);
@@ -473,7 +517,7 @@
                     } else {
                         W.Emitters.ironSlash(this.particles, hitX, hitY, dir);
                     }
-                    W.Emitters.blood(this.particles, hitX, hitY, dir);
+                    W.Gore.onEnemyHit(this.particles, hitX, hitY, dir, damage);
 
                     // Floating text
                     if (!correctSword) {
@@ -522,13 +566,9 @@
 
                     this.player.takeDamage(damage);
 
-                    // Hit particles
+                    // Hit particles (gore-scaled)
                     var hitDir = enemy.x < this.player.x ? 1 : -1;
-                    W.Emitters.blood(
-                        this.particles,
-                        this.player.x, this.player.y - 15,
-                        hitDir
-                    );
+                    W.Gore.onPlayerHit(this.particles, this.player.x, this.player.y - 15, hitDir, damage);
 
                     if (damage > 0) {
                         this.addFloatingText(
