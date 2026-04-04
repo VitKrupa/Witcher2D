@@ -869,3 +869,202 @@ W.Backgrounds = {
         ctx.fillRect(0, 390, CW, CH - 390);
     },
 
+
+    mountain: function(ctx, cameraX) {
+        var t = Date.now() * 0.001;
+        var far = cameraX * 0.1, mid = cameraX * 0.3, near = cameraX * 0.6;
+
+        // --- DEEP NIGHT SKY ---
+        var sky = ctx.createLinearGradient(0, 0, 0, CH);
+        sky.addColorStop(0, '#020510');
+        sky.addColorStop(0.5, '#0a1030');
+        sky.addColorStop(1, '#152040');
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, CW, CH);
+
+        // --- TWINKLING STARS (alpha oscillates per star) ---
+        for (var s = 0; s < 60; s++) {
+            var sx = seededRand(s * 7 + 3) * CW;
+            var sy = seededRand(s * 11 + 7) * 260;
+            var starAlpha = 0.3 + Math.sin(t * (1.5 + seededRand(s * 3) * 2) + s * 1.3) * 0.35;
+            var sz = (s % 5 === 0) ? 2.5 : (s % 3 === 0) ? 1.5 : 1;
+            ctx.fillStyle = 'rgba(255,255,255,' + Math.max(0.05, starAlpha) + ')';
+            ctx.beginPath();
+            ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // --- MOON with craters ---
+        var moonX = 750, moonY = 80;
+        // Moon glow
+        ctx.fillStyle = 'rgba(180,200,255,0.05)';
+        ctx.beginPath();
+        ctx.arc(moonX, moonY, 60, 0, Math.PI * 2);
+        ctx.fill();
+        // Moon body
+        ctx.fillStyle = '#c8d0e0';
+        ctx.beginPath();
+        ctx.arc(moonX, moonY, 32, 0, Math.PI * 2);
+        ctx.fill();
+        // Craters
+        ctx.fillStyle = '#a8b0c0';
+        ctx.beginPath();
+        ctx.arc(moonX - 10, moonY - 8, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(moonX + 8, moonY + 5, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(moonX - 5, moonY + 12, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#b8c0d0';
+        ctx.beginPath();
+        ctx.arc(moonX + 14, moonY - 10, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // --- AURORA BOREALIS (wavy sine bands) ---
+        ctx.save();
+        for (var ab = 0; ab < 5; ab++) {
+            var colors = ['rgba(30,255,120,A)', 'rgba(40,200,255,A)', 'rgba(120,60,255,A)', 'rgba(50,255,180,A)', 'rgba(80,100,255,A)'];
+            var baseY = 60 + ab * 18;
+            var auroraAlpha = 0.06 + Math.sin(t * 0.3 + ab * 0.7) * 0.03;
+            ctx.fillStyle = colors[ab].replace('A', '' + auroraAlpha);
+            ctx.beginPath();
+            ctx.moveTo(0, baseY + Math.sin(t * 0.2 + ab) * 10);
+            for (var ax = 0; ax <= CW; ax += 20) {
+                var ay = baseY + Math.sin(t * 0.25 + ax * 0.005 + ab * 1.2) * (12 + ab * 3)
+                       + Math.sin(t * 0.15 + ax * 0.003) * 5;
+                ctx.lineTo(ax, ay);
+            }
+            for (var ax = CW; ax >= 0; ax -= 20) {
+                var ay = baseY + 14 + Math.sin(t * 0.25 + ax * 0.005 + ab * 1.2) * (12 + ab * 3)
+                       + Math.sin(t * 0.15 + ax * 0.003) * 5;
+                ctx.lineTo(ax, ay);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+        ctx.restore();
+
+        // --- MASSIVE SNOW PEAKS (far) ---
+        for (var pk = -1; pk < 5; pk++) {
+            var pkx = pk * 320 - (far % 320);
+            var pkH = 180 + (pk % 2) * 40;
+            // Mountain body
+            ctx.fillStyle = '#1a2545';
+            ctx.beginPath();
+            ctx.moveTo(pkx, 400);
+            ctx.lineTo(pkx + 160, 400 - pkH);
+            ctx.lineTo(pkx + 320, 400);
+            ctx.fill();
+            // Glacial blue highlights (left face lit by moon)
+            ctx.fillStyle = 'rgba(100,140,200,0.08)';
+            ctx.beginPath();
+            ctx.moveTo(pkx + 160, 400 - pkH);
+            ctx.lineTo(pkx + 200, 400 - pkH + 50);
+            ctx.lineTo(pkx + 160, 400 - pkH + 80);
+            ctx.fill();
+            // Snow cap
+            ctx.fillStyle = '#d0ddf0';
+            ctx.beginPath();
+            ctx.moveTo(pkx + 130, 400 - pkH + 40);
+            ctx.lineTo(pkx + 160, 400 - pkH);
+            ctx.lineTo(pkx + 190, 400 - pkH + 40);
+            ctx.quadraticCurveTo(pkx + 170, 400 - pkH + 35, pkx + 155, 400 - pkH + 50);
+            ctx.quadraticCurveTo(pkx + 140, 400 - pkH + 38, pkx + 130, 400 - pkH + 40);
+            ctx.fill();
+        }
+
+        // --- MID MOUNTAINS ---
+        for (var mm = -1; mm < 7; mm++) {
+            var mmx = mm * 220 - (mid % 220);
+            ctx.fillStyle = '#12203a';
+            ctx.beginPath();
+            ctx.moveTo(mmx, 430);
+            ctx.lineTo(mmx + 110, 320 + (mm % 2) * 20);
+            ctx.lineTo(mmx + 220, 430);
+            ctx.lineTo(mmx + 220, CH);
+            ctx.lineTo(mmx, CH);
+            ctx.fill();
+        }
+
+        // --- PINE TREE SILHOUETTES in rows ---
+        for (var row = 0; row < 2; row++) {
+            var treeOff = row === 0 ? mid * 0.8 : mid * 1.2;
+            var treeY = row === 0 ? 380 : 410;
+            var treeScale = row === 0 ? 1.2 : 0.8;
+            ctx.fillStyle = row === 0 ? '#0a1520' : '#081018';
+            for (var pt = -1; pt < 16; pt++) {
+                var ptx = pt * 75 - (treeOff % 75);
+                var ptH = (30 + (pt % 3) * 10) * treeScale;
+                // Trunk
+                ctx.fillRect(ptx + 5, treeY, 3 * treeScale, 12 * treeScale);
+                // Layered triangle canopy
+                for (var layer = 0; layer < 3; layer++) {
+                    var lw = (14 - layer * 3) * treeScale;
+                    var ly = treeY - layer * ptH / 3;
+                    ctx.beginPath();
+                    ctx.moveTo(ptx + 6.5 * treeScale - lw / 2, ly);
+                    ctx.lineTo(ptx + 6.5 * treeScale, ly - ptH / 3 - 5 * treeScale);
+                    ctx.lineTo(ptx + 6.5 * treeScale + lw / 2, ly);
+                    ctx.fill();
+                }
+            }
+        }
+
+        // --- BLOWING SNOW (white dots diagonal) ---
+        for (var sn = 0; sn < 30; sn++) {
+            var snPhase = (t * 50 + sn * 37) % (CW + 200);
+            var snX = snPhase - 100;
+            var snY = ((sn * 29 + t * 20) % (CH + 50)) - 25;
+            var snAlpha = 0.2 + seededRand(sn * 13) * 0.3;
+            var snSize = 1 + seededRand(sn * 7) * 2;
+            ctx.fillStyle = 'rgba(220,230,255,' + snAlpha + ')';
+            ctx.beginPath();
+            ctx.arc(snX, snY, snSize, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // --- ICE CRYSTALS catching moonlight (flashes) ---
+        for (var ic = 0; ic < 8; ic++) {
+            var flashPhase = Math.sin(t * 2 + ic * 1.7);
+            if (flashPhase > 0.7) {
+                var icx = seededRand(ic * 23) * CW;
+                var icy = 350 + seededRand(ic * 31) * 80;
+                var icAlpha = (flashPhase - 0.7) * 3;
+                ctx.fillStyle = 'rgba(255,255,255,' + Math.min(0.8, icAlpha) + ')';
+                ctx.beginPath();
+                ctx.arc(icx, icy, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = 'rgba(200,220,255,' + Math.min(0.2, icAlpha * 0.3) + ')';
+                ctx.beginPath();
+                ctx.arc(icx, icy, 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // --- ICICLES hanging from overhangs ---
+        for (var ii = 0; ii < 10; ii++) {
+            var iix = ii * 105 + 20 - (near % 105);
+            var iiLen = 12 + (ii % 4) * 6;
+            ctx.fillStyle = 'rgba(180,200,230,0.4)';
+            ctx.beginPath();
+            ctx.moveTo(iix, 0);
+            ctx.lineTo(iix + 3, 0);
+            ctx.lineTo(iix + 1.5, iiLen);
+            ctx.fill();
+            // Highlight
+            ctx.fillStyle = 'rgba(220,240,255,0.3)';
+            ctx.fillRect(iix + 1, 1, 1, iiLen * 0.6);
+        }
+
+        // Ground
+        ctx.fillStyle = '#0e1828';
+        ctx.fillRect(0, 440, CW, CH - 440);
+        // Snow on ground
+        ctx.fillStyle = 'rgba(200,210,230,0.1)';
+        ctx.fillRect(0, 440, CW, 3);
+    }
+};
+
+})();
