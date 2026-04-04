@@ -668,3 +668,204 @@ W.Backgrounds = {
         }
     },
 
+
+    battlefield: function(ctx, cameraX) {
+        var t = Date.now() * 0.001;
+        var far = cameraX * 0.1, mid = cameraX * 0.3, near = cameraX * 0.6;
+
+        // --- DRAMATIC SUNSET SKY ---
+        var sky = ctx.createLinearGradient(0, 0, 0, CH);
+        sky.addColorStop(0, '#1a0820');
+        sky.addColorStop(0.25, '#3a1030');
+        sky.addColorStop(0.45, '#8a3010');
+        sky.addColorStop(0.6, '#cc5510');
+        sky.addColorStop(0.72, '#aa2a08');
+        sky.addColorStop(1, '#2a0a04');
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, CW, CH);
+
+        // --- SUN disk partially below horizon with rays ---
+        var sunX = CW * 0.65;
+        var sunY = 330;
+        // Rays
+        ctx.save();
+        for (var r = 0; r < 12; r++) {
+            var rayAngle = r * Math.PI / 6 + t * 0.02;
+            ctx.fillStyle = 'rgba(200,100,20,0.04)';
+            ctx.beginPath();
+            ctx.moveTo(sunX, sunY);
+            ctx.lineTo(sunX + Math.cos(rayAngle) * 250, sunY + Math.sin(rayAngle) * 250);
+            ctx.lineTo(sunX + Math.cos(rayAngle + 0.15) * 250, sunY + Math.sin(rayAngle + 0.15) * 250);
+            ctx.fill();
+        }
+        ctx.restore();
+        // Sun body
+        ctx.fillStyle = 'rgba(255,120,20,0.5)';
+        ctx.beginPath();
+        ctx.arc(sunX, sunY, 45, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,180,60,0.3)';
+        ctx.beginPath();
+        ctx.arc(sunX, sunY, 35, 0, Math.PI * 2);
+        ctx.fill();
+        // Horizon cover
+        ctx.fillStyle = '#2a0a04';
+        ctx.fillRect(0, 355, CW, CH - 355);
+
+        // --- SMOKE COLUMNS (animated, swaying) ---
+        for (var s = 0; s < 5; s++) {
+            var smx = s * 230 + 60 - (far % 230);
+            for (var sp = 0; sp < 8; sp++) {
+                var spY = 340 - sp * 22 - ((t * 8 + s * 3) % 20);
+                var spX = smx + Math.sin(t * 0.4 + sp * 0.5 + s) * (4 + sp * 2);
+                var spAlpha = 0.12 - sp * 0.012;
+                var spSize = 8 + sp * 5;
+                if (spAlpha > 0) {
+                    ctx.fillStyle = 'rgba(30,15,8,' + spAlpha + ')';
+                    ctx.beginPath();
+                    ctx.arc(spX, spY, spSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        // --- SHATTERED WALLS ---
+        for (var w = 0; w < 3; w++) {
+            var wallX = w * 380 + 50 - (far % 380);
+            ctx.fillStyle = '#2a1a10';
+            // Standing portion
+            ctx.fillRect(wallX, 300, 20, 55);
+            ctx.fillRect(wallX + 20, 320, 15, 35);
+            // Broken edge
+            ctx.beginPath();
+            ctx.moveTo(wallX + 35, 355);
+            ctx.lineTo(wallX + 35, 330);
+            ctx.lineTo(wallX + 45, 340);
+            ctx.lineTo(wallX + 40, 355);
+            ctx.fill();
+            // Rubble
+            for (var rb = 0; rb < 5; rb++) {
+                ctx.fillRect(wallX + 30 + rb * 8, 350 + (rb % 2) * 3, 6, 4);
+            }
+        }
+
+        // --- BROKEN SIEGE EQUIPMENT ---
+        for (var se = -1; se < 4; se++) {
+            var sex = se * 300 + 100 - (mid % 300);
+            ctx.fillStyle = '#1a0c05';
+            // Catapult frame
+            ctx.fillRect(sex, 365, 50, 5);
+            ctx.fillRect(sex + 10, 340, 6, 25);
+            // Broken arm at angle
+            ctx.save();
+            ctx.translate(sex + 13, 342);
+            ctx.rotate(-0.7);
+            ctx.fillRect(0, 0, 35, 4);
+            ctx.restore();
+            // Wheels
+            ctx.strokeStyle = '#1a0c05';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(sex + 8, 372, 8, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(sex + 42, 372, 8, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        // --- SWORDS stuck in ground, fallen shields, skeleton outlines ---
+        for (var sw = 0; sw < 8; sw++) {
+            var swx = sw * 130 + 20 - (mid % 130);
+            var swAngle = -0.2 + seededRand(sw * 17) * 0.4;
+            // Sword
+            ctx.fillStyle = '#5a5a5a';
+            ctx.save();
+            ctx.translate(swx, 378);
+            ctx.rotate(swAngle);
+            ctx.fillRect(-1, -30, 2, 30);
+            // Crossguard
+            ctx.fillRect(-5, -5, 10, 2);
+            // Handle
+            ctx.fillStyle = '#3a2a1a';
+            ctx.fillRect(-1, 0, 2, 8);
+            ctx.restore();
+        }
+
+        // Fallen shields
+        for (var sh = 0; sh < 4; sh++) {
+            var shx = 90 + sh * 260 - (mid % 260);
+            ctx.fillStyle = '#3a2a18';
+            ctx.beginPath();
+            ctx.arc(shx, 380, 10, 0, Math.PI);
+            ctx.fill();
+            ctx.strokeStyle = '#4a3a28';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(shx, 380, 10, 0, Math.PI);
+            ctx.stroke();
+        }
+
+        // Skeleton outlines
+        for (var sk = 0; sk < 3; sk++) {
+            var skx = 200 + sk * 350 - (mid % 350);
+            ctx.fillStyle = '#7a7a60';
+            // Skull
+            ctx.beginPath();
+            ctx.arc(skx, 382, 5, 0, Math.PI * 2);
+            ctx.fill();
+            // Eye sockets
+            ctx.fillStyle = '#2a0a04';
+            ctx.fillRect(skx - 3, 381, 2, 2);
+            ctx.fillRect(skx + 1, 381, 2, 2);
+            // Body
+            ctx.fillStyle = '#7a7a60';
+            ctx.fillRect(skx - 1, 387, 2, 15);
+            // Ribs
+            for (var rib = 0; rib < 3; rib++) {
+                ctx.fillRect(skx - 5, 390 + rib * 4, 10, 1);
+            }
+        }
+
+        // --- SCORCHED EARTH ---
+        ctx.fillStyle = 'rgba(10,5,2,0.4)';
+        for (var sc = 0; sc < 20; sc++) {
+            var scx = sc * 55 - (near % 55);
+            ctx.beginPath();
+            ctx.arc(scx + 20, 395 + (sc % 3) * 5, 12 + (sc % 4) * 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // --- EMBERS floating upward (animated) ---
+        for (var em = 0; em < 20; em++) {
+            var emPhase = (t * 0.4 + em * 0.5) % 4.0;
+            var emX = (em * 53 + Math.sin(t * 0.5 + em) * 30) % CW;
+            var emY = 400 - emPhase * 90;
+            var emAlpha = Math.max(0, 0.8 - emPhase * 0.2);
+            var emColor = em % 3 === 0 ? '255,200,50' : '255,130,30';
+            ctx.fillStyle = 'rgba(' + emColor + ',' + emAlpha + ')';
+            ctx.fillRect(emX, emY, 2, 2);
+        }
+
+        // --- CROWS: V shapes moving across sky ---
+        for (var cr = 0; cr < 5; cr++) {
+            var crX = ((t * 20 + cr * 200) % (CW + 300)) - 150;
+            var crY = 80 + cr * 35 + Math.sin(t * 1.5 + cr * 2) * 15;
+            var wingFlap = Math.sin(t * 6 + cr * 3) * 3;
+            ctx.fillStyle = '#0a0505';
+            ctx.beginPath();
+            ctx.moveTo(crX, crY);
+            ctx.lineTo(crX - 7, crY - 4 - wingFlap);
+            ctx.lineTo(crX - 3, crY - 1);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(crX, crY);
+            ctx.lineTo(crX + 7, crY - 4 + wingFlap);
+            ctx.lineTo(crX + 3, crY - 1);
+            ctx.fill();
+        }
+
+        // Ground
+        ctx.fillStyle = '#1a0a04';
+        ctx.fillRect(0, 390, CW, CH - 390);
+    },
+
