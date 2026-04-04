@@ -6,7 +6,7 @@ W.Backgrounds = {
     // cameraX = current camera offset, canvasW/H = 960/540
 
     village: function(ctx, cameraX) {
-        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 400;
         // Sky - overcast grey
         const sky = ctx.createLinearGradient(0, 0, 0, ch);
         sky.addColorStop(0, '#3a3a44');
@@ -14,13 +14,14 @@ W.Backgrounds = {
         ctx.fillStyle = sky;
         ctx.fillRect(0, 0, cw, ch);
 
+        const gnd = W.GROUND_Y || 340;
         // Far layer (0.1x) - rolling hills
         const far = cameraX * 0.1;
         ctx.fillStyle = '#2a2a30';
         for (let i = -1; i < 4; i++) {
             const bx = i * 400 - (far % 400);
             ctx.beginPath();
-            ctx.moveTo(bx, 350); ctx.quadraticCurveTo(bx+200, 280, bx+400, 350);
+            ctx.moveTo(bx, gnd - 60); ctx.quadraticCurveTo(bx+200, gnd - 130, bx+400, gnd - 60);
             ctx.lineTo(bx+400, ch); ctx.lineTo(bx, ch); ctx.fill();
         }
 
@@ -30,13 +31,13 @@ W.Backgrounds = {
         for (let i = -1; i < 6; i++) {
             const bx = i * 200 - (mid % 200);
             // House shape
-            ctx.fillRect(bx+20, 340, 60, 80);
+            ctx.fillRect(bx+20, gnd - 70, 60, 80);
             // Roof triangle
             ctx.beginPath();
-            ctx.moveTo(bx+15, 340); ctx.lineTo(bx+50, 310); ctx.lineTo(bx+85, 340); ctx.fill();
+            ctx.moveTo(bx+15, gnd - 70); ctx.lineTo(bx+50, gnd - 100); ctx.lineTo(bx+85, gnd - 70); ctx.fill();
             // Window glow
             ctx.fillStyle = '#554422';
-            ctx.fillRect(bx+35, 360, 10, 12);
+            ctx.fillRect(bx+35, gnd - 50, 10, 12);
             ctx.fillStyle = '#3a3028';
         }
 
@@ -44,13 +45,13 @@ W.Backgrounds = {
         ctx.fillStyle = '#4a3a20';
         for (let i = 0; i < 20; i++) {
             const fx = i * 60 - (mid % 60);
-            ctx.fillRect(fx, 400, 3, 20);
-            if (i % 2 === 0) ctx.fillRect(fx, 406, 60, 2);
+            ctx.fillRect(fx, gnd - 10, 3, 20);
+            if (i % 2 === 0) ctx.fillRect(fx, gnd - 4, 60, 2);
         }
     },
 
     swamp: function(ctx, cameraX) {
-        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 400;
         // Sky - murky green
         const sky = ctx.createLinearGradient(0, 0, 0, ch);
         sky.addColorStop(0, '#0a1a0a');
@@ -107,7 +108,7 @@ W.Backgrounds = {
     },
 
     castle: function(ctx, cameraX) {
-        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 400;
         // Dark interior
         ctx.fillStyle = '#0e0e14';
         ctx.fillRect(0, 0, cw, ch);
@@ -162,7 +163,7 @@ W.Backgrounds = {
     },
 
     battlefield: function(ctx, cameraX) {
-        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 400;
         // Dusk sky - red/orange
         const sky = ctx.createLinearGradient(0, 0, 0, ch);
         sky.addColorStop(0, '#1a0a0a');
@@ -216,7 +217,7 @@ W.Backgrounds = {
     },
 
     mountain: function(ctx, cameraX) {
-        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 400;
         // Night sky
         const sky = ctx.createLinearGradient(0, 0, 0, ch);
         sky.addColorStop(0, '#050818');

@@ -3,7 +3,7 @@
 if (!W.Backgrounds) W.Backgrounds = {};
 
 W.Backgrounds.castle = function(ctx, cameraX) {
-    const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540, t = Date.now() * 0.001;
+    const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 400, t = Date.now() * 0.001;
 
     // === BASE: dark stone background ===
     const bg = ctx.createLinearGradient(0, 0, 0, ch);
@@ -139,22 +139,23 @@ W.Backgrounds.castle = function(ctx, cameraX) {
     const near = cameraX * 0.6;
 
     // Suit of armor silhouette
+    const gnd = W.GROUND_Y || 340;
     const ax = 500 - (near % 600);
     ctx.fillStyle = '#3a3a42';
     // Body
-    ctx.fillRect(ax - 8, 380, 16, 40);
+    ctx.fillRect(ax - 8, gnd - 20, 16, 40);
     // Head
     ctx.beginPath();
-    ctx.arc(ax, 374, 9, 0, Math.PI * 2);
+    ctx.arc(ax, gnd - 26, 9, 0, Math.PI * 2);
     ctx.fill();
     // Shoulders
-    ctx.fillRect(ax - 14, 383, 28, 5);
+    ctx.fillRect(ax - 14, gnd - 17, 28, 5);
     // Legs
-    ctx.fillRect(ax - 7, 420, 5, 18);
-    ctx.fillRect(ax + 2, 420, 5, 18);
+    ctx.fillRect(ax - 7, gnd + 20, 5, 18);
+    ctx.fillRect(ax + 2, gnd + 20, 5, 18);
     // Stand
     ctx.fillStyle = '#333';
-    ctx.fillRect(ax - 12, 438, 24, 4);
+    ctx.fillRect(ax - 12, gnd + 38, 24, 4);
 
     // Dripping water (2 drips cycling down from ceiling)
     for (let d = 0; d < 2; d++) {

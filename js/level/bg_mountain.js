@@ -2,7 +2,7 @@
 'use strict';
 if (!W.Backgrounds) W.Backgrounds = {};
 W.Backgrounds.mountain = function(ctx, cameraX) {
-    const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540, t = Date.now() * 0.001;
+    const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 400, t = Date.now() * 0.001;
     // SKY: deep night blue gradient
     var skyGrad = ctx.createLinearGradient(0, 0, 0, ch);
     skyGrad.addColorStop(0, '#050818');
