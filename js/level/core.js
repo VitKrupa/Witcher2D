@@ -14,12 +14,19 @@ W.Level = class {
     }
 
     drawBackground(ctx, cameraX) {
-        const fn = W.Backgrounds[this.bgTheme];
-        if (fn) fn(ctx, cameraX);
+        try {
+            const fn = W.Backgrounds[this.bgTheme];
+            if (fn) fn(ctx, cameraX);
+        } catch(e) { console.error('BG error:', e); }
     }
 
     drawPlatforms(ctx) {
-        for (const p of this.platforms) p.draw(ctx);
+        for (const p of this.platforms) {
+            try { p.draw(ctx); } catch(e) { /* fallback: simple rect */
+                ctx.fillStyle = '#6b4226';
+                ctx.fillRect(p.x, p.y, p.w, p.h);
+            }
+        }
     }
 
     drawForeground(ctx, cameraX) {
