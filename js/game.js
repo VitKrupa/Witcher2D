@@ -144,21 +144,33 @@
 
         resizeCanvas() {
             var container = document.getElementById('gameContainer');
-            if (!container) return;
+            if (!container || !this.canvas) return;
             var vw = window.innerWidth;
             var vh = window.innerHeight;
-            var scaleX = vw / W.CANVAS_W;
-            var scaleY = vh / W.CANVAS_H;
-            var scale = Math.min(scaleX, scaleY);
-            container.style.width = W.CANVAS_W + 'px';
-            container.style.height = W.CANVAS_H + 'px';
+            var screenRatio = vw / vh;
+            var gameH = W.CANVAS_H; // always 540
+            // Adjust canvas width to match screen aspect ratio
+            var gameW = Math.round(gameH * screenRatio);
+            gameW = Math.max(gameW, 800);  // minimum width
+            gameW = Math.min(gameW, 1400); // maximum width
+
+            // Update internal canvas resolution
+            if (this.canvas.width !== gameW || this.canvas.height !== gameH) {
+                this.canvas.width = gameW;
+                this.canvas.height = gameH;
+                W.CANVAS_W = gameW; // update global
+            }
+
+            // Scale to fill screen exactly
+            var scale = vh / gameH;
+            var scaledW = gameW * scale;
+            container.style.width = gameW + 'px';
+            container.style.height = gameH + 'px';
             container.style.transform = 'scale(' + scale + ')';
-            container.style.transformOrigin = 'center center';
+            container.style.transformOrigin = 'top left';
             container.style.position = 'fixed';
-            container.style.left = '50%';
-            container.style.top = '50%';
-            container.style.marginLeft = -(W.CANVAS_W / 2) + 'px';
-            container.style.marginTop = -(W.CANVAS_H / 2) + 'px';
+            container.style.top = '0px';
+            container.style.left = Math.max(0, (vw - scaledW) / 2) + 'px';
         }
 
         showStartScreen() {
