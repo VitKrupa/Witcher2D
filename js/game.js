@@ -161,16 +161,15 @@
                 W.CANVAS_W = gameW; // update global
             }
 
-            // Scale to fill screen exactly
-            var scale = vh / gameH;
-            var scaledW = gameW * scale;
+            // Scale to fill screen — width matches exactly, height fills
+            var scale = vw / gameW;
             container.style.width = gameW + 'px';
             container.style.height = gameH + 'px';
             container.style.transform = 'scale(' + scale + ')';
             container.style.transformOrigin = 'top left';
             container.style.position = 'fixed';
             container.style.top = '0px';
-            container.style.left = Math.max(0, (vw - scaledW) / 2) + 'px';
+            container.style.left = '0px';
         }
 
         showStartScreen() {

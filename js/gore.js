@@ -101,6 +101,7 @@ W.Gore = {
         const isCreature = enemy.category === 'creature';
         const bodyColor = isCreature ? (enemy.name === 'Drowner' ? '#3a6a5a' : '#6a6060') : '#6a5a3a';
         const boneColor = '#ccbbaa';
+        const groundY = enemy.y + enemy.h; // foot position = ground level
 
         // Severed head
         this.gibs.push({
@@ -109,7 +110,7 @@ W.Gore = {
             rotation: 0, rotSpeed: dir * W.randRange(0.1, 0.3),
             size: 8, color: isCreature ? bodyColor : '#d4a574',
             type: 'head', life: 200, gravity: 0.3,
-            isCreature: isCreature
+            isCreature: isCreature, groundY: groundY
         });
 
         // Severed arm
@@ -119,7 +120,7 @@ W.Gore = {
             rotation: 0, rotSpeed: W.randRange(-0.2, 0.2),
             size: 10, color: bodyColor,
             type: 'arm', life: 180, gravity: 0.3,
-            isCreature: isCreature
+            isCreature: isCreature, groundY: groundY
         });
 
         // Severed leg
@@ -129,7 +130,7 @@ W.Gore = {
             rotation: 0, rotSpeed: W.randRange(-0.15, 0.15),
             size: 12, color: bodyColor,
             type: 'leg', life: 180, gravity: 0.35,
-            isCreature: isCreature
+            isCreature: isCreature, groundY: groundY
         });
 
         // Blood pool (large)
@@ -186,9 +187,10 @@ W.Gore = {
             g.rotation += g.rotSpeed * spd;
             g.life -= spd;
 
-            // Stop at ground
-            if (g.y > 500) {
-                g.y = 500;
+            // Stop at ground (use enemy's foot position, fallback to 500)
+            const floorY = g.groundY || 500;
+            if (g.y > floorY) {
+                g.y = floorY;
                 g.vy = 0;
                 g.vx *= 0.8;
                 g.rotSpeed *= 0.5;

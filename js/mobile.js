@@ -271,17 +271,21 @@ W.Mobile = {
             keys['d'] = false;
         }
 
-        // Vertical: up = jump (single press behavior)
+        // Vertical: up = jump (single press with cooldown)
+        if (!this._jumpCooldown) this._jumpCooldown = 0;
+        if (this._jumpCooldown > 0) this._jumpCooldown--;
+
         if (this.joyY < -0.4) {
-            if (!this._jumpTriggered) {
+            if (!this._jumpTriggered && this._jumpCooldown <= 0) {
                 keys['w'] = true;
                 this._jumpTriggered = true;
+                this._jumpCooldown = 30; // ~0.5s cooldown at 60fps
             } else {
-                keys['w'] = false; // already triggered, don't hold
+                keys['w'] = false;
             }
         } else {
             keys['w'] = false;
-            this._jumpTriggered = false; // reset when joystick returns to center
+            this._jumpTriggered = false;
         }
         if (this.joyY > 0.5) {
             keys['s'] = true;
