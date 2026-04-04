@@ -204,7 +204,7 @@ W.WitchHunter = class extends W.Enemy {
                 x: this.x + this.w/2,
                 y: this.y + 20,
                 vx: this.facing * 5,
-                life: 120
+                life: 60
             });
             this.shootCooldown = W.randRange(80, 140);
         }

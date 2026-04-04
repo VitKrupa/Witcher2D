@@ -252,8 +252,15 @@ W.NilfSoldier = class extends W.Enemy {
     }
     update(dt, px, py, platforms) {
         super.update(dt, px, py, platforms);
-        // Occasionally block
-        this.blocking = (this.state === 'chase' && Math.random() < 0.005);
+        // Occasionally block (timer-based so it lasts ~1 second)
+        if (!this.blocking && this.state === 'chase' && Math.random() < 0.005) {
+            this.blocking = true;
+            this._blockTimer = 60; // block for 1 second
+        }
+        if (this.blocking) {
+            this._blockTimer--;
+            if (this._blockTimer <= 0) this.blocking = false;
+        }
     }
     takeDamage(amount, swordType) {
         if (this.blocking) amount = Math.floor(amount * 0.4);

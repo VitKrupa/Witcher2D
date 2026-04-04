@@ -102,6 +102,16 @@ function drawBoot(ctx, x, y, angle) {
     ctx.lineTo(-1, -1);
     ctx.closePath();
     ctx.fill();
+    // Buckle strap across ankle
+    ctx.strokeStyle = '#555';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(-2, -1.5);
+    ctx.lineTo(2.5, -1.5);
+    ctx.stroke();
+    // Small buckle square
+    ctx.fillStyle = MEDAL;
+    ctx.fillRect(0, -2.2, 1.5, 1.5);
     ctx.restore();
 }
 
@@ -243,6 +253,14 @@ const Body = {
         ctx.quadraticCurveTo(x + 8 + bx, y + 8, x + 7 + bx, y + 1);
         ctx.closePath();
         ctx.fill();
+
+        // --- Subtle leather texture: alternating dark/light horizontal rows ---
+        for (let row = 0; row < 14; row++) {
+            const ry = y + 1 + row;
+            const rowWidth = 6 + (row < 7 ? row * 0.3 : (14 - row) * 0.3);
+            ctx.fillStyle = row % 2 === 0 ? 'rgba(80,60,40,0.15)' : 'rgba(120,100,70,0.1)';
+            ctx.fillRect(x - rowWidth, ry, rowWidth * 2, 1);
+        }
 
         // --- Leather under-layer panels ---
         const leathGrad = ctx.createLinearGradient(x, y + 2, x, y + 14);
@@ -734,10 +752,10 @@ W.Player = class {
         // Clamp to level bounds (0 minimum)
         if (this.x < 0) this.x = 0;
 
-        // Animation timer
+        // Animation timer — continuous (never resets) for smooth sin/cos curves
         this.animTimer += spd;
-        if (this.animTimer > 10) {
-            this.animTimer = 0;
+        // animFrame still cycles for any legacy frame-based code
+        if (Math.floor(this.animTimer / 10) !== Math.floor((this.animTimer - spd) / 10)) {
             this.animFrame = (this.animFrame + 1) % 4;
         }
     }
@@ -822,8 +840,7 @@ W.Player = class {
 
     draw(ctx) {
         ctx.save();
-        this._drawTimer = (this._drawTimer || 0) + 1;
-        const t = this._drawTimer; // continuous timer for smooth animations
+        const t = this.animTimer; // continuous timer for smooth sin/cos animations
         const f = this.facing;
         // Invincibility flicker
         if (this.invincible && Math.floor(t) % 3 === 0) ctx.globalAlpha = 0.4;
@@ -881,17 +898,36 @@ W.Player = class {
         }
 
         // === CALCULATE JOINT POSITIONS ===
-        // Hip position
-        const hipX = cx;
-        const hipY = cy + 16 + breathe * 0.5 + (isRun ? wave(runCycle * 2, 1, 1.5) : 0);
 
-        // Leg angles (radians from vertical)
+        // Hurt jolt: shift entire body backward
+        const hurtJolt = isHurt ? (this.stateTimer / 12) * 6 : 0;
+        const joltX = -this.facing * hurtJolt; // jolt opposite to facing
+
+        // Run: upper body leans forward slightly
+        const bodyLean = isRun ? 0.08 : 0;
+
+        // Head bob synced with step cycle (double frequency since 2 steps per cycle)
+        const headBob = isRun ? Math.abs(Math.sin(runCycle)) * 1.2 : 0;
+
+        // Hip position — reduced lateral sway during run
+        const hipX = cx + joltX;
+        const hipY = cy + 16 + breathe * 0.3 + (isRun ? Math.abs(Math.sin(runCycle)) * 1.0 : 0);
+
+        // Leg angles (radians from vertical) — more forward/back, less lateral spread
         let lLegAngle, rLegAngle, lKneeAngle, rKneeAngle;
         if (isRun) {
-            lLegAngle = Math.sin(runCycle) * 0.7;
-            rLegAngle = Math.sin(runCycle + Math.PI) * 0.7;
-            lKneeAngle = Math.max(0, -Math.sin(runCycle - 0.5)) * 0.8;
-            rKneeAngle = Math.max(0, -Math.sin(runCycle + Math.PI - 0.5)) * 0.8;
+            // Increased amplitude for longer strides; sin drives forward/back swing
+            lLegAngle = Math.sin(runCycle) * 0.85;
+            rLegAngle = Math.sin(runCycle + Math.PI) * 0.85;
+            // Natural knee bend: bends more when leg swings back (push-off) and during lift
+            // Uses a shifted sin so knee bends at the right phase
+            lKneeAngle = 0.15 + Math.max(0, -Math.sin(runCycle - 0.8)) * 1.0;
+            rKneeAngle = 0.15 + Math.max(0, -Math.sin(runCycle + Math.PI - 0.8)) * 1.0;
+            // Slight foot-contact delay: extra knee bend at foot-plant (adds weight)
+            const lPlant = Math.max(0, Math.cos(runCycle) * 0.3);
+            const rPlant = Math.max(0, Math.cos(runCycle + Math.PI) * 0.3);
+            lKneeAngle += lPlant;
+            rKneeAngle += rPlant;
         } else if (isJump) {
             lLegAngle = -0.3; rLegAngle = 0.2;
             lKneeAngle = 0.6; rKneeAngle = 0.4;
@@ -907,13 +943,13 @@ W.Player = class {
         const legLen = 12;
         const shinLen = 12;
 
-        // Calculate leg endpoints
-        const lKneeX = hipX - 3 + Math.sin(lLegAngle) * legLen;
+        // Calculate leg endpoints (narrow hip spread: 2px each side, not 3)
+        const lKneeX = hipX - 2 + Math.sin(lLegAngle) * legLen;
         const lKneeY = hipY + Math.cos(lLegAngle) * legLen;
         const lFootX = lKneeX + Math.sin(lLegAngle + lKneeAngle) * shinLen;
         const lFootY = lKneeY + Math.cos(lLegAngle + lKneeAngle) * shinLen;
 
-        const rKneeX = hipX + 3 + Math.sin(rLegAngle) * legLen;
+        const rKneeX = hipX + 2 + Math.sin(rLegAngle) * legLen;
         const rKneeY = hipY + Math.cos(rLegAngle) * legLen;
         const rFootX = rKneeX + Math.sin(rLegAngle + rKneeAngle) * shinLen;
         const rFootY = rKneeY + Math.cos(rLegAngle + rKneeAngle) * shinLen;
@@ -945,8 +981,9 @@ W.Player = class {
             rArmAngle = -0.8; rElbowAngle = 1.2;
             lArmAngle = -0.5; lElbowAngle = 0.8;
         } else if (isRun) {
-            lArmAngle = Math.sin(runCycle + Math.PI) * 0.5;
-            rArmAngle = Math.sin(runCycle) * 0.5;
+            // Arms swing opposite to legs but with LESS range (0.35 vs legs 0.85)
+            lArmAngle = Math.sin(runCycle + Math.PI) * 0.35;
+            rArmAngle = Math.sin(runCycle) * 0.35;
             lElbowAngle = 0.4 + Math.abs(Math.sin(runCycle + Math.PI)) * 0.3;
             rElbowAngle = 0.4 + Math.abs(Math.sin(runCycle)) * 0.3;
         } else if (isHurt) {
@@ -962,8 +999,8 @@ W.Player = class {
             lElbowAngle = 0.15; rElbowAngle = 0.15;
         }
 
-        const shoulderY = cy + 1;
-        const lShX = cx - 7, rShX = cx + 7;
+        const shoulderY = cy + 1 + (isHurt ? -hurtJolt * 0.3 : 0);
+        const lShX = cx - 7 + joltX, rShX = cx + 7 + joltX;
 
         const lElbX = lShX + Math.sin(lArmAngle) * armLen;
         const lElbY = shoulderY + Math.cos(lArmAngle) * armLen;
@@ -975,10 +1012,10 @@ W.Player = class {
         const rHandX = rElbX + Math.sin(rArmAngle + rElbowAngle) * foreLen;
         const rHandY = rElbY + Math.cos(rArmAngle + rElbowAngle) * foreLen;
 
-        // Head position
-        const headX = cx;
-        const headY = cy - 8 + breathe * 0.5 + (isRun ? wave(runCycle * 2, 1, 1) : 0)
-            + (isHurt ? -3 : 0);
+        // Head position — includes head bob synced with steps, and hurt jolt
+        const headX = cx + joltX + (isRun ? bodyLean * 12 : 0);
+        const headY = cy - 8 + breathe * 0.3 + headBob
+            + (isHurt ? -3 - hurtJolt * 0.5 : 0);
 
         // === DRAW ORDER (back to front) ===
 
@@ -1002,8 +1039,15 @@ W.Player = class {
         // Gauntlet on back hand
         drawJoint(ctx, rHandX, rHandY, 2.5, '#4a3a2a');
 
-        // Torso
-        Body.torso(ctx, cx, cy, breathe + 0.5);
+        // Torso (shifted by hurt jolt; lean forward when running)
+        ctx.save();
+        if (isRun) {
+            ctx.translate(cx + joltX, cy);
+            ctx.rotate(bodyLean);
+            ctx.translate(-(cx + joltX), -cy);
+        }
+        Body.torso(ctx, cx + joltX, cy, breathe + 0.5);
+        if (isRun) ctx.restore(); else ctx.restore();
 
         // Front leg (thigh thicker than shin)
         drawLimb(ctx, hipX - 3, hipY, lKneeX, lKneeY, 6, ARMOR, 4.5);

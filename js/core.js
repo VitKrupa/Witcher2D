@@ -100,7 +100,7 @@ W.Camera = class Camera {
         ctx.save();
         ctx.translate(
             -this.offsetX + this.shakeX,
-            this.shakeY
+            -this.offsetY + this.shakeY
         );
     }
 

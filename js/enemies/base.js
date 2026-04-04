@@ -63,14 +63,14 @@ W.Enemy = class {
             this.animFrame = (this.animFrame + 1) % 4;
         }
 
+        if (this.state === 'dead') { this.knockbackVx = 0; return; }
+
         // Knockback decay
         if (this.knockbackVx) {
             this.x += this.knockbackVx * spd;
             this.knockbackVx *= 0.85;
             if (Math.abs(this.knockbackVx) < 0.1) this.knockbackVx = 0;
         }
-
-        if (this.state === 'dead') return;
         if (this.state === 'hit') {
             this.stateTimer -= spd;
             if (this.stateTimer <= 0) this.state = 'chase';
@@ -133,7 +133,6 @@ W.Enemy = class {
             ctx.globalAlpha = Math.max(0, this.stateTimer / 30);
             this.drawBody(ctx);
             ctx.globalAlpha = 1;
-            this.stateTimer -= 0.5;
             return;
         }
         this.drawBody(ctx);

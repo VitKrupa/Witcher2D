@@ -45,6 +45,7 @@ W.Griffin = class extends W.Enemy {
             this.swooping = true;
             this.swoopTimer = 40;
             this.y -= 80; // fly up first
+            if (this.y < 0) this.y = 0;
             this.swoopCooldown = W.randRange(150, 250);
             return;
         }

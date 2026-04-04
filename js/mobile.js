@@ -286,10 +286,16 @@ W.Mobile = {
         } else {
             keys['w'] = false;
         }
-        if (this.joyY > 0.5) {
+        var wantRoll = this.joyY > 0.5;
+        if (wantRoll && !this._prevJoyDown) {
+            this._rollFrames = 5;
+        }
+        this._prevJoyDown = wantRoll;
+        if (this._rollFrames > 0) {
             keys['s'] = true;
-            // Brief press for roll
-            setTimeout(function() { keys['s'] = false; }, 100);
+            this._rollFrames--;
+        } else {
+            keys['s'] = false;
         }
     }
 };

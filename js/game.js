@@ -301,6 +301,7 @@
                 if (dt > 0.05) dt = 0.05;
             }
             this.lastTime = timestamp;
+            W.gameTime = timestamp * 0.001;
 
             try {
                 if (!this.paused) {
@@ -325,7 +326,7 @@
                 // Dismiss on any key/touch OR after timer expires
                 var anyKey = false;
                 for (var k in this.keys) { if (this.keys[k]) anyKey = true; }
-                if (this.storyTextTimer <= 0 || (anyKey && this.storyTextTimer < 150)) {
+                if (this.storyTextTimer <= 0 || (anyKey && this.storyTextTimer < 80)) {
                     this.showingStoryText = false;
                 }
                 return;
@@ -694,9 +695,8 @@
                 if (W.boxCollision(atkBox, playerHitbox)) {
                     var damage = enemy.damage || 8;
 
-                    // Check if player is blocking
+                    // Check if player is blocking (visual feedback only; takeDamage handles reduction)
                     if (this.player.state === 'block') {
-                        damage = Math.floor(damage * 0.25);
                         W.Emitters.sparks(this.particles, this.player.x, this.player.y - 15);
                         this.addFloatingText(
                             this.player.x, this.player.y - 40,
@@ -743,7 +743,6 @@
                     if (W.boxCollision(projBox, this.player.hitbox)) {
                         var damage = proj.damage || 5;
                         if (this.player.state === 'block') {
-                            damage = Math.floor(damage * 0.25);
                             W.Emitters.sparks(this.particles, this.player.x, this.player.y - 15);
                         }
                         this.player.takeDamage(damage);
