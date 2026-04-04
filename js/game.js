@@ -431,7 +431,13 @@
 
             // --- Story mode: check level end ---
             if (this.gameMode === 'story' && this.player && this.level) {
-                if (this.player.x > this.level.width - 100 && this.enemies.length === 0) {
+                // Clamp player to level bounds
+                if (this.player.x > this.level.width - 60) {
+                    this.player.x = this.level.width - 60;
+                    this.player.vx = 0;
+                }
+                // Trigger next level near the end
+                if (this.player.x > this.level.width - 120) {
                     this.nextLevel();
                 }
             }
