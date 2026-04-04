@@ -1,488 +1,407 @@
 (function() {
 'use strict';
 
-// Level 1: The Blighted Village (8 rooms, Prince-of-Persia style)
-// ROOM-BASED: walled rooms ~800px each, doorways = gaps in walls
+// ============================================================
+// Level 1: The Blighted Village - Prince of Persia ROOM design
+// 8 rooms, each ~960px wide. Canvas: 960x400, GROUND_Y=340
+// Each room: floor at y=340 h=60, walls w=16, ceiling y varies
+// Doorways = gaps in walls (60-80px) connecting rooms
+// ============================================================
+
+var R1 = 0, R2 = 960, R3 = 1920, R4 = 2880, R5 = 3840, R6 = 4800, R7 = 5760, R8 = 6720;
+
 W.StoryLevel1 = {
     name: 'The Blighted Village',
-    width: 6400,
+    width: 7680,
     bgTheme: 'village',
-    storyText: 'A village plagued by drowners... The alderman\'s contract seems straightforward, but something feels wrong.',
+    storyText: "A village plagued by drowners... The alderman's contract seems straightforward, but something feels wrong.",
     platforms: [
-        // ============================================================
-        // ROOM 1: ALLEY (x:0-800) — floor, walls, ceiling, crates
-        // ============================================================
-        // Floor
-        {x:0, y:340, w:800, h:60},
-        // Ceiling
-        {x:0, y:80, w:800, h:16},
-        // Left wall (solid, no door)
-        {x:0, y:80, w:16, h:260},
-        // Right wall — gap (doorway) from y:200 to y:340
-        {x:784, y:80, w:16, h:120},           // upper right wall
-        // Crates to climb
-        {x:200, y:260, w:80, h:16},           // crate 1 (low)
-        {x:300, y:180, w:80, h:16},           // crate 2 (high)
-        // Ledge near ceiling
-        {x:500, y:120, w:120, h:16},          // upper ledge
+        // ==============================
+        // ROOM 1: Alley Entrance (0-960)
+        // Tight corridor, crates to climb, bandit guards
+        // ==============================
+        {x:R1, y:340, w:960, h:60},                   // floor
+        {x:R1, y:60, w:16, h:280},                    // left wall
+        {x:R1, y:60, w:960, h:16},                    // ceiling
+        {x:R1+944, y:60, w:16, h:200},                // right wall upper (gap 260-340 = doorway)
+        // Internal platforms
+        {x:R1+100, y:280, w:80, h:16},                // low crate
+        {x:R1+160, y:220, w:60, h:16},                // mid crate
+        {x:R1+300, y:260, w:100, h:16, type:'wood'},   // wooden shelf
+        {x:R1+500, y:200, w:120, h:16},               // upper walkway
+        {x:R1+700, y:160, w:100, h:16},               // high ledge
+        {x:R1+800, y:260, w:120, h:16, type:'wood'},   // shelf near exit
 
-        // ============================================================
-        // ROOM 2: HOUSE GROUND FLOOR (x:800-1600) — shelf, stairs up
-        // ============================================================
-        // Floor
-        {x:800, y:340, w:800, h:60},
-        // Left wall — gap (doorway) matching room 1 exit
-        {x:800, y:80, w:16, h:120},           // upper left wall
-        // Right wall — gap (doorway) from y:80 to y:200 (upper exit)
-        {x:1584, y:200, w:16, h:140},         // lower right wall
-        // Internal shelf
-        {x:900, y:240, w:200, h:16},          // shelf
-        // Stairs going up: platforms ascending right
-        {x:1100, y:240, w:100, h:16},         // stair step 1
-        {x:1250, y:160, w:120, h:16},         // stair step 2 (upper floor)
-        // Vertical pillar (interior wall segment)
-        {x:1050, y:160, w:16, h:100},         // interior pillar
+        // ==============================
+        // ROOM 2: House Interior (960-1920)
+        // Two floors connected by ledge climb, drowner in cellar
+        // ==============================
+        {x:R2, y:340, w:960, h:60},                   // floor
+        {x:R2, y:60, w:16, h:200},                    // left wall upper (gap matches R1 doorway)
+        {x:R2, y:60, w:960, h:16},                    // ceiling
+        {x:R2+944, y:60, w:16, h:200},                // right wall upper
+        // Second floor divides room upper/lower
+        {x:R2+100, y:220, w:500, h:16, type:'wood'},   // 2nd floor left
+        {x:R2+700, y:220, w:244, h:16, type:'wood'},   // 2nd floor right (gap to climb)
+        // Internal details
+        {x:R2+80, y:300, w:80, h:16},                 // cellar crate
+        {x:R2+620, y:280, w:60, h:16},                // stepping stone to 2nd floor
+        {x:R2+400, y:160, w:100, h:16},               // upper shelf
+        {x:R2+750, y:140, w:80, h:16},                // attic ledge
 
-        // ============================================================
-        // ROOM 3: HOUSE UPPER + COURTYARD DROP (x:1600-2400)
-        // ============================================================
-        // Upper floor continues from room 2
-        {x:1600, y:160, w:300, h:16},         // upper floor
-        // Left wall — gap at top (doorway from room 2 upper exit)
-        {x:1600, y:200, w:16, h:140},         // lower left wall
-        // Courtyard floor (drop down)
-        {x:1600, y:340, w:800, h:60},         // ground floor
-        // Corridor walls
-        {x:1900, y:80, w:16, h:260},          // mid wall (corridor divider)
-        // Gap in mid wall at bottom: y:280-340 for passage
-        // Platforms on right side
-        {x:2000, y:260, w:120, h:16},         // right side ledge
-        {x:2150, y:180, w:100, h:16},         // right side upper
-        // Right wall — doorway at ground level y:240-340
-        {x:2384, y:80, w:16, h:160},          // upper right wall
-
-        // ============================================================
-        // ROOM 4: CHURCH (x:2400-3200) — tall room, tower climb
-        // ============================================================
-        // Floor
-        {x:2400, y:340, w:800, h:60},
-        // Left wall — doorway at ground y:240-340
-        {x:2400, y:80, w:16, h:160},          // upper left wall
-        // Right wall — doorway at ground y:260-340
-        {x:3184, y:80, w:16, h:180},          // upper right wall
-        // NO ceiling (tall room, open to sky)
-        // Tower ledges — climbing sequence
-        {x:2500, y:280, w:80, h:16},          // ledge 1
-        {x:2620, y:220, w:80, h:16},          // ledge 2
-        {x:2500, y:160, w:80, h:16},          // ledge 3
-        {x:2620, y:100, w:100, h:16},         // ledge 4 (near top)
-        {x:2750, y:80, w:120, h:16},          // tower top platform
-        // Descent on right side
-        {x:2950, y:140, w:80, h:16},          // step down 1
-        {x:3050, y:220, w:100, h:16},         // step down 2
-
-        // ============================================================
-        // ROOM 5: MARKET CELLAR (x:3200-4000) — drop underground
-        // ============================================================
-        // Ground level entry (partial floor)
-        {x:3200, y:340, w:200, h:60},         // entry ground
-        // Left wall — doorway at ground y:260-340
-        {x:3200, y:80, w:16, h:180},          // upper left wall
-        // DROP: no floor from x:3400-3700
-        // Underground platforms
-        {x:3350, y:380, w:150, h:16},         // underground ledge 1
-        {x:3500, y:420, w:200, h:16},         // deep floor
-        // Low ceiling over underground section
-        {x:3300, y:300, w:500, h:16},         // cellar ceiling
-        // Climb back up
-        {x:3700, y:360, w:80, h:16},          // step up 1
-        {x:3780, y:300, w:80, h:16},          // step up 2
-        {x:3850, y:240, w:100, h:16},         // step up 3
-        // Exit ground
-        {x:3800, y:340, w:200, h:60},         // exit ground
-        // Right wall — doorway y:240-340
-        {x:3984, y:80, w:16, h:160},          // upper right wall
-
-        // ============================================================
-        // ROOM 6: DAMAGED BUILDING (x:4000-4800) — broken floors
-        // ============================================================
-        // Floor
-        {x:4000, y:340, w:800, h:60},
-        // Left wall — doorway y:240-340
-        {x:4000, y:80, w:16, h:160},          // upper left wall
-        // Right wall — doorway y:280-340
-        {x:4784, y:80, w:16, h:200},          // upper right wall
-        // Broken floors at 3 heights
-        {x:4080, y:280, w:150, h:16},         // broken floor low
-        {x:4280, y:200, w:120, h:16},         // broken floor mid
-        {x:4480, y:130, w:140, h:16},         // broken floor high
-        // Interior walls creating tight corridors
-        {x:4230, y:200, w:16, h:140},         // interior wall 1
-        {x:4450, y:130, w:16, h:140},         // interior wall 2
-        // Connecting ledge
-        {x:4600, y:220, w:100, h:16},         // connector
-
-        // ============================================================
-        // ROOM 7: NEKKER CAVE (x:4800-5600) — underground, tight
-        // ============================================================
-        // Ceiling (low, oppressive)
-        {x:4800, y:280, w:800, h:16},
-        // Floor
-        {x:4800, y:380, w:800, h:20},
-        // Left wall — small doorway y:280-380
-        {x:4800, y:80, w:16, h:200},          // upper left wall (above ceiling)
-        // Right wall — doorway y:300-380
-        {x:5584, y:280, w:16, h:20},          // right wall above door
-        // Interior obstacles
-        {x:4950, y:340, w:80, h:16},          // raised rock 1
-        {x:5150, y:320, w:100, h:16},         // raised rock 2
-        {x:5350, y:340, w:60, h:16},          // raised rock 3
-        // Ceiling stalactites (narrow platforms above)
-        {x:5050, y:300, w:60, h:16},          // stalactite ledge 1
-        {x:5250, y:300, w:60, h:16},          // stalactite ledge 2
-
-        // ============================================================
-        // ROOM 8: EXIT CORRIDOR (x:5600-6400) — ground level, final
-        // ============================================================
-        // Floor
-        {x:5600, y:340, w:800, h:60},
-        // Left wall — doorway y:300-380 matching cave exit
-        {x:5600, y:80, w:16, h:220},          // upper left wall
-        // Right wall (solid, level end)
-        {x:6384, y:80, w:16, h:260},
-        // Ceiling (partial)
-        {x:5600, y:80, w:400, h:16},
+        // ==============================
+        // ROOM 3: Courtyard (1920-2880)
+        // Semi-open (no ceiling), vertical well shaft
+        // ==============================
+        {x:R3, y:340, w:400, h:60},                   // floor left
+        {x:R3+500, y:340, w:460, h:60},               // floor right (100px well gap)
+        {x:R3, y:80, w:16, h:260},                    // left wall
+        {x:R3+944, y:80, w:16, h:180},                // right wall upper
+        // NO ceiling - open courtyard
+        // Well shaft platforms
+        {x:R3+410, y:370, w:80, h:16},                // shaft ledge
+        {x:R3+420, y:310, w:60, h:16},                // shaft stepping stone
         // Vertical elements
-        {x:5700, y:260, w:100, h:16},         // ledge low
-        {x:5850, y:180, w:120, h:16},         // ledge mid
-        {x:6050, y:260, w:100, h:16},         // ledge low 2
-        {x:6200, y:180, w:120, h:16},         // ledge mid 2
-        // Interior pillar
-        {x:5980, y:180, w:16, h:160},         // corridor pillar
+        {x:R3+150, y:240, w:120, h:16},               // low balcony
+        {x:R3+200, y:160, w:100, h:16},               // upper balcony
+        {x:R3+600, y:240, w:100, h:16, type:'wood'},   // scaffold
+        {x:R3+750, y:160, w:120, h:16, type:'wood'},   // high scaffold
+
+        // ==============================
+        // ROOM 4: Church Interior (2880-3840)
+        // Tall room, 3 internal floors, bandits on each
+        // ==============================
+        {x:R4, y:340, w:960, h:60},                   // floor
+        {x:R4, y:40, w:16, h:300},                    // left wall (tall)
+        {x:R4, y:40, w:960, h:16},                    // ceiling (high vaulted)
+        {x:R4+944, y:40, w:16, h:220},                // right wall upper
+        // Three internal floors
+        {x:R4+60, y:270, w:300, h:16},                // floor 1 left
+        {x:R4+500, y:270, w:300, h:16},               // floor 1 right
+        {x:R4+120, y:200, w:250, h:16},               // floor 2 left
+        {x:R4+550, y:200, w:200, h:16},               // floor 2 right
+        {x:R4+250, y:130, w:400, h:16},               // floor 3 choir loft
+        // Vertical connections
+        {x:R4+420, y:300, w:60, h:16},                // step ground to 1
+        {x:R4+400, y:230, w:50, h:16},                // step 1 to 2
+        {x:R4+800, y:160, w:80, h:16},                // side ledge
+
+        // ==============================
+        // ROOM 5: Market Cellar (3840-4800)
+        // Underground, nekkers, low ceiling
+        // ==============================
+        {x:R5, y:340, w:960, h:60},                   // floor
+        {x:R5, y:100, w:16, h:240},                   // left wall
+        {x:R5, y:100, w:960, h:16},                   // ceiling (low cellar)
+        {x:R5+944, y:100, w:16, h:160},               // right wall upper
+        // Barrels and crates
+        {x:R5+120, y:280, w:100, h:16, type:'wood'},   // barrel platform
+        {x:R5+300, y:240, w:80, h:16, type:'wood'},    // crate stack
+        {x:R5+500, y:200, w:120, h:16, type:'wood'},   // shelf
+        {x:R5+700, y:260, w:100, h:16, type:'wood'},   // barrel right
+        {x:R5+400, y:160, w:80, h:16},                // high shelf near ceiling
+
+        // ==============================
+        // ROOM 6: Damaged Building (4800-5760)
+        // Broken floors creating vertical maze
+        // ==============================
+        {x:R6, y:340, w:400, h:60},                   // floor left (right collapsed)
+        {x:R6+600, y:340, w:360, h:60},               // floor right section
+        {x:R6, y:60, w:16, h:280},                    // left wall
+        {x:R6, y:60, w:960, h:16},                    // ceiling
+        {x:R6+944, y:60, w:16, h:200},                // right wall upper
+        // Broken floor pieces
+        {x:R6+420, y:300, w:60, h:16},                // chunk 1
+        {x:R6+500, y:260, w:50, h:16},                // chunk 2
+        {x:R6+560, y:320, w:40, h:16},                // chunk 3
+        // Upper structure
+        {x:R6+100, y:220, w:200, h:16},               // intact upper left
+        {x:R6+400, y:180, w:150, h:16},               // mid section
+        {x:R6+650, y:140, w:200, h:16},               // upper right
+        {x:R6+300, y:120, w:80, h:16},                // high perch
+
+        // ==============================
+        // ROOM 7: Nekker Nest (5760-6720)
+        // Cave room, low ceiling, spikes on floor
+        // ==============================
+        {x:R7, y:340, w:960, h:60},                   // floor
+        {x:R7, y:120, w:16, h:220},                   // left wall
+        {x:R7, y:120, w:960, h:16},                   // ceiling (low cave)
+        {x:R7+944, y:120, w:16, h:140},               // right wall upper
+        // Cave platforms
+        {x:R7+150, y:280, w:100, h:16},               // rock shelf
+        {x:R7+320, y:240, w:80, h:16},                // stalagmite platform
+        {x:R7+500, y:200, w:120, h:16},               // cave ledge
+        {x:R7+700, y:250, w:100, h:16},               // rock outcrop
+        {x:R7+350, y:170, w:80, h:16},                // high nook
+
+        // ==============================
+        // ROOM 8: Swamp Gate (6720-7680)
+        // Boss drowner room, exit right
+        // ==============================
+        {x:R8, y:340, w:960, h:60},                   // floor
+        {x:R8, y:80, w:16, h:260},                    // left wall
+        {x:R8, y:80, w:960, h:16},                    // ceiling
+        // NO right wall - level exit
+        // Boss arena platforms
+        {x:R8+150, y:260, w:120, h:16},               // low left
+        {x:R8+400, y:200, w:160, h:16},               // center elevated
+        {x:R8+700, y:260, w:120, h:16},               // low right
+        {x:R8+300, y:140, w:100, h:16},               // high left
+        {x:R8+600, y:140, w:100, h:16},               // high right
     ],
     enemies: [
-        // Room 1: Alley — 1 bandit
-        {type:'bandit', x:600, y:280},
-        // Room 2: House ground floor — 2 drowners
-        {type:'drowner', x:950, y:280},
-        {type:'drowner', x:1200, y:180},
-        // Room 3: (no enemies, traversal challenge)
-        // Room 4: Church — 1 bandit at top, 1 at bottom
-        {type:'bandit', x:2780, y:20},         // tower top guard
-        {type:'bandit', x:2550, y:280},        // ground patrol
-        // Room 5: Market cellar — nekkers underground
-        {type:'nekker', x:3450, y:360},
-        {type:'nekker', x:3550, y:360},
-        // Room 6: Damaged building — 2 bandits in corridors
-        {type:'bandit', x:4180, y:280},
-        {type:'bandit', x:4520, y:70},
-        // Room 7: Nekker cave — 3 nekkers (tight)
-        {type:'nekker', x:4950, y:320},
-        {type:'nekker', x:5150, y:320},
-        {type:'nekker', x:5350, y:320},
-        // Room 8: Exit corridor — 3 drowners
-        {type:'drowner', x:5800, y:280},
-        {type:'drowner', x:6000, y:280},
-        {type:'drowner', x:6200, y:280},
+        // Room 1: Bandit guards (2)
+        {type:'bandit', x:R1+350, y:280},
+        {type:'bandit', x:R1+750, y:280},
+        // Room 2: Drowner in cellar, bandit on 2nd floor (2)
+        {type:'drowner', x:R2+200, y:280},
+        {type:'bandit', x:R2+300, y:160},
+        // Room 3: Drowners near well (2)
+        {type:'drowner', x:R3+300, y:280},
+        {type:'drowner', x:R3+700, y:280},
+        // Room 4: Bandits on each floor (3)
+        {type:'bandit', x:R4+200, y:280},
+        {type:'bandit', x:R4+600, y:210},
+        {type:'bandit', x:R4+400, y:70},
+        // Room 5: Nekkers in cellar (4)
+        {type:'nekker', x:R5+200, y:280},
+        {type:'nekker', x:R5+400, y:280},
+        {type:'nekker', x:R5+600, y:280},
+        {type:'nekker', x:R5+800, y:280},
+        // Room 6: Bandits in ruins (2)
+        {type:'bandit', x:R6+200, y:280},
+        {type:'bandit', x:R6+700, y:280},
+        // Room 7: Nekkers in nest (4)
+        {type:'nekker', x:R7+200, y:280},
+        {type:'nekker', x:R7+400, y:280},
+        {type:'nekker', x:R7+600, y:280},
+        {type:'nekker', x:R7+800, y:280},
+        // Room 8: Boss drowners (3)
+        {type:'drowner', x:R8+300, y:280},
+        {type:'drowner', x:R8+500, y:280},
+        {type:'drowner', x:R8+700, y:280},
     ],
     spikes: [
-        {x:3500, y:440, w:120, direction:'up'},     // cellar deep floor
-        {x:5050, y:370, w:80, direction:'up'},       // nekker cave floor
-        {x:5250, y:370, w:80, direction:'up'},       // nekker cave floor 2
+        // Room 3: spikes at bottom of well shaft
+        {x:R3+400, y:390, w:96, direction:'up'},
+        // Room 7: spikes in nekker nest
+        {x:R7+200, y:324, w:96, direction:'up'},
+        {x:R7+550, y:324, w:96, direction:'up'},
     ],
     secrets: [
-        {triggerX:2780, triggerY:80, reward:200,
-         enemies:[{type:'nobleman',x:2800,y:20},{type:'nobleman',x:2850,y:20}]},
-    ],
-    rooms: [
-        // Room 1: Alley (x:0-800)
-        {x:0, y:80, w:800, h:320, theme:'village',
-         doors:[{side:'right', offset:200, size:140}],
-         features:[{type:'torch',x:400,y:100}, {type:'cobweb',x:20,y:20}, {type:'cobweb',x:740,y:20}]},
-        // Room 2: House Ground Floor (x:800-1600)
-        {x:800, y:80, w:800, h:320, theme:'village',
-         doors:[{side:'left', offset:200, size:140}, {side:'right', offset:0, size:120}],
-         features:[{type:'torch',x:100,y:120}, {type:'shelf',x:100,y:160,w:200}, {type:'torch',x:600,y:120}]},
-        // Room 3: House Upper + Courtyard Drop (x:1600-2400)
-        {x:1600, y:80, w:800, h:320, theme:'village',
-         doors:[{side:'left', offset:120, size:140}, {side:'right', offset:160, size:160}],
-         features:[{type:'torch',x:100,y:100}, {type:'window',x:400,y:100}, {type:'cobweb',x:750,y:20}]},
-        // Room 4: Church (x:2400-3200) — tall, no ceiling
-        {x:2400, y:80, w:800, h:320, theme:'village',
-         doors:[{side:'left', offset:160, size:160}, {side:'right', offset:180, size:160}],
-         features:[{type:'torch',x:100,y:120}, {type:'torch',x:680,y:120}, {type:'banner',x:400,y:90}, {type:'window',x:200,y:100}, {type:'window',x:600,y:100}]},
-        // Room 5: Market Cellar (x:3200-4000)
-        {x:3200, y:80, w:800, h:380, theme:'village',
-         doors:[{side:'left', offset:180, size:160}, {side:'right', offset:160, size:160}],
-         features:[{type:'torch',x:100,y:240}, {type:'cobweb',x:300,y:20}, {type:'shelf',x:600,y:200,w:80}, {type:'chains',x:400,y:260}]},
-        // Room 6: Damaged Building (x:4000-4800)
-        {x:4000, y:80, w:800, h:320, theme:'village',
-         doors:[{side:'left', offset:160, size:160}, {side:'right', offset:200, size:120}],
-         features:[{type:'torch',x:200,y:100}, {type:'cobweb',x:20,y:20}, {type:'cobweb',x:750,y:20}, {type:'shelf',x:500,y:160,w:60}]},
-        // Room 7: Nekker Cave (x:4800-5600)
-        {x:4800, y:80, w:800, h:320, theme:'village',
-         doors:[{side:'left', offset:200, size:180}, {side:'right', offset:220, size:160}],
-         features:[{type:'cobweb',x:100,y:220}, {type:'cobweb',x:400,y:220}, {type:'chains',x:600,y:240}, {type:'torch',x:700,y:250}]},
-        // Room 8: Exit Corridor (x:5600-6400)
-        {x:5600, y:80, w:800, h:320, theme:'village',
-         doors:[{side:'left', offset:220, size:160}],
-         features:[{type:'torch',x:200,y:100}, {type:'torch',x:600,y:100}, {type:'banner',x:400,y:90}, {type:'cobweb',x:750,y:20}]}
+        // Room 4: secret in church choir loft
+        {triggerX:R4+400, triggerY:130, reward:200,
+         enemies:[{type:'nobleman', x:R4+420, y:70}, {type:'nobleman', x:R4+480, y:70}]},
     ]
 };
 
-// Level 2: The Swamp Depths (10 rooms = 9600px)
-// PRINCE-OF-PERSIA room-based design: walled rooms ~800-960px, swamp theme
+
+// ============================================================
+// Level 2: The Swamp Depths - Prince of Persia ROOM design
+// 10 rooms, each ~960px wide. Swamp/cave theme.
+// ============================================================
+
+var S1 = 0, S2 = 960, S3 = 1920, S4 = 2880, S5 = 3840, S6 = 4800;
+var S7 = 5760, S8 = 6720, S9 = 7680, S10 = 8640;
+
 W.StoryLevel2 = {
     name: 'The Swamp Depths',
     width: 9600,
     bgTheme: 'swamp',
-    storyText: 'The trail leads deep into the swamp. Witch Hunter camps dot the mire — they\'re driving monsters toward the village.',
+    storyText: "The trail leads deep into the swamp. Witch Hunter camps dot the mire - they're driving monsters toward the village.",
     platforms: [
-        // ============================================================
-        // ROOM 1: SWAMP ENTRANCE HUT (x:0–960)
-        // Wooden hut at swamp edge. Small interior. 1 ghoul outside.
-        // ============================================================
-        // Floor
-        {x:0, y:340, w:960, h:60},
-        // Walls
-        {x:0, y:140, w:16, h:200},                // left wall
-        {x:944, y:140, w:16, h:200},              // right wall
+        // ==============================
+        // ROOM 1: Swamp Entrance - wooden hut (0-960)
+        // ==============================
+        {x:S1, y:340, w:960, h:60, type:'wood'},       // wooden floor
+        {x:S1, y:80, w:16, h:260},                     // left wall
+        {x:S1, y:80, w:960, h:16, type:'wood'},        // ceiling (wooden hut)
+        {x:S1+944, y:80, w:16, h:180},                 // right wall upper
         // Interior
-        {x:100, y:240, w:200, h:16, type:'wood'}, // hut loft
-        {x:350, y:280, w:120, h:16, type:'wood'}, // crate shelf
-        {x:600, y:260, w:140, h:16, type:'wood'}, // porch awning
+        {x:S1+100, y:260, w:120, h:16, type:'wood'},   // table
+        {x:S1+350, y:220, w:80, h:16, type:'wood'},    // crate
+        {x:S1+550, y:180, w:100, h:16, type:'wood'},   // upper shelf
+        {x:S1+750, y:260, w:100, h:16, type:'wood'},   // barrel stack
 
-        // ============================================================
-        // ROOM 2: HOLLOW TREE (x:960–1920)
-        // Trunk walls. Climb branches inside tree. 1 drowner.
-        // ============================================================
-        // Floor
-        {x:960, y:340, w:960, h:60},
-        // Trunk walls
-        {x:960, y:100, w:16, h:240},              // left trunk wall
-        {x:1904, y:100, w:16, h:240},             // right trunk wall
-        // Branches (climb up inside)
-        {x:1100, y:240, w:160, h:14, type:'wood'},// branch at y:240
-        {x:1300, y:160, w:180, h:14, type:'wood'},// branch at y:160
-        {x:1500, y:100, w:200, h:14, type:'wood'},// branch at y:100
-        {x:1720, y:180, w:120, h:14, type:'wood'},// descent branch
+        // ==============================
+        // ROOM 2: Hollow Tree - tall room, branches (960-1920)
+        // ==============================
+        {x:S2, y:340, w:960, h:60},                    // ground
+        {x:S2, y:40, w:16, h:300},                     // left wall (tall tree)
+        {x:S2, y:40, w:960, h:16},                     // canopy ceiling
+        {x:S2+944, y:40, w:16, h:220},                 // right wall upper
+        // Branch platforms to climb
+        {x:S2+80, y:280, w:120, h:12, type:'wood'},    // low branch
+        {x:S2+250, y:220, w:100, h:12, type:'wood'},   // branch 2
+        {x:S2+420, y:170, w:140, h:12, type:'wood'},   // branch 3
+        {x:S2+600, y:120, w:100, h:12, type:'wood'},   // high branch
+        {x:S2+750, y:180, w:120, h:12, type:'wood'},   // descent branch
+        {x:S2+350, y:100, w:80, h:12, type:'wood'},    // top perch
 
-        // ============================================================
-        // ROOM 3: CANOPY BRIDGE (x:1920–2880)
-        // High floor y:160 (canopy). No ground — fall = death.
-        // Wood platforms. 2 ghouls.
-        // ============================================================
-        // Walls
-        {x:1920, y:120, w:16, h:220},             // left wall
-        {x:2864, y:120, w:16, h:220},             // right wall
-        // Canopy planks (the only footing — no ground below!)
-        {x:1960, y:160, w:200, h:16, type:'wood'},// canopy plank 1
-        {x:2200, y:160, w:180, h:16, type:'wood'},// canopy plank 2
-        {x:2420, y:160, w:160, h:16, type:'wood'},// canopy plank 3
-        {x:2620, y:160, w:220, h:16, type:'wood'},// canopy plank 4
-        // High branches
-        {x:2100, y:100, w:100, h:14, type:'wood'},// high branch
-        {x:2500, y:100, w:100, h:14, type:'wood'},// high branch 2
+        // ==============================
+        // ROOM 3: Cave Tunnel 1 - low ceiling, tight (1920-2880)
+        // ==============================
+        {x:S3, y:340, w:960, h:60},                    // floor
+        {x:S3, y:140, w:16, h:200},                    // left wall
+        {x:S3, y:140, w:960, h:16},                    // ceiling (low)
+        {x:S3+944, y:140, w:16, h:200},                // right wall full
+        // Cave internals
+        {x:S3+120, y:280, w:100, h:16},               // rock step
+        {x:S3+300, y:250, w:80, h:16},                // outcrop
+        {x:S3+500, y:220, w:120, h:16},               // ledge
+        {x:S3+700, y:270, w:100, h:16},               // rock shelf
+        {x:S3+450, y:180, w:60, h:16},                // nook near ceiling
 
-        // ============================================================
-        // ROOM 4: CAVE ENTRANCE (x:2880–3840)
-        // Descent. Floor drops y:380→y:420. Ceiling y:300. Drowners.
-        // ============================================================
-        // Walls
-        {x:2880, y:140, w:16, h:260},             // left wall
-        {x:3824, y:140, w:16, h:260},             // right wall
-        // Ceiling
-        {x:2880, y:300, w:960, h:16},
-        // Descending floors
-        {x:2920, y:340, w:300, h:60},             // upper floor y:340
-        {x:3300, y:380, w:280, h:20},             // mid drop y:380
-        {x:3620, y:420, w:200, h:20},             // deep floor y:420
-        // Stepping stone
-        {x:3400, y:340, w:80, h:14, type:'wood'}, // wood stepping stone
+        // ==============================
+        // ROOM 4: Cave Tunnel 2 - continuation (2880-3840)
+        // ==============================
+        {x:S4, y:340, w:960, h:60},                    // floor
+        {x:S4, y:140, w:16, h:200},                    // left wall
+        {x:S4, y:140, w:960, h:16},                    // ceiling (low)
+        {x:S4+944, y:140, w:16, h:120},                // right wall upper (gap at bottom)
+        // Cave platforms
+        {x:S4+100, y:280, w:80, h:16},                // step
+        {x:S4+250, y:240, w:100, h:16},               // mid platform
+        {x:S4+450, y:200, w:120, h:16},               // upper ledge
+        {x:S4+650, y:260, w:100, h:16},               // descent
+        {x:S4+800, y:300, w:80, h:16},                // low step near exit
 
-        // ============================================================
-        // ROOM 5: CAVE TUNNEL (x:3840–4800)
-        // Underground. Low ceiling y:280. Tight. Spikes on floor.
-        // ============================================================
-        // Walls
-        {x:3840, y:140, w:16, h:260},             // left wall
-        {x:4784, y:140, w:16, h:260},             // right wall
-        // Low ceiling
-        {x:3840, y:280, w:960, h:16},
-        // Floor
-        {x:3840, y:340, w:960, h:60},
-        // Raised planks (over spike gaps)
-        {x:3960, y:310, w:120, h:14, type:'wood'},// raised plank 1
-        {x:4200, y:310, w:100, h:14, type:'wood'},// raised plank 2
-        {x:4500, y:310, w:140, h:14, type:'wood'},// raised plank 3
+        // ==============================
+        // ROOM 5: Witch Hunter Camp 1 - stockade (3840-4800)
+        // ==============================
+        {x:S5, y:340, w:960, h:60, type:'wood'},       // wooden floor
+        {x:S5, y:80, w:16, h:260},                     // left wall
+        {x:S5, y:80, w:960, h:16, type:'wood'},        // ceiling
+        {x:S5+944, y:80, w:16, h:260},                 // right wall (full)
+        // Interior - camp structure
+        {x:S5+100, y:260, w:150, h:16, type:'wood'},   // bunk
+        {x:S5+350, y:200, w:120, h:16, type:'wood'},   // upper walkway
+        {x:S5+550, y:260, w:100, h:16, type:'wood'},   // crate platform
+        {x:S5+750, y:180, w:120, h:16, type:'wood'},   // watchtower base
+        {x:S5+780, y:120, w:80, h:16, type:'wood'},    // watchtower top
 
-        // ============================================================
-        // ROOM 6: WITCH HUNTER STOCKADE (x:4800–5760)
-        // Wooden walls, 2 floors (y:340 ground, y:200 upper).
-        // 2 witch hunters.
-        // ============================================================
-        // Walls
-        {x:4800, y:100, w:16, h:300},             // left wall
-        {x:5744, y:100, w:16, h:300},             // right wall
-        // Ground floor
-        {x:4800, y:340, w:960, h:60},
-        // Upper floor (two sections with gap)
-        {x:4850, y:200, w:400, h:16, type:'wood'},// upper floor left
-        {x:5350, y:200, w:380, h:16, type:'wood'},// upper floor right
-        // Mid scaffold + lookout
-        {x:5100, y:270, w:120, h:14, type:'wood'},// mid scaffold
-        {x:4900, y:130, w:100, h:14, type:'wood'},// high lookout
+        // ==============================
+        // ROOM 6: Witch Hunter Camp 2 - guard quarters (4800-5760)
+        // ==============================
+        {x:S6, y:340, w:960, h:60, type:'wood'},       // wooden floor
+        {x:S6, y:80, w:16, h:260},                     // left wall
+        {x:S6, y:80, w:960, h:16, type:'wood'},        // ceiling
+        {x:S6+944, y:80, w:16, h:180},                 // right wall upper
+        // Interior
+        {x:S6+80, y:260, w:100, h:16, type:'wood'},    // shelf left
+        {x:S6+250, y:200, w:140, h:16, type:'wood'},   // upper walkway
+        {x:S6+500, y:260, w:120, h:16, type:'wood'},   // mid shelf
+        {x:S6+700, y:180, w:100, h:16, type:'wood'},   // upper right
+        {x:S6+400, y:140, w:80, h:16, type:'wood'},    // high center
 
-        // ============================================================
-        // ROOM 7: PRISON ROOM (x:5760–6560) — TINY
-        // Walls close. Ceiling low y:240. 1 witch hunter blocks exit.
-        // ============================================================
-        // Walls
-        {x:5760, y:100, w:16, h:240},             // left wall
-        {x:6544, y:100, w:16, h:240},             // right wall
-        // Low ceiling
-        {x:5760, y:240, w:800, h:16},
-        // Floor
-        {x:5760, y:340, w:800, h:60},
-        // Shelves
-        {x:5860, y:290, w:100, h:14, type:'wood'},// low shelf left
-        {x:6300, y:290, w:100, h:14, type:'wood'},// low shelf right
+        // ==============================
+        // ROOM 7: Prison Cell - tiny, must fight to exit (5760-6720)
+        // ==============================
+        {x:S7, y:340, w:960, h:60},                    // floor
+        {x:S7, y:100, w:16, h:240},                    // left wall
+        {x:S7, y:100, w:960, h:16},                    // ceiling
+        {x:S7+944, y:100, w:16, h:160},                // right wall upper
+        // Cramped interior
+        {x:S7+150, y:280, w:80, h:16},                // bench
+        {x:S7+350, y:240, w:100, h:16},               // crate
+        {x:S7+600, y:200, w:80, h:16},                // high shelf
+        {x:S7+800, y:260, w:80, h:16},                // stepping stone
 
-        // ============================================================
-        // ROOM 8: UNDERGROUND RIVER (x:6560–7520)
-        // Cave, spike pits, stepping stones over gaps. 1 drowner.
-        // ============================================================
-        // Walls
-        {x:6560, y:120, w:16, h:280},             // left wall
-        {x:7504, y:120, w:16, h:280},             // right wall
-        // Ground (split by river gaps)
-        {x:6600, y:340, w:200, h:60},             // ground left
-        // Stepping stones over river
-        {x:6840, y:320, w:60, h:14, type:'wood'}, // stepping stone 1
-        {x:6940, y:300, w:60, h:14, type:'wood'}, // stepping stone 2
-        {x:7040, y:320, w:60, h:14, type:'wood'}, // stepping stone 3
-        // Ground right
-        {x:7200, y:340, w:300, h:60},
-        // Elevated plank
-        {x:7100, y:260, w:100, h:14, type:'wood'},// elevated plank
+        // ==============================
+        // ROOM 8: Underground River - spike pits (6720-7680)
+        // ==============================
+        {x:S8, y:340, w:350, h:60},                    // floor left
+        {x:S8+450, y:340, w:200, h:60},                // floor center island
+        {x:S8+750, y:340, w:210, h:60},                // floor right
+        {x:S8, y:80, w:16, h:260},                     // left wall
+        {x:S8, y:80, w:960, h:16},                     // ceiling
+        {x:S8+944, y:80, w:16, h:180},                 // right wall upper
+        // Bridges over spike pits
+        {x:S8+360, y:280, w:80, h:12, type:'wood'},    // bridge 1
+        {x:S8+660, y:280, w:80, h:12, type:'wood'},    // bridge 2
+        {x:S8+200, y:220, w:100, h:16},               // upper left
+        {x:S8+500, y:200, w:120, h:16},               // upper center
+        {x:S8+800, y:220, w:100, h:16},               // upper right
 
-        // ============================================================
-        // ROOM 9: BOSS APPROACH (x:7520–8480)
-        // Tighter, walls close, ceiling lowers. 2 witch hunters.
-        // ============================================================
-        // Walls
-        {x:7520, y:120, w:16, h:280},             // left wall
-        {x:8464, y:120, w:16, h:280},             // right wall
-        // Lowered ceiling
-        {x:7520, y:260, w:960, h:16},
-        // Floor
-        {x:7520, y:340, w:960, h:60},
-        // Planks
-        {x:7620, y:300, w:140, h:14, type:'wood'},// plank 1
-        {x:7900, y:300, w:120, h:14, type:'wood'},// plank 2
-        {x:8200, y:300, w:140, h:14, type:'wood'},// plank 3
+        // ==============================
+        // ROOM 9: Boss Cavern Entry (7680-8640)
+        // ==============================
+        {x:S9, y:340, w:960, h:60},                    // floor
+        {x:S9, y:60, w:16, h:280},                     // left wall
+        {x:S9, y:60, w:960, h:16},                     // ceiling (tall cavern)
+        {x:S9+944, y:60, w:16, h:280},                 // right wall (connects to R10)
+        // Arena platforms
+        {x:S9+100, y:260, w:150, h:16},               // low left
+        {x:S9+350, y:200, w:200, h:16},               // center elevated
+        {x:S9+650, y:260, w:150, h:16},               // low right
+        {x:S9+200, y:140, w:100, h:16},               // high left
+        {x:S9+600, y:140, w:100, h:16},               // high right
 
-        // ============================================================
-        // ROOM 10: BOSS CAVERN (x:8480–9600) — 1120px arena
-        // Walled arena. Multi-level. Witch hunter captain + 2 ghouls.
-        // ============================================================
-        // Walls
-        {x:8480, y:60, w:16, h:340},              // left wall
-        {x:9584, y:60, w:16, h:340},              // right wall
-        // Arena floor
-        {x:8480, y:340, w:1120, h:60},
-        // Upper platforms
-        {x:8580, y:240, w:250, h:16, type:'wood'},// upper platform left
-        {x:9200, y:240, w:250, h:16, type:'wood'},// upper platform right
-        // Top center platform
-        {x:8900, y:160, w:300, h:16, type:'wood'},// top center platform
-        // Low steps
-        {x:8700, y:300, w:100, h:14, type:'wood'},// low step left
-        {x:9350, y:300, w:100, h:14, type:'wood'},// low step right
+        // ==============================
+        // ROOM 10: Boss Cavern - Witch Hunter Captain (8640-9600)
+        // ==============================
+        {x:S10, y:340, w:960, h:60},                   // floor
+        {x:S10, y:60, w:16, h:280},                    // left wall
+        {x:S10, y:60, w:960, h:16},                    // ceiling
+        // NO right wall - level exit
+        // Boss arena
+        {x:S10+100, y:260, w:120, h:16},              // low left
+        {x:S10+300, y:190, w:160, h:16},              // center platform
+        {x:S10+550, y:260, w:120, h:16},              // low right
+        {x:S10+750, y:200, w:120, h:16},              // exit platform
+        {x:S10+400, y:120, w:120, h:16},              // high center
     ],
     enemies: [
-        // Room 1: 1 ghoul outside hut
-        {type:'ghoul', x:700, y:280},
-        // Room 2: 1 drowner at base of tree
-        {type:'drowner', x:1400, y:280},
-        // Room 3: 2 ghouls on canopy
-        {type:'ghoul', x:2250, y:100},
-        {type:'ghoul', x:2650, y:100},
-        // Room 4: 2 drowners in cave descent
-        {type:'drowner', x:3350, y:320},
-        {type:'drowner', x:3650, y:360},
-        // Room 5: 2 ghouls in tunnel
-        {type:'ghoul', x:4100, y:280},
-        {type:'ghoul', x:4450, y:280},
-        // Room 6: 2 witch hunters in stockade
-        {type:'witchHunter', x:5000, y:280},
-        {type:'witchHunter', x:5500, y:140},
-        // Room 7: 1 witch hunter blocks exit
-        {type:'witchHunter', x:6300, y:280},
-        // Room 8: 1 drowner by the river
-        {type:'drowner', x:7100, y:280},
-        // Room 9: 2 witch hunters in approach
-        {type:'witchHunter', x:7800, y:280},
-        {type:'witchHunter', x:8300, y:280},
-        // Room 10: witch hunter captain + 2 ghouls
-        {type:'witchHunter', x:9050, y:100},
-        {type:'ghoul', x:8700, y:280},
-        {type:'ghoul', x:9350, y:280},
+        // Room 1: Ghouls in hut (2)
+        {type:'ghoul', x:S1+300, y:280},
+        {type:'ghoul', x:S1+700, y:280},
+        // Room 2: Ghouls in tree (2)
+        {type:'ghoul', x:S2+300, y:280},
+        {type:'ghoul', x:S2+600, y:60},
+        // Room 3: Ghouls in cave (3)
+        {type:'ghoul', x:S3+200, y:280},
+        {type:'ghoul', x:S3+500, y:280},
+        {type:'ghoul', x:S3+800, y:280},
+        // Room 4: Ghouls deeper (2)
+        {type:'ghoul', x:S4+300, y:280},
+        {type:'ghoul', x:S4+650, y:280},
+        // Room 5: Witch hunters (3)
+        {type:'witchHunter', x:S5+200, y:280},
+        {type:'witchHunter', x:S5+500, y:280},
+        {type:'witchHunter', x:S5+800, y:120},
+        // Room 6: Witch hunters (3)
+        {type:'witchHunter', x:S6+200, y:280},
+        {type:'witchHunter', x:S6+500, y:280},
+        {type:'witchHunter', x:S6+750, y:120},
+        // Room 7: Prison guards (2)
+        {type:'witchHunter', x:S7+400, y:280},
+        {type:'witchHunter', x:S7+700, y:280},
+        // Room 8: Drowners (3)
+        {type:'drowner', x:S8+200, y:280},
+        {type:'drowner', x:S8+500, y:280},
+        {type:'drowner', x:S8+800, y:280},
+        // Room 9: Guards (2)
+        {type:'witchHunter', x:S9+300, y:280},
+        {type:'witchHunter', x:S9+700, y:280},
+        // Room 10: Boss fight (3)
+        {type:'witchHunter', x:S10+300, y:280},
+        {type:'witchHunter', x:S10+600, y:280},
+        {type:'ghoul', x:S10+450, y:280},
     ],
     spikes: [
-        // Room 5: spikes on tunnel floor (gaps between planks)
-        {x:4080, y:330, w:100, direction:'up'},
-        {x:4350, y:330, w:100, direction:'up'},
-        // Room 8: spike pits in river gaps
-        {x:6810, y:390, w:100, direction:'up'},
-        {x:7110, y:390, w:60, direction:'up'},
+        // Room 3: well shaft bottom
+        {x:R3+400, y:390, w:96, direction:'up'},
+        // Room 7: prison floor spikes
+        {x:S7+450, y:324, w:72, direction:'up'},
+        // Room 8: spike pits in underground river
+        {x:S8+350, y:390, w:96, direction:'up'},
+        {x:S8+650, y:390, w:96, direction:'up'},
     ],
     secrets: [
-        // Room 6: hidden loot on high lookout
-        {triggerX:4950, triggerY:130, reward:250,
-         enemies:[{type:'wraith',x:4970,y:80},{type:'ghoul',x:5010,y:80}]},
-    ],
-    rooms: [
-        // Room 1: Swamp Entrance Hut (x:0-960)
-        {x:0, y:140, w:960, h:260, theme:'swamp',
-         doors:[{side:'right', offset:0, size:200}],
-         features:[{type:'torch',x:200,y:40}, {type:'roots',x:800,y:180}, {type:'cobweb',x:20,y:20}]},
-        // Room 2: Hollow Tree (x:960-1920)
-        {x:960, y:100, w:960, h:300, theme:'swamp',
-         doors:[{side:'left', offset:0, size:240}, {side:'right', offset:0, size:240}],
-         features:[{type:'roots',x:100,y:40}, {type:'roots',x:800,y:40}, {type:'cobweb',x:480,y:20}, {type:'roots',x:400,y:200}]},
-        // Room 3: Canopy Bridge (x:1920-2880)
-        {x:1920, y:120, w:960, h:220, theme:'swamp',
-         doors:[{side:'left', offset:0, size:220}, {side:'right', offset:0, size:220}],
-         features:[{type:'roots',x:100,y:20}, {type:'roots',x:860,y:20}, {type:'cobweb',x:480,y:10}]},
-        // Room 4: Cave Entrance (x:2880-3840)
-        {x:2880, y:140, w:960, h:300, theme:'swamp',
-         doors:[{side:'left', offset:0, size:260}, {side:'right', offset:0, size:260}],
-         features:[{type:'roots',x:100,y:20}, {type:'cobweb',x:800,y:20}, {type:'torch',x:480,y:180}, {type:'roots',x:600,y:200}]},
-        // Room 5: Cave Tunnel (x:3840-4800)
-        {x:3840, y:140, w:960, h:260, theme:'swamp',
-         doors:[{side:'left', offset:0, size:260}, {side:'right', offset:0, size:260}],
-         features:[{type:'cobweb',x:100,y:150}, {type:'cobweb',x:500,y:150}, {type:'roots',x:800,y:160}, {type:'crystals',x:300,y:160}]},
-        // Room 6: Witch Hunter Stockade (x:4800-5760)
-        {x:4800, y:100, w:960, h:300, theme:'swamp',
-         doors:[{side:'left', offset:0, size:300}, {side:'right', offset:0, size:300}],
-         features:[{type:'torch',x:150,y:40}, {type:'torch',x:800,y:40}, {type:'torch',x:480,y:120}, {type:'banner',x:480,y:30}]},
-        // Room 7: Prison Room (x:5760-6560)
-        {x:5760, y:100, w:800, h:300, theme:'swamp',
-         doors:[{side:'left', offset:0, size:240}, {side:'right', offset:0, size:240}],
-         features:[{type:'chains',x:200,y:120}, {type:'chains',x:600,y:120}, {type:'cobweb',x:400,y:20}, {type:'torch',x:400,y:160}]},
-        // Room 8: Underground River (x:6560-7520)
-        {x:6560, y:120, w:960, h:280, theme:'swamp',
-         doors:[{side:'left', offset:0, size:280}, {side:'right', offset:0, size:280}],
-         features:[{type:'roots',x:100,y:20}, {type:'cobweb',x:800,y:20}, {type:'torch',x:480,y:40}, {type:'crystals',x:300,y:200}]},
-        // Room 9: Boss Approach (x:7520-8480)
-        {x:7520, y:120, w:960, h:280, theme:'swamp',
-         doors:[{side:'left', offset:0, size:280}, {side:'right', offset:0, size:280}],
-         features:[{type:'torch',x:200,y:40}, {type:'torch',x:760,y:40}, {type:'cobweb',x:480,y:150}, {type:'roots',x:600,y:180}]},
-        // Room 10: Boss Cavern (x:8480-9600)
-        {x:8480, y:60, w:1120, h:340, theme:'swamp',
-         doors:[{side:'left', offset:0, size:340}],
-         features:[{type:'torch',x:200,y:40}, {type:'torch',x:920,y:40}, {type:'torch',x:560,y:40}, {type:'roots',x:100,y:20}, {type:'roots',x:1020,y:20}, {type:'crystals',x:560,y:260}]}
+        // Room 9: hidden in high center
+        {triggerX:S9+350, triggerY:200, reward:250,
+         enemies:[{type:'wraith', x:S9+380, y:140}, {type:'ghoul', x:S9+500, y:140}]},
     ]
 };
 
