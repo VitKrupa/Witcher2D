@@ -28,71 +28,150 @@ W.WildHuntWarrior = class extends W.Enemy {
         super.update(dt, px, py, platforms);
     }
     drawBody(ctx) {
+        if (this._t === undefined) this._t = 0;
+        this._t += 0.12;
         const x = this.x, y = this.y;
+        const t = this._t;
+        const isChasing = this.state === 'chase';
+        const isAttacking = this.state === 'attack';
+        const isHit = this.state === 'hit';
+        const attackProgress = isAttacking ? (1 - this.stateTimer / 20) : 0;
+
+        // Menacing stride - heavy, deliberate
+        const strideBob = isChasing ? Math.abs(Math.sin(t * 1.8)) * 2 : Math.sin(t * 0.5) * 1;
+        const walkCycle = isChasing ? Math.sin(t * 1.8) : 0;
+
         ctx.save();
-        if (this.facing === -1) { ctx.translate(x+this.w/2,0); ctx.scale(-1,1); ctx.translate(-(x+this.w/2),0); }
-        // Frost aura
-        ctx.globalAlpha = 0.15 + Math.sin(this.frostAura) * 0.08;
+        if (this.facing === -1) { ctx.translate(x + this.w / 2, 0); ctx.scale(-1, 1); ctx.translate(-(x + this.w / 2), 0); }
+
+        if (isHit && Math.floor(t * 10) % 2 === 0) ctx.globalAlpha = 0.5;
+
+        const by = y - strideBob;
+
+        // Frost aura - pulses with intensity
+        const auraSize = 26 + Math.sin(this.frostAura * 1.2) * 5;
+        ctx.globalAlpha = 0.12 + Math.sin(this.frostAura) * 0.06;
         ctx.fillStyle = C.WILD_HUNT_ICE || '#88aacc';
         ctx.beginPath();
-        ctx.arc(x+18, y+28, 28, 0, Math.PI*2);
+        ctx.arc(x + 18, by + 28, auraSize, 0, Math.PI * 2);
         ctx.fill();
-        ctx.globalAlpha = 1;
-        // Spiked helmet
-        ctx.fillStyle = C.WILD_HUNT_DARK || '#0a0a1a';
-        ctx.fillRect(x+8, y+2, 20, 16);
-        // Helmet spikes
-        ctx.fillRect(x+6, y, 3, 6);
-        ctx.fillRect(x+16, y-3, 4, 6);
-        ctx.fillRect(x+27, y, 3, 6);
-        // Ice-blue eye glow
-        ctx.fillStyle = '#66ccff';
-        ctx.fillRect(x+12, y+8, 4, 3);
-        ctx.fillRect(x+20, y+8, 4, 3);
-        // Glow effect around eyes
-        ctx.globalAlpha = 0.4;
-        ctx.fillStyle = '#44aaff';
-        ctx.fillRect(x+10, y+7, 16, 5);
-        ctx.globalAlpha = 1;
-        // Dark plate armor body
-        ctx.fillStyle = '#0a0a1a';
-        ctx.fillRect(x+5, y+18, 26, 20);
-        // Ice accents on armor
-        ctx.fillStyle = '#4488aa';
-        ctx.fillRect(x+7, y+20, 2, 8);
-        ctx.fillRect(x+27, y+20, 2, 8);
-        ctx.fillRect(x+14, y+24, 8, 2);
-        // Spiked shoulders
-        ctx.fillStyle = '#1a1a2a';
-        ctx.fillRect(x+1, y+16, 7, 8);
-        ctx.fillRect(x+28, y+16, 7, 8);
-        ctx.fillStyle = '#0a0a1a';
-        ctx.fillRect(x-1, y+14, 3, 4);
-        ctx.fillRect(x+34, y+14, 3, 4);
-        // Arms
-        ctx.fillStyle = '#0a0a1a';
-        ctx.fillRect(x+1, y+24, 5, 14);
-        ctx.fillRect(x+30, y+24, 5, 14);
-        // Large sword
-        ctx.fillStyle = '#8ab';
-        ctx.fillRect(x+32, y+6, 3, 26);
-        ctx.fillStyle = '#0a0a2a';
-        ctx.fillRect(x+30, y+18, 7, 3);
-        // Ice crystals on sword
+        // Inner aura
+        ctx.globalAlpha = 0.08 + Math.sin(this.frostAura * 1.5) * 0.04;
+        ctx.fillStyle = '#aaccee';
+        ctx.beginPath();
+        ctx.arc(x + 18, by + 28, auraSize * 0.6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
+
+        // Ice particles floating around body - 3 orbiting particles
         ctx.fillStyle = '#aaddff';
-        ctx.fillRect(x+33, y+8, 2, 3);
-        ctx.fillRect(x+31, y+14, 2, 3);
-        // Legs
+        for (let i = 0; i < 3; i++) {
+            const angle = t * 0.8 + i * (Math.PI * 2 / 3);
+            const radius = 20 + Math.sin(t * 1.5 + i) * 4;
+            const px = x + 18 + Math.cos(angle) * radius;
+            const py = by + 26 + Math.sin(angle) * radius * 0.6;
+            ctx.fillRect(px, py, 2, 2);
+            // Particle trail
+            ctx.globalAlpha = 0.3;
+            ctx.fillRect(px - Math.cos(angle) * 3, py - Math.sin(angle) * 2, 2, 2);
+            ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
+        }
+
+        // Legs - heavy, menacing stride
+        const legSwing1 = walkCycle * 4;
+        const legSwing2 = -walkCycle * 4;
         ctx.fillStyle = '#111';
-        ctx.fillRect(x+8, y+38, 7, 14);
-        ctx.fillRect(x+21, y+38, 7, 14);
+        ctx.fillRect(x + 8 + legSwing1 * 0.4, by + 38, 7, 14);
+        ctx.fillRect(x + 21 + legSwing2 * 0.4, by + 38, 7, 14);
+
         // Boots with spikes
         ctx.fillStyle = '#0a0a1a';
-        ctx.fillRect(x+6, y+50, 10, 6);
-        ctx.fillRect(x+20, y+50, 10, 6);
+        ctx.fillRect(x + 6 + legSwing1 * 0.4, by + 50, 10, 6);
+        ctx.fillRect(x + 20 + legSwing2 * 0.4, by + 50, 10, 6);
+        // Boot spikes
         ctx.fillStyle = '#334';
-        ctx.fillRect(x+5, y+50, 3, 3);
-        ctx.fillRect(x+28, y+50, 3, 3);
+        ctx.fillRect(x + 5 + legSwing1 * 0.4, by + 50, 3, 3);
+        ctx.fillRect(x + 28 + legSwing2 * 0.4, by + 50, 3, 3);
+
+        // Dark plate armor body
+        ctx.fillStyle = '#0a0a1a';
+        ctx.fillRect(x + 5, by + 18, 26, 20);
+
+        // Ice accents on armor - pulse with frost aura
+        const icePulse = 0.7 + Math.sin(this.frostAura * 1.5) * 0.3;
+        const iceR = Math.floor(68 * icePulse);
+        const iceG = Math.floor(136 * icePulse);
+        const iceB = Math.floor(170 * icePulse);
+        ctx.fillStyle = `rgb(${iceR},${iceG},${iceB})`;
+        ctx.fillRect(x + 7, by + 20, 2, 8);
+        ctx.fillRect(x + 27, by + 20, 2, 8);
+        ctx.fillRect(x + 14, by + 24, 8, 2);
+        // Additional ice detail
+        ctx.fillRect(x + 12, by + 30, 12, 1);
+
+        // Spiked shoulders - menacing
+        ctx.fillStyle = '#1a1a2a';
+        ctx.fillRect(x + 1, by + 16, 7, 8);
+        ctx.fillRect(x + 28, by + 16, 7, 8);
+        // Shoulder spikes
+        ctx.fillStyle = '#0a0a1a';
+        ctx.fillRect(x - 1, by + 13, 3, 5);
+        ctx.fillRect(x + 34, by + 13, 3, 5);
+        // Spike tips with ice glow
+        ctx.fillStyle = `rgb(${iceR},${iceG},${iceB})`;
+        ctx.fillRect(x - 1, by + 13, 1, 2);
+        ctx.fillRect(x + 36, by + 13, 1, 2);
+
+        // Arms - swing with stride
+        const armSwing = isChasing ? Math.sin(t * 1.8) * 3 : 0;
+        ctx.fillStyle = '#0a0a1a';
+        ctx.fillRect(x + 1, by + 24 + armSwing, 5, 14);
+        ctx.fillRect(x + 30, by + 24 - armSwing, 5, 14);
+
+        // Large sword - raised high during attack
+        const swordRaise = isAttacking ? (1 - attackProgress) * 12 : 0;
+        const swordSwing = isAttacking ? attackProgress * 14 : 0;
+        ctx.fillStyle = '#8ab';
+        ctx.fillRect(x + 32, by + 4 - swordRaise + swordSwing, 3, 26);
+        // Sword ice crystals
+        ctx.fillStyle = '#aaddff';
+        ctx.fillRect(x + 33, by + 6 - swordRaise + swordSwing, 2, 3);
+        ctx.fillRect(x + 31, by + 12 - swordRaise + swordSwing, 2, 3);
+        ctx.fillRect(x + 33, by + 18 - swordRaise + swordSwing, 2, 3);
+        // Sword hilt
+        ctx.fillStyle = '#0a0a2a';
+        ctx.fillRect(x + 30, by + 18 - swordRaise * 0.5, 7, 3);
+        // Hilt ice accent
+        ctx.fillStyle = `rgb(${iceR},${iceG},${iceB})`;
+        ctx.fillRect(x + 30, by + 18 - swordRaise * 0.5, 7, 1);
+
+        // Spiked helmet
+        const headBob = isChasing ? Math.sin(t * 1.8) * 1 : 0;
+        ctx.fillStyle = C.WILD_HUNT_DARK || '#0a0a1a';
+        ctx.fillRect(x + 8, by + 2 + headBob, 20, 16);
+
+        // Helmet spikes
+        ctx.fillRect(x + 6, by + headBob, 3, 6);
+        ctx.fillRect(x + 16, by - 3 + headBob, 4, 6);
+        ctx.fillRect(x + 27, by + headBob, 3, 6);
+
+        // Ice-blue eye glow - intense, pulsing
+        const eyeGlow = 0.7 + Math.sin(t * 2) * 0.3;
+        ctx.fillStyle = `rgba(102,204,255,${eyeGlow})`;
+        ctx.fillRect(x + 12, by + 8 + headBob, 4, 3);
+        ctx.fillRect(x + 20, by + 8 + headBob, 4, 3);
+
+        // Eye glow bleed effect
+        ctx.globalAlpha = 0.35 + Math.sin(t * 2) * 0.15;
+        ctx.fillStyle = '#44aaff';
+        ctx.fillRect(x + 10, by + 7 + headBob, 16, 5);
+        // Eye trail when moving
+        if (isChasing) {
+            ctx.globalAlpha = 0.15;
+            ctx.fillRect(x + 8, by + 8 + headBob, 4, 3);
+        }
+        ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
+
         ctx.restore();
     }
 };
@@ -141,50 +220,117 @@ W.WitchHunter = class extends W.Enemy {
         }
     }
     drawBody(ctx) {
+        if (this._t === undefined) this._t = 0;
+        this._t += 0.11;
         const x = this.x, y = this.y;
+        const t = this._t;
+        const isChasing = this.state === 'chase';
+        const isAttacking = this.state === 'attack';
+        const isHit = this.state === 'hit';
+        const attackProgress = isAttacking ? (1 - this.stateTimer / 20) : 0;
+
+        // Is shooting (cooldown just reset recently)
+        const isShooting = this.shootCooldown > 60;
+
+        const walkBob = isChasing ? Math.abs(Math.sin(t * 2)) * 1.5 : Math.sin(t * 0.6) * 0.8;
+        const walkCycle = isChasing ? Math.sin(t * 2) : 0;
+
         ctx.save();
-        if (this.facing === -1) { ctx.translate(x+this.w/2,0); ctx.scale(-1,1); ctx.translate(-(x+this.w/2),0); }
-        // Wide-brim hat
-        ctx.fillStyle = '#2a1a0a';
-        ctx.fillRect(x+2, y+4, 26, 4); // brim
-        ctx.fillRect(x+8, y, 14, 6); // crown
-        // Face
-        ctx.fillStyle = '#d4a574';
-        ctx.fillRect(x+8, y+8, 14, 10);
-        // Stern eyes
-        ctx.fillStyle = '#333';
-        ctx.fillRect(x+10, y+11, 3, 2);
-        ctx.fillRect(x+17, y+11, 3, 2);
-        // Frown
-        ctx.fillStyle = '#9a7a5a';
-        ctx.fillRect(x+11, y+15, 8, 1);
-        // Dark red robes
-        ctx.fillStyle = C.WITCH_HUNTER_RED || '#8a2a1a';
-        ctx.fillRect(x+5, y+18, 20, 18);
-        // Robe details
-        ctx.fillStyle = '#6a1a0a';
-        ctx.fillRect(x+14, y+18, 2, 18);
-        // Cross/emblem
-        ctx.fillStyle = '#ddd';
-        ctx.fillRect(x+13, y+22, 4, 6);
-        ctx.fillRect(x+11, y+24, 8, 2);
-        // Arms
-        ctx.fillStyle = '#7a2a1a';
-        ctx.fillRect(x+1, y+20, 5, 12);
-        ctx.fillRect(x+24, y+20, 5, 12);
-        // Crossbow
-        ctx.fillStyle = '#5a4020';
-        ctx.fillRect(x+24, y+22, 8, 3);
-        ctx.fillStyle = '#888';
-        ctx.fillRect(x+22, y+20, 2, 7);
-        // Legs (under robe)
+        if (this.facing === -1) { ctx.translate(x + this.w / 2, 0); ctx.scale(-1, 1); ctx.translate(-(x + this.w / 2), 0); }
+
+        if (isHit && Math.floor(t * 10) % 2 === 0) ctx.globalAlpha = 0.5;
+
+        const by = y - walkBob;
+
+        // Legs under robe - walk cycle
+        const legSwing1 = walkCycle * 4;
+        const legSwing2 = -walkCycle * 4;
         ctx.fillStyle = '#3a1a0a';
-        ctx.fillRect(x+8, y+36, 6, 12);
-        ctx.fillRect(x+16, y+36, 6, 12);
+        ctx.fillRect(x + 8 + legSwing1 * 0.4, by + 36, 6, 12);
+        ctx.fillRect(x + 16 + legSwing2 * 0.4, by + 36, 6, 12);
+
         // Boots
         ctx.fillStyle = '#2a1a0a';
-        ctx.fillRect(x+7, y+47, 7, 5);
-        ctx.fillRect(x+16, y+47, 7, 5);
+        ctx.fillRect(x + 7 + legSwing1 * 0.4, by + 47, 7, 5);
+        ctx.fillRect(x + 16 + legSwing2 * 0.4, by + 47, 7, 5);
+
+        // Dark red robes - sway at bottom
+        ctx.fillStyle = C.WITCH_HUNTER_RED || '#8a2a1a';
+        ctx.fillRect(x + 5, by + 18, 20, 18);
+        // Robe bottom sway
+        const robeSway1 = Math.sin(t * 1.5) * 1.5;
+        const robeSway2 = Math.sin(t * 1.5 + 1) * 1.5;
+        ctx.fillRect(x + 4 + robeSway1, by + 34, 6, 4);
+        ctx.fillRect(x + 20 + robeSway2, by + 34, 6, 4);
+
+        // Robe center seam
+        ctx.fillStyle = '#6a1a0a';
+        ctx.fillRect(x + 14, by + 18, 2, 18);
+
+        // Cross/emblem on chest
+        ctx.fillStyle = '#ddd';
+        ctx.fillRect(x + 13, by + 22, 4, 6);
+        ctx.fillRect(x + 11, by + 24, 8, 2);
+        // Emblem glow
+        ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.1 : 0.15;
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(x + 11, by + 22, 8, 6);
+        ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
+
+        // Left arm - holds crossbow support
+        const leftArmSwing = isShooting ? -2 : (isChasing ? Math.sin(t * 2) * 3 : 0);
+        ctx.fillStyle = '#7a2a1a';
+        ctx.fillRect(x + 1, by + 20 + leftArmSwing, 5, 12);
+
+        // Right arm - extends forward when shooting, swings during attack
+        const rightArmExtend = isShooting ? 6 : (isAttacking ? attackProgress * 6 : (isChasing ? -Math.sin(t * 2) * 3 : 0));
+        ctx.fillStyle = '#7a2a1a';
+        ctx.fillRect(x + 24 + rightArmExtend * 0.5, by + 20 - rightArmExtend * 0.3, 5, 12);
+
+        // Crossbow - aims forward when shooting
+        const bowExtend = isShooting ? 4 : 0;
+        ctx.fillStyle = '#5a4020';
+        ctx.fillRect(x + 24 + bowExtend, by + 22 - bowExtend * 0.3, 8, 3);
+        // Crossbow arms
+        ctx.fillStyle = '#888';
+        ctx.fillRect(x + 22 + bowExtend, by + 20 - bowExtend * 0.3, 2, 7);
+        // Bowstring
+        ctx.fillStyle = '#aaa';
+        ctx.fillRect(x + 22 + bowExtend, by + 20 - bowExtend * 0.3, 1, 1);
+        ctx.fillRect(x + 22 + bowExtend, by + 26 - bowExtend * 0.3, 1, 1);
+
+        // Face
+        ctx.fillStyle = '#d4a574';
+        ctx.fillRect(x + 8, by + 8, 14, 10);
+
+        // Stern eyes
+        ctx.fillStyle = '#333';
+        ctx.fillRect(x + 10, by + 11, 3, 2);
+        ctx.fillRect(x + 17, by + 11, 3, 2);
+        // Furrowed brows
+        ctx.fillStyle = '#9a7a5a';
+        ctx.fillRect(x + 10, by + 10, 3, 1);
+        ctx.fillRect(x + 17, by + 10, 3, 1);
+
+        // Frown
+        ctx.fillStyle = '#9a7a5a';
+        ctx.fillRect(x + 11, by + 15, 8, 1);
+
+        // Wide-brim hat - bobs slightly
+        const hatBob = isChasing ? Math.sin(t * 2) * 0.5 : 0;
+        ctx.fillStyle = '#2a1a0a';
+        ctx.fillRect(x + 2, by + 4 + hatBob, 26, 4); // brim
+        ctx.fillRect(x + 8, by + hatBob, 14, 6); // crown
+        // Hat band
+        ctx.fillStyle = '#444';
+        ctx.fillRect(x + 8, by + 4 + hatBob, 14, 1);
+
+        // Hat shadow on face - darkens upper face
+        ctx.globalAlpha = 0.3;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(x + 8, by + 8, 14, 4);
+        ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
+
         ctx.restore();
     }
 };
