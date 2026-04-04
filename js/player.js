@@ -591,6 +591,7 @@ W.Player = class {
         this.y += this.vy * spd;
 
         // Platform collision
+        var wasOnGround = this.onGround;
         this.onGround = false;
         for (const p of platforms) {
             const pr = p.rect || p;
@@ -605,6 +606,15 @@ W.Player = class {
                     }
                 }
             }
+        }
+
+        // Coyote time: 6 frames after leaving ground you can still jump
+        if (this.onGround) {
+            this._coyoteFrames = 6;
+        } else if (wasOnGround) {
+            this._coyoteFrames = 6;
+        } else if (this._coyoteFrames > 0) {
+            this._coyoteFrames -= spd;
         }
 
         // Fall off screen death
@@ -658,9 +668,11 @@ W.Player = class {
     }
 
     jump() {
-        if (this.onGround) {
+        // Coyote time: allow jump for a few frames after leaving ground
+        if (this.onGround || (this._coyoteFrames && this._coyoteFrames > 0)) {
             this.vy = this.jumpForce;
             this.state = States.JUMP;
+            this._coyoteFrames = 0;
             this.onGround = false;
         }
     }

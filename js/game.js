@@ -222,9 +222,14 @@
         // -----------------------------------------------------------
 
         restart() {
-            this.running = false;
-            this.init();
-            this.showStartScreen();
+            if (this.gameMode === 'story' && this._lastCheckpointX) {
+                this.respawnFromCheckpoint();
+            } else {
+                this.running = false;
+                this._lastCheckpointX = 0;
+                this.init();
+                this.showStartScreen();
+            }
         }
 
         // -----------------------------------------------------------
@@ -261,12 +266,17 @@
                 this.player.hp = this.player.maxHp;
             }
 
-            // Show story intro text
-            if (storyData.storyText) {
+            // Show story intro text (only on first visit, not respawn)
+            if (storyData.storyText && !this._levelVisited) {
+                this._levelVisited = {};
+            }
+            if (storyData.storyText && (!this._levelVisited || !this._levelVisited[index])) {
                 this.showingStoryText = true;
-                this.storyTextTimer = 180; // ~3 seconds at 60fps
+                this.storyTextTimer = 180;
                 this._storyText = storyData.storyText;
                 this._storyTitle = storyData.name || ('Level ' + (index + 1));
+                if (!this._levelVisited) this._levelVisited = {};
+                this._levelVisited[index] = true;
             }
 
             // Update wave display to show level name
@@ -383,6 +393,14 @@
 
             // --- Floating texts ---
             this.updateFloatingTexts(dt);
+
+            // --- Checkpoint tracking (every 480px = half screen) ---
+            if (this.player && this.player.onGround && this.gameMode === 'story') {
+                var screenPos = Math.floor(this.player.x / 480) * 480;
+                if (!this._lastCheckpointX || screenPos > this._lastCheckpointX) {
+                    this._lastCheckpointX = screenPos;
+                }
+            }
 
             // --- Ambient particles ---
             if (Math.random() < 0.03 && this.level) {
@@ -1022,6 +1040,56 @@
             }
 
             overScreen.style.display = 'flex';
+
+            // Keep drawing last frame so game over screen shows over game
+            var self = this;
+            this._gameOverDraw = function() {
+                self.draw();
+            };
+            this._gameOverDraw();
+        }
+
+        // Respawn from checkpoint (same level, keep score)
+        respawnFromCheckpoint() {
+            if (!this.player) return;
+            // Reset player state
+            this.player.hp = this.player.maxHp;
+            this.player.state = 'idle';
+            this.player.vx = 0;
+            this.player.vy = 0;
+            this.player.invincible = false;
+            // Move to checkpoint (last safe X position rounded to screen start)
+            var checkpointX = Math.max(100, Math.floor(this._lastCheckpointX || 100));
+            this.player.x = checkpointX;
+            this.player.y = 420;
+
+            // Don't show story text on respawn
+            this.showingStoryText = false;
+
+            // Clear gore
+            W.Gore.clear();
+
+            // Respawn enemies
+            this.enemies = [];
+            this.projectiles = [];
+            var storyData = W.StoryLevels[this.currentLevelIndex];
+            if (storyData && storyData.enemies) {
+                for (var i = 0; i < storyData.enemies.length; i++) {
+                    var def = storyData.enemies[i];
+                    // Only spawn enemies ahead of checkpoint
+                    if (def.x >= checkpointX - 200) {
+                        var enemy = W.createEnemy(def.type, def.x, def.y);
+                        if (enemy) this.enemies.push(enemy);
+                    }
+                }
+            }
+
+            // Resume
+            document.getElementById('gameOverScreen').style.display = 'none';
+            W.Mobile.show();
+            this.running = true;
+            this.lastTime = 0;
+            requestAnimationFrame(this._loopBound);
         }
     };
 
