@@ -138,7 +138,7 @@
                 // Wave mode
                 this.level = W.createWaveLevel();
                 this.waveManager = new W.WaveManager();
-                this.player = new W.Player(this.level.playerStart.x, this.level.playerStart.y);
+                this.player = new W.Player(100, 420);
                 this.player.score = 0;
                 var waveDisp = document.getElementById('waveDisplay');
                 if (waveDisp) waveDisp.textContent = 'Wave 1';
@@ -183,24 +183,21 @@
 
             // Create / reposition player
             if (!this.player) {
-                this.player = new W.Player(
-                    this.level.playerStart.x,
-                    this.level.playerStart.y
-                );
+                this.player = new W.Player(100, 420);
                 this.player.score = 0;
             } else {
-                this.player.x = this.level.playerStart.x;
-                this.player.y = this.level.playerStart.y;
+                this.player.x = 100;
+                this.player.y = 420;
                 this.player.vx = 0;
                 this.player.vy = 0;
                 this.player.hp = this.player.maxHp;
             }
 
             // Show story intro text
-            if (storyData.introText) {
+            if (storyData.storyText) {
                 this.showingStoryText = true;
                 this.storyTextTimer = 180; // ~3 seconds at 60fps
-                this._storyText = storyData.introText;
+                this._storyText = storyData.storyText;
                 this._storyTitle = storyData.name || ('Level ' + (index + 1));
             }
 
@@ -263,12 +260,23 @@
             for (var i = 0; i < this.enemies.length; i++) {
                 var enemy = this.enemies[i];
                 if (enemy && this.player) {
-                    enemy.update(dt, this.player, this.level.platforms);
+                    enemy.update(dt, this.player.x + this.player.w / 2, this.player.y, this.level.platforms);
                 }
             }
 
             // --- Particles ---
             this.particles.update(dt);
+
+            // --- Collect enemy projectiles (e.g. Witch Hunter bolts) ---
+            for (var i = 0; i < this.enemies.length; i++) {
+                var enemy = this.enemies[i];
+                if (enemy.projectiles && enemy.projectiles.length > 0) {
+                    for (var j = 0; j < enemy.projectiles.length; j++) {
+                        this.projectiles.push(enemy.projectiles[j]);
+                    }
+                    enemy.projectiles = [];
+                }
+            }
 
             // --- Projectiles ---
             this.handleProjectiles(dt);
@@ -280,7 +288,7 @@
             // --- Remove dead enemies ---
             for (var i = this.enemies.length - 1; i >= 0; i--) {
                 var enemy = this.enemies[i];
-                if (enemy.dead) {
+                if (enemy.dead || (!enemy.alive && enemy.state === 'dead')) {
                     // Score
                     if (this.player) {
                         this.player.score += (enemy.scoreLoot || 10);
@@ -323,7 +331,7 @@
 
             // --- Wave mode: update wave manager ---
             if (this.gameMode === 'wave' && this.waveManager) {
-                var spawns = this.waveManager.update(dt, this.enemies);
+                var spawns = this.waveManager.update(dt, this.enemies, this.level.width);
                 if (spawns && spawns.length) {
                     for (var s = 0; s < spawns.length; s++) {
                         var sp = spawns[s];
@@ -337,7 +345,7 @@
                     waveDisp.textContent = 'Wave ' + this.waveManager.currentWave;
                 }
                 // Show wave announcement
-                if (this.waveManager.announcing) {
+                if (this.waveManager.betweenWaves && this.waveManager.waveTimer > 100) {
                     var announceEl = document.getElementById('waveAnnounce');
                     if (announceEl) {
                         announceEl.textContent = 'WAVE ' + this.waveManager.currentWave;
@@ -432,7 +440,7 @@
 
             for (var i = 0; i < this.enemies.length; i++) {
                 var enemy = this.enemies[i];
-                if (enemy.dead || enemy.invulnTimer > 0) continue;
+                if (enemy.dead || !enemy.alive) continue;
                 if (!enemy.hitbox) continue;
 
                 if (W.boxCollision(this.player.attackHitbox, enemy.hitbox)) {
@@ -494,7 +502,7 @@
 
             for (var i = 0; i < this.enemies.length; i++) {
                 var enemy = this.enemies[i];
-                if (!enemy.attackBox || !enemy.isAttacking) continue;
+                if (!enemy.attackBox || enemy.state !== 'attack') continue;
 
                 var playerHitbox = this.player.hitbox;
                 if (!playerHitbox) continue;
@@ -503,7 +511,7 @@
                     var damage = enemy.damage || 8;
 
                     // Check if player is blocking
-                    if (this.player.blocking) {
+                    if (this.player.state === 'block') {
                         damage = Math.floor(damage * 0.25);
                         W.Emitters.sparks(this.particles, this.player.x, this.player.y - 15);
                         this.addFloatingText(
@@ -562,7 +570,7 @@
                     };
                     if (W.boxCollision(projBox, this.player.hitbox)) {
                         var damage = proj.damage || 5;
-                        if (this.player.blocking) {
+                        if (this.player.state === 'block') {
                             damage = Math.floor(damage * 0.25);
                             W.Emitters.sparks(this.particles, this.player.x, this.player.y - 15);
                         }
