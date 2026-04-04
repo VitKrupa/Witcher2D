@@ -53,6 +53,11 @@
             this.canvas.width = W.CANVAS_W;
             this.canvas.height = W.CANVAS_H;
             this.ctx = this.canvas.getContext('2d');
+            this.resizeCanvas();
+            window.addEventListener('resize', this.resizeCanvas.bind(this));
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() { window.game.resizeCanvas(); }, 200);
+            });
 
             this.camera = new W.Camera();
             this.particles = new W.ParticleSystem();
@@ -135,6 +140,29 @@
 
         setupStartScreen() {
             // Buttons are already in HTML — no dynamic creation needed
+        }
+
+        resizeCanvas() {
+            var container = document.getElementById('gameContainer');
+            if (!container || !this.canvas) return;
+            var vw = window.innerWidth;
+            var vh = window.innerHeight;
+            var gameRatio = W.CANVAS_W / W.CANVAS_H; // 960/540 = 16:9
+            var screenRatio = vw / vh;
+            var cssW, cssH;
+            if (screenRatio > gameRatio) {
+                // Screen is wider than game — fit to height
+                cssH = vh;
+                cssW = vh * gameRatio;
+            } else {
+                // Screen is taller — fit to width
+                cssW = vw;
+                cssH = vw / gameRatio;
+            }
+            this.canvas.style.width = cssW + 'px';
+            this.canvas.style.height = cssH + 'px';
+            container.style.width = cssW + 'px';
+            container.style.height = cssH + 'px';
         }
 
         showStartScreen() {
