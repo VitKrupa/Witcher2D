@@ -91,11 +91,11 @@ W.StoryLevel2 = {
         // Screen 4: solid ground patch
         {x:1670, y:480, w:630, h:60},
         {x:1800, y:380, w:100, h:16},
-        {x:2000, y:340, w:120, h:16},
+        {x:1960, y:395, w:120, h:16},
         // Screen 5-6: witch hunter camp (solid ground)
         {x:2360, y:480, w:940, h:60},
         {x:2500, y:390, w:100, h:16, type:'wood'},
-        {x:2700, y:350, w:140, h:16, type:'wood'},
+        {x:2660, y:395, w:140, h:16, type:'wood'},
         {x:2950, y:390, w:100, h:16, type:'wood'},
         // Screen 7: back to floating
         {x:3360, y:460, w:100, h:12, type:'wood'},
@@ -107,7 +107,7 @@ W.StoryLevel2 = {
         // Screen 9-10: final approach + boss
         {x:4460, y:480, w:640, h:60},
         {x:4600, y:380, w:120, h:16},
-        {x:4800, y:340, w:100, h:16},
+        {x:4780, y:395, w:100, h:16},
         {x:5160, y:480, w:1000, h:60},
         {x:5400, y:370, w:140, h:16},
         // Extended to end

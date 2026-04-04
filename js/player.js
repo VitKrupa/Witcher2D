@@ -21,15 +21,24 @@ const BOOT = '#2a1a0a';
 const BELT = '#888';
 const MEDAL = C.WITCHER_GOLD;
 
-// Draw a limb segment between two points
-function drawLimb(ctx, x1, y1, x2, y2, w, color) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = w;
-    ctx.lineCap = 'round';
+// Draw a tapered limb segment (thicker at start, thinner at end)
+function drawLimb(ctx, x1, y1, x2, y2, w, color, w2) {
+    const endW = w2 !== undefined ? w2 : w * 0.7;
+    const dx = x2 - x1, dy = y2 - y1;
+    const len = Math.sqrt(dx * dx + dy * dy) || 1;
+    const nx = -dy / len, ny = dx / len;
+    // Build a filled quadrilateral with different widths at each end
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
+    ctx.moveTo(x1 + nx * w / 2, y1 + ny * w / 2);
+    ctx.lineTo(x2 + nx * endW / 2, y2 + ny * endW / 2);
+    ctx.lineTo(x2 - nx * endW / 2, y2 - ny * endW / 2);
+    ctx.lineTo(x1 - nx * w / 2, y1 - ny * w / 2);
+    ctx.closePath();
+    ctx.fill();
+    // Smooth ends with arcs
+    ctx.beginPath(); ctx.arc(x1, y1, w / 2, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x2, y2, endW / 2, 0, Math.PI * 2); ctx.fill();
 }
 
 // Draw a joint circle
@@ -38,6 +47,42 @@ function drawJoint(ctx, x, y, r, color) {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
+}
+
+// Draw a boot shape (wider sole, narrower ankle)
+function drawBoot(ctx, x, y, angle) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle || 0);
+    // Ankle
+    ctx.fillStyle = BOOT;
+    ctx.beginPath();
+    ctx.moveTo(-2, -3);
+    ctx.lineTo(2, -3);
+    ctx.lineTo(3, 0);
+    ctx.lineTo(-2, 0);
+    ctx.closePath();
+    ctx.fill();
+    // Sole (wider)
+    ctx.fillStyle = '#1a0e05';
+    ctx.beginPath();
+    ctx.moveTo(-3, 0);
+    ctx.lineTo(5, 0);
+    ctx.lineTo(5, 3);
+    ctx.quadraticCurveTo(4, 4, -2, 4);
+    ctx.lineTo(-3, 3);
+    ctx.closePath();
+    ctx.fill();
+    // Boot top highlight
+    ctx.fillStyle = '#3a2a1a';
+    ctx.beginPath();
+    ctx.moveTo(-1, -3);
+    ctx.lineTo(1, -3);
+    ctx.lineTo(2, -1);
+    ctx.lineTo(-1, -1);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
 }
 
 // Smooth interpolation helper
