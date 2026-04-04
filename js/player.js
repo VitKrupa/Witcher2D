@@ -173,12 +173,7 @@ W.Player = class {
             case States.IDLE:
             case States.RUN:
                 this.handleMovement(keys, spd);
-                // Jump only on fresh press (not held)
-                if ((keys['w'] || keys['arrowup']) && !this._jumpHeld) {
-                    this.jump();
-                    this._jumpHeld = true;
-                }
-                if (!keys['w'] && !keys['arrowup']) this._jumpHeld = false;
+                if (keys['w'] || keys['arrowup']) this.jump();
                 if (keys['s'] || keys['arrowdown']) this.rollDodge();
                 if (keys['shift']) { this.state = States.BLOCK; }
                 break;

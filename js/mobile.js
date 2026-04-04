@@ -18,7 +18,7 @@ W.Mobile = {
     joyTouchId: null,
     joyCenterX: 0,
     joyCenterY: 0,
-    joyRadius: 40,
+    joyRadius: 50,
 
     // Check if device supports touch
     isTouchDevice: function() {
@@ -59,19 +59,19 @@ W.Mobile = {
         // === LEFT SIDE: Virtual Joystick ===
         var joyArea = document.createElement('div');
         joyArea.id = 'joyArea';
-        joyArea.style.cssText = 'position:absolute;left:5px;bottom:5px;width:130px;height:130px;pointer-events:all;';
+        joyArea.style.cssText = 'position:absolute;left:10px;bottom:40px;width:150px;height:150px;pointer-events:all;';
 
         var joyBase = document.createElement('div');
         joyBase.id = 'joyBase';
         joyBase.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
-            'width:100px;height:100px;border-radius:50%;' +
-            'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);';
+            'width:120px;height:120px;border-radius:50%;' +
+            'background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.12);';
 
         var joyKnob = document.createElement('div');
         joyKnob.id = 'joyKnob';
         joyKnob.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
-            'width:40px;height:40px;border-radius:50%;' +
-            'background:rgba(200,160,50,0.2);border:1px solid rgba(200,160,50,0.35);' +
+            'width:48px;height:48px;border-radius:50%;' +
+            'background:rgba(200,160,50,0.25);border:2px solid rgba(200,160,50,0.4);' +
             'transition:none;';
 
         // Direction arrows overlay
@@ -91,7 +91,7 @@ W.Mobile = {
         // === RIGHT SIDE: Two BIG sword attack buttons ===
         var btnArea = document.createElement('div');
         btnArea.id = 'btnArea';
-        btnArea.style.cssText = 'position:absolute;right:5px;bottom:5px;width:180px;height:120px;pointer-events:all;';
+        btnArea.style.cssText = 'position:absolute;right:10px;bottom:35px;width:180px;height:120px;pointer-events:all;';
 
         // Silver sword (left, big)
         var silverBtn = this.makeBigButton('silverTouch', '⚔', 'SILVER', 'Monsters',
@@ -271,17 +271,11 @@ W.Mobile = {
             keys['d'] = false;
         }
 
-        // Vertical: up = jump (pulse, not hold), down = roll
-        if (this.joyY < -0.5) {
-            if (!this._joyJumpSent) {
-                keys['w'] = true;
-                this._joyJumpSent = true;
-                // Release after one frame so _jumpHeld resets
-                var k = keys;
-                setTimeout(function() { k['w'] = false; }, 60);
-            }
+        // Vertical: up = jump
+        if (this.joyY < -0.4) {
+            keys['w'] = true;
         } else {
-            this._joyJumpSent = false;
+            keys['w'] = false;
         }
         if (this.joyY > 0.5) {
             keys['s'] = true;
