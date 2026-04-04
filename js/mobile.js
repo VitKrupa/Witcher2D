@@ -271,11 +271,17 @@ W.Mobile = {
             keys['d'] = false;
         }
 
-        // Vertical: up = jump
+        // Vertical: up = jump (single press behavior)
         if (this.joyY < -0.4) {
-            keys['w'] = true;
+            if (!this._jumpTriggered) {
+                keys['w'] = true;
+                this._jumpTriggered = true;
+            } else {
+                keys['w'] = false; // already triggered, don't hold
+            }
         } else {
             keys['w'] = false;
+            this._jumpTriggered = false; // reset when joystick returns to center
         }
         if (this.joyY > 0.5) {
             keys['s'] = true;
