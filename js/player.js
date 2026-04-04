@@ -26,7 +26,8 @@ if (!CanvasRenderingContext2D.prototype.roundRect) {
 const States = {
     IDLE: 'idle', RUN: 'run', JUMP: 'jump', FALL: 'fall',
     ATTACK: 'attack', ROLL: 'roll', BLOCK: 'block',
-    HURT: 'hurt', DEAD: 'dead'
+    HURT: 'hurt', DEAD: 'dead',
+    HANG: 'hang', CLIMB: 'climb'
 };
 W.PlayerStates = States;
 
@@ -524,7 +525,8 @@ W.Player = class {
         this.score = 0;
         this.onGround = false;
         this.attackHitbox = null;
-        this.rollSpeed = 4.0;
+        this.rollSpeed = 2.5;
+        this.rollCooldown = 0;
         this.comboCount = 0;
         this.jumpConsumed = false; // prevents repeated jumps while key/joystick held
     }
@@ -533,13 +535,18 @@ W.Player = class {
     get isAttacking() { return this.state === States.ATTACK; }
     get hitbox() { return { x: this.x, y: this.y, w: this.w, h: this.h }; }
 
-    update(dt, keys, platforms) {
+    update(dt, keys, platforms, enemies) {
         const spd = dt * 60; // normalize to 60fps
 
         // Invincibility timer
         if (this.invincible) {
             this.invincibleTimer -= spd;
             if (this.invincibleTimer <= 0) this.invincible = false;
+        }
+
+        // Roll cooldown timer
+        if (this.rollCooldown > 0) {
+            this.rollCooldown -= spd;
         }
 
         // State machine
@@ -559,6 +566,32 @@ W.Player = class {
             case States.JUMP:
             case States.FALL:
                 this.handleAirMovement(keys, spd);
+                // Check for ledge grab
+                for (const p of platforms) {
+                    const pr = p.rect || p;
+                    // Near left edge of platform
+                    if (Math.abs(this.x + this.w - pr.x) < 15 &&
+                        this.y > pr.y - 20 && this.y < pr.y + 5 && this.vy > 0) {
+                        this.state = States.HANG;
+                        this._hangPlatform = pr;
+                        this._hangSide = 'left';
+                        this.x = pr.x - this.w + 5;
+                        this.y = pr.y - 5;
+                        this.vy = 0; this.vx = 0;
+                        break;
+                    }
+                    // Near right edge of platform
+                    if (Math.abs(this.x - (pr.x + pr.w)) < 15 &&
+                        this.y > pr.y - 20 && this.y < pr.y + 5 && this.vy > 0) {
+                        this.state = States.HANG;
+                        this._hangPlatform = pr;
+                        this._hangSide = 'right';
+                        this.x = pr.x + pr.w - 5;
+                        this.y = pr.y - 5;
+                        this.vy = 0; this.vx = 0;
+                        break;
+                    }
+                }
                 break;
 
             case States.ATTACK:
@@ -579,6 +612,17 @@ W.Player = class {
             case States.ROLL:
                 this.x += this.facing * this.rollSpeed * spd;
                 this.stateTimer -= spd;
+                // Stop roll on enemy collision
+                if (enemies) {
+                    var playerBox = this.hitbox;
+                    for (var ei = 0; ei < enemies.length; ei++) {
+                        var enemy = enemies[ei];
+                        if (enemy && enemy.hitbox && W.boxCollision(playerBox, enemy.hitbox)) {
+                            this.stateTimer = 0;
+                            break;
+                        }
+                    }
+                }
                 if (this.stateTimer <= 0) {
                     this.state = States.IDLE;
                     this.invincible = false;
@@ -595,6 +639,37 @@ W.Player = class {
                 this.vx *= 0.85;
                 if (this.stateTimer <= 0) {
                     this.state = States.IDLE;
+                }
+                break;
+
+            case States.HANG:
+                this.vx = 0; this.vy = 0;
+                if (keys['w'] || keys['arrowup']) {
+                    this.state = States.CLIMB;
+                    this.stateTimer = 12;
+                } else if (keys['s'] || keys['arrowdown']) {
+                    this.state = States.FALL;
+                    this.vy = 1;
+                } else if (keys['a'] || keys['arrowleft'] || keys['d'] || keys['arrowright']) {
+                    this.state = States.FALL;
+                    this.vy = 0;
+                }
+                break;
+
+            case States.CLIMB:
+                this.stateTimer -= spd;
+                this.vx = 0; this.vy = 0;
+                // Animate moving up onto platform
+                if (this._hangPlatform) {
+                    var progress = 1 - (this.stateTimer / 12);
+                    this.y = this._hangPlatform.y - 5 - progress * (this.h - 5);
+                }
+                if (this.stateTimer <= 0) {
+                    this.state = States.IDLE;
+                    if (this._hangPlatform) {
+                        this.y = this._hangPlatform.y - this.h;
+                        this.onGround = true;
+                    }
                 }
                 break;
 
@@ -712,10 +787,12 @@ W.Player = class {
 
     rollDodge() {
         if (this.state === States.ROLL || this.state === States.DEAD) return;
+        if (this.rollCooldown > 0) return;
         this.state = States.ROLL;
-        this.stateTimer = 15;
+        this.stateTimer = 10;
         this.invincible = true;
-        this.invincibleTimer = 15;
+        this.invincibleTimer = 8;
+        this.rollCooldown = 40;
     }
 
     takeDamage(amount) {
@@ -766,11 +843,25 @@ W.Player = class {
         const isRoll = this.state === States.ROLL;
         const isDead = this.state === States.DEAD;
         const isJump = this.state === States.JUMP || this.state === States.FALL;
+        const isHang = this.state === States.HANG;
+        const isClimb = this.state === States.CLIMB;
         const runCycle = t * 0.15; // smooth run phase
         const atkProgress = isAttack ? (1 - this.stateTimer / 22) : 0;
 
         if (isRoll) {
             this.drawRoll(ctx, cx, cy + 14, t);
+            ctx.restore();
+            return;
+        }
+
+        if (isHang) {
+            this.drawHang(ctx, cx, cy, t);
+            ctx.restore();
+            return;
+        }
+
+        if (isClimb) {
+            this.drawClimb(ctx, cx, cy, t);
             ctx.restore();
             return;
         }
@@ -961,7 +1052,7 @@ W.Player = class {
     }
 
     drawRoll(ctx, cx, cy, t) {
-        const progress = 1 - this.stateTimer / 15;
+        const progress = 1 - this.stateTimer / 10;
         const angle = progress * Math.PI * 2 * this.facing;
         const r = 14;
 
