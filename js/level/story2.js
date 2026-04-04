@@ -356,98 +356,80 @@ W.StoryLevel4 = {
         {x:1920, y:380, w:200, h:60},           // trench start
         {x:1920, y:80, w:16, h:360},            // left wall
         {x:2864, y:80, w:16, h:260},            // right wall
-        {x:1980, y:320, w:120, h:16},           // climb step 1
-        {x:2060, y:260, w:120, h:16},           // climb step 2
-        {x:2160, y:200, w:140, h:16},           // climb step 3 — surface
-        {x:2360, y:200, w:520, h:16},           // surface floor
-        {x:2500, y:170, w:100, h:16},           // high platform
+        // Thick ascending floors
+        {x:1960, y:300, w:300, h:40},           // floor 2 (climb from trench)
+        {x:2200, y:220, w:680, h:40},           // surface floor (thick, spanning right)
 
-        // ===== ROOM 4: Siege Tower Interior (x:2880–3840) =====
-        // Vertical climb inside wooden walls. 4 floors.
-        {x:2880, y:340, w:960, h:60},           // ground floor
+        // ===== ROOM 4: Siege Tower Interior (x:2880-3840) =====
+        {x:2880, y:340, w:960, h:60},           // ground floor (solid)
         {x:2880, y:80, w:16, h:260},            // left wall
         {x:3824, y:80, w:16, h:260},            // right wall
         {x:2880, y:80, w:960, h:16},            // ceiling
-        // Interior walls creating tight corridors
-        {x:3200, y:140, w:16, h:200},           // interior divider
-        {x:3500, y:140, w:16, h:200},           // interior divider
-        // Floor 2
-        {x:2920, y:275, w:260, h:16},
-        // Floor 3
-        {x:3236, y:210, w:244, h:16},
-        // Floor 4 (top)
-        {x:3536, y:145, w:260, h:16},
+        // Interior divider walls
+        {x:3200, y:140, w:16, h:200},
+        {x:3500, y:140, w:16, h:200},
+        // Thick interior floors
+        {x:2920, y:260, w:260, h:40},           // floor 2 (thick)
+        {x:3236, y:200, w:244, h:40},           // floor 3 (thick)
+        {x:3536, y:140, w:260, h:40},           // floor 4 top (thick)
 
-        // ===== ROOM 5: Siege Tower Top + Descent (x:3840–4800) =====
-        // High floor y:120, stepping down to landing
+        // ===== ROOM 5: Siege Tower Top + Descent (x:3840-4800) =====
         {x:3840, y:80, w:16, h:260},            // left wall
         {x:4784, y:80, w:16, h:260},            // right wall
         {x:3840, y:80, w:960, h:16},            // ceiling
-        {x:3880, y:120, w:200, h:16},           // top platform
-        {x:3880, y:180, w:160, h:16},           // step down 1
-        {x:4100, y:220, w:160, h:16},           // step down 2
-        {x:4300, y:270, w:160, h:16},           // step down 3
+        // Thick descent floors
+        {x:3880, y:130, w:300, h:40},           // top floor (thick)
+        {x:4200, y:220, w:300, h:40},           // mid floor (thick)
         {x:4500, y:340, w:300, h:60},           // landing floor
 
-        // ===== ROOM 6: No Man's Land (x:4800–5760) =====
-        // Rubble walls creating short corridors. Tight.
-        {x:4800, y:340, w:960, h:60},           // floor
+        // ===== ROOM 6: No Man's Land (x:4800-5760) =====
+        {x:4800, y:340, w:960, h:60},           // floor (solid)
         {x:4800, y:80, w:16, h:260},            // left wall
         {x:5744, y:80, w:16, h:260},            // right wall
         {x:4800, y:80, w:960, h:16},            // ceiling
-        // Rubble walls — short corridors
-        {x:5000, y:140, w:16, h:200},           // rubble wall 1
-        {x:5200, y:140, w:16, h:200},           // rubble wall 2
-        {x:5400, y:140, w:16, h:200},           // rubble wall 3
-        {x:5050, y:280, w:100, h:16},           // rubble step
-        {x:5280, y:260, w:80, h:16},            // rubble step
+        // Rubble walls (corridors)
+        {x:5000, y:140, w:16, h:200},
+        {x:5200, y:140, w:16, h:200},
+        {x:5400, y:140, w:16, h:200},
 
-        // ===== ROOM 7: Ritual Approach (x:5760–6720) =====
-        // Walls closing in. Tighter and tighter.
-        {x:5760, y:340, w:960, h:60},           // floor
+        // ===== ROOM 7: Ritual Approach (x:5760-6720) =====
+        {x:5760, y:340, w:960, h:60},           // floor (solid)
         {x:5760, y:80, w:16, h:260},            // left wall
         {x:6704, y:80, w:16, h:260},            // right wall
         {x:5760, y:80, w:960, h:16},            // ceiling
-        // Closing walls — corridor narrows
-        {x:5900, y:140, w:16, h:200},           // wall 1
-        {x:6100, y:120, w:16, h:220},           // wall 2 (taller)
-        {x:6300, y:100, w:16, h:240},           // wall 3 (tallest)
-        {x:6500, y:100, w:16, h:240},           // wall 4
-        {x:6000, y:280, w:80, h:16},            // step
-        {x:6200, y:270, w:80, h:16},            // step
+        // Closing walls
+        {x:5900, y:140, w:16, h:200},
+        {x:6100, y:120, w:16, h:220},
+        {x:6300, y:100, w:16, h:240},
+        {x:6500, y:100, w:16, h:240},
 
-        // ===== ROOM 8: Ritual Chamber (x:6720–7680) =====
-        // Sunken pit floor y:400. Walled and ceilinged.
+        // ===== ROOM 8: Ritual Chamber (x:6720-7680) =====
         {x:6720, y:340, w:100, h:60},           // entry ledge
-        {x:6820, y:400, w:760, h:60},           // sunken pit floor
+        {x:6820, y:400, w:760, h:60},           // sunken pit floor (solid)
         {x:6720, y:80, w:16, h:260},            // left wall
-        {x:7664, y:80, w:16, h:380},            // right wall (extends to pit)
+        {x:7664, y:80, w:16, h:380},            // right wall
         {x:6720, y:80, w:960, h:16},            // ceiling
-        {x:6900, y:360, w:100, h:16},           // pit step 1
-        {x:7200, y:360, w:100, h:16},           // pit step 2
-        {x:7400, y:340, w:100, h:16},           // climb-out step
+        // Thick pit shelves
+        {x:6850, y:340, w:300, h:40},           // thick shelf left
+        {x:7300, y:340, w:200, h:40},           // thick shelf right (climb out)
 
-        // ===== ROOMS 9–10: Boss Arena (x:7680–9600) =====
-        // Walled arena with pillars. Two connected rooms.
-        {x:7680, y:340, w:1920, h:60},          // wide arena floor
+        // ===== ROOMS 9-10: Boss Arena (x:7680-9600) =====
+        {x:7680, y:340, w:1920, h:60},          // wide arena floor (solid)
         {x:7680, y:80, w:16, h:260},            // left wall
         {x:9584, y:80, w:16, h:260},            // right wall
         {x:7680, y:80, w:1920, h:16},           // ceiling
-        // Pillars
-        {x:8060, y:140, w:16, h:200},           // pillar 1
-        {x:8440, y:140, w:16, h:200},           // pillar 2
-        {x:8820, y:140, w:16, h:200},           // pillar 3
-        {x:9200, y:140, w:16, h:200},           // pillar 4
-        // Mid-arena divider (partial wall from ceiling)
+        // Pillars (walls)
+        {x:8060, y:140, w:16, h:200},
+        {x:8440, y:140, w:16, h:200},
+        {x:8820, y:140, w:16, h:200},
+        {x:9200, y:140, w:16, h:200},
+        // Mid-arena divider
         {x:8640, y:80, w:16, h:120},
-        // Combat platforms
-        {x:8100, y:280, w:100, h:16},
-        {x:8500, y:260, w:100, h:16},
-        {x:8900, y:280, w:100, h:16},
-        {x:9250, y:260, w:100, h:16},
+        // Thick elevated platform for boss
+        {x:8300, y:220, w:400, h:40},           // thick center platform
 
         // SECRET: Buried treasure beneath no man's land rubble
-        {x:5100, y:380, w:160, h:16},
+        {x:5100, y:380, w:160, h:40},
     ],
     rooms: [
         // Room 1: Trench Entrance (drop to y:380)
