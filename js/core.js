@@ -14,9 +14,9 @@ var W = {};
 // Engine constants
 // ---------------------------------------------------------------------------
 W.CANVAS_W = 960;
-W.CANVAS_H = 540;
+W.CANVAS_H = 400;
 W.GRAVITY  = 0.55;
-W.GROUND_Y = 480; // default ground level (pixels from top)
+W.GROUND_Y = 340; // adjusted for smaller canvas height
 
 // ---------------------------------------------------------------------------
 // Camera
@@ -29,7 +29,7 @@ W.Camera = class Camera {
     constructor() {
         this.offsetX = 0;
         this.offsetY = 0;
-        this.zoom = 1.4; // zoom in — everything appears 40% bigger
+        this.zoom = 1.0;
 
         // Screen-shake state
         this.shakeX         = 0;
@@ -98,10 +98,9 @@ W.Camera = class Camera {
      */
     apply(ctx) {
         ctx.save();
-        ctx.scale(this.zoom, this.zoom);
         ctx.translate(
             -this.offsetX + this.shakeX,
-            -this.offsetY + this.shakeY
+            this.shakeY
         );
     }
 

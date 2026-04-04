@@ -148,7 +148,7 @@
             var vw = window.innerWidth;
             var vh = window.innerHeight;
             var screenRatio = vw / vh;
-            var gameH = 540; // fixed height, never changes
+            var gameH = 400; // fixed height — smaller = everything bigger
             // Adjust canvas width to match screen aspect ratio
             var gameW = Math.round(gameH * screenRatio);
             gameW = Math.max(gameW, 800);  // minimum width
@@ -206,7 +206,7 @@
                 // Wave mode
                 this.level = W.createWaveLevel();
                 this.waveManager = new W.WaveManager();
-                this.player = new W.Player(100, 420);
+                this.player = new W.Player(100, 280);
                 this.player.score = 0;
                 var waveDisp = document.getElementById('waveDisplay');
                 if (waveDisp) waveDisp.textContent = 'Wave 1';
@@ -256,11 +256,11 @@
 
             // Create / reposition player
             if (!this.player) {
-                this.player = new W.Player(100, 420);
+                this.player = new W.Player(100, 280);
                 this.player.score = 0;
             } else {
                 this.player.x = 100;
-                this.player.y = 420;
+                this.player.y = 280;
                 this.player.vx = 0;
                 this.player.vy = 0;
                 this.player.hp = this.player.maxHp;
@@ -1065,7 +1065,7 @@
             // Move to checkpoint (last safe X position rounded to screen start)
             var checkpointX = Math.max(100, Math.floor(this._lastCheckpointX || 100));
             this.player.x = checkpointX;
-            this.player.y = 420;
+            this.player.y = 280;
 
             // Don't show story text on respawn
             this.showingStoryText = false;
