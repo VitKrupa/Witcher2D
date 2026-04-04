@@ -9,6 +9,14 @@
 
 ---
 
+### Demo
+
+![Game Demo](screenshots/demo.gif)
+
+*Title screen → Swamp combat (Silver Sword) → Castle combat (Iron Sword) → Griffin boss fight → Bestiary*
+
+---
+
 ![Title Screen](screenshots/01_title_screen.png)
 
 ---
