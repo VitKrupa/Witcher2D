@@ -533,8 +533,11 @@
             // World-space drawing
             this.camera.apply(ctx);
 
-            // Background (parallax)
+            // Background (parallax) - undo camera Y offset so background renders in screen-space for Y
+            ctx.save();
+            ctx.translate(0, this.camera.offsetY);
             this.level.drawBackground(ctx, this.camera.offsetX);
+            ctx.restore();
 
             // Platforms
             this.level.drawPlatforms(ctx);
@@ -710,10 +713,11 @@
                     var hitDir = enemy.x < this.player.x ? 1 : -1;
                     W.Gore.onPlayerHit(this.particles, this.player.x, this.player.y - 15, hitDir, damage);
 
-                    if (damage > 0) {
+                    var displayDmg = (this.player.state === 'block') ? Math.floor(damage * 0.25) : damage;
+                    if (displayDmg > 0) {
                         this.addFloatingText(
                             this.player.x, this.player.y - 25,
-                            '-' + damage, W.Colors.DAMAGE_RED
+                            '-' + displayDmg, W.Colors.DAMAGE_RED
                         );
                     }
 
@@ -746,9 +750,10 @@
                             W.Emitters.sparks(this.particles, this.player.x, this.player.y - 15);
                         }
                         this.player.takeDamage(damage);
+                        var epDisplayDmg = (this.player.state === 'block') ? Math.floor(damage * 0.25) : damage;
                         this.addFloatingText(
                             this.player.x, this.player.y - 25,
-                            '-' + damage, W.Colors.DAMAGE_RED
+                            '-' + epDisplayDmg, W.Colors.DAMAGE_RED
                         );
                         W.Emitters.sparks(this.particles, proj.x, proj.y);
                         enemy.projectiles.splice(j, 1);
@@ -777,13 +782,13 @@
                     if (W.boxCollision(projBox, this.player.hitbox)) {
                         var damage = proj.damage || 5;
                         if (this.player.state === 'block') {
-                            damage = Math.floor(damage * 0.25);
                             W.Emitters.sparks(this.particles, this.player.x, this.player.y - 15);
                         }
                         this.player.takeDamage(damage);
+                        var projDisplayDmg = (this.player.state === 'block') ? Math.floor(damage * 0.25) : damage;
                         this.addFloatingText(
                             this.player.x, this.player.y - 25,
-                            '-' + damage, W.Colors.DAMAGE_RED
+                            '-' + projDisplayDmg, W.Colors.DAMAGE_RED
                         );
                         W.Emitters.sparks(this.particles, proj.x, proj.y);
                         this.projectiles.splice(i, 1);

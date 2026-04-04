@@ -1,7 +1,7 @@
 (function() {
 'use strict';
 
-var CW = 960, CH = 540;
+var CW = 960, CH = W.CANVAS_H || 400;
 
 function seededRand(seed) {
     var x = Math.sin(seed) * 10000;

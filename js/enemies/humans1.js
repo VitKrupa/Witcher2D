@@ -258,7 +258,7 @@ W.NilfSoldier = class extends W.Enemy {
             this._blockTimer = 60; // block for 1 second
         }
         if (this.blocking) {
-            this._blockTimer--;
+            this._blockTimer -= dt * 60;
             if (this._blockTimer <= 0) this.blocking = false;
         }
     }
