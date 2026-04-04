@@ -547,7 +547,11 @@ W.Player = class {
             case States.IDLE:
             case States.RUN:
                 this.handleMovement(keys, spd);
-                if (keys['w'] || keys['arrowup']) this.jump();
+                if (keys['w'] || keys['arrowup']) {
+                    if (!this.jumpConsumed) this.jump();
+                } else {
+                    this.jumpConsumed = false;
+                }
                 if (keys['s'] || keys['arrowdown']) this.rollDodge();
                 if (keys['shift']) { this.state = States.BLOCK; }
                 break;
@@ -693,6 +697,7 @@ W.Player = class {
             this.state = States.JUMP;
             this._coyoteFrames = 0;
             this.onGround = false;
+            this.jumpConsumed = true; // prevent repeated jumps while key held
         }
     }
 
