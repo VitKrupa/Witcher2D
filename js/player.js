@@ -137,7 +137,7 @@ W.Player = class {
         this.vx = 0;
         this.vy = 0;
         this.speed = 2.2;
-        this.jumpForce = -8.5;
+        this.jumpForce = -11;
         this.hp = 100;
         this.maxHp = 100;
         this.facing = 1;
@@ -297,10 +297,10 @@ W.Player = class {
 
     handleAirMovement(keys, spd) {
         if (keys['a'] || keys['arrowleft']) {
-            this.vx = -this.speed * 0.7;
+            this.vx = -this.speed * 0.85;
             this.facing = -1;
         } else if (keys['d'] || keys['arrowright']) {
-            this.vx = this.speed * 0.7;
+            this.vx = this.speed * 0.85;
             this.facing = 1;
         } else {
             this.vx *= 0.9;
@@ -635,94 +635,142 @@ W.Player = class {
 
     drawSwordSwing(ctx, handX, handY, progress) {
         const isSilver = this.activeSword === 'silver';
-        const swordLen = 28;
+        const swordLen = 26;
+        const hiltLen = 4; // short hilt behind the hand
 
-        // Sword angle — controlled slash arc (not a full spin)
-        // Starts raised above head, slashes down to hip level
-        const startAngle = -Math.PI * 0.65; // raised behind
-        const swingRange = Math.PI * 0.8;    // ~140° arc (not 360!)
-        // Ease-in-out for snappy slash feel
+        // Eased progress: fast in the middle, slow at start/end (cubic ease)
         const easedProgress = progress < 0.5
-            ? 2 * progress * progress
-            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-        const currentAngle = startAngle + swingRange * easedProgress;
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-        const tipX = handX + Math.cos(currentAngle) * swordLen;
-        const tipY = handY + Math.sin(currentAngle) * swordLen;
+        // Blade angle — the direction the sword points FROM the hand
+        let bladeAngle;
+        if (isSilver) {
+            // Silver (pirouette/horizontal slash): blade sweeps ~100 degrees
+            // from behind-and-up to forward-and-slightly-down at chest height
+            const startAngle = -Math.PI * 0.85; // pointing back and up
+            const endAngle = -Math.PI * 0.15;   // pointing forward and slightly down
+            bladeAngle = startAngle + (endAngle - startAngle) * easedProgress;
+        } else {
+            // Iron (overhead chop): blade sweeps ~110 degrees
+            // from above head straight down to hip level
+            const startAngle = -Math.PI * 0.92; // pointing almost straight up
+            const endAngle = Math.PI * 0.2;     // pointing down and slightly forward
+            bladeAngle = startAngle + (endAngle - startAngle) * easedProgress;
+        }
 
-        // Sword blade with glow
+        // Tip and hilt-end positions (sword is a straight line through the hand)
+        const tipX = handX + Math.cos(bladeAngle) * swordLen;
+        const tipY = handY + Math.sin(bladeAngle) * swordLen;
+        const hiltEndX = handX - Math.cos(bladeAngle) * hiltLen;
+        const hiltEndY = handY - Math.sin(bladeAngle) * hiltLen;
+
+        // Crossguard perpendicular to blade
+        const guardAngle = bladeAngle + Math.PI / 2;
+        const guardLen = 5;
+        const g1x = handX + Math.cos(guardAngle) * guardLen;
+        const g1y = handY + Math.sin(guardAngle) * guardLen;
+        const g2x = handX - Math.cos(guardAngle) * guardLen;
+        const g2y = handY - Math.sin(guardAngle) * guardLen;
+
+        // === TRAIL: thin fading arcs showing where the blade swept ===
+        if (progress > 0.12 && progress < 0.88) {
+            const trailColor = isSilver ? C.SILVER_TRAIL : C.IRON_TRAIL;
+            // Compute the angle range that has been swept so far
+            let startAngle, endAngle;
+            if (isSilver) {
+                startAngle = -Math.PI * 0.85;
+                endAngle = -Math.PI * 0.15;
+            } else {
+                startAngle = -Math.PI * 0.92;
+                endAngle = Math.PI * 0.2;
+            }
+            // Trail covers from a bit behind current position back toward the start
+            const trailHead = bladeAngle;
+            const trailSpan = (endAngle - startAngle) * easedProgress * 0.45; // trail length
+            const trailTail = trailHead - trailSpan;
+            const arcFrom = Math.min(trailTail, trailHead);
+            const arcTo = Math.max(trailTail, trailHead);
+
+            // 3 thin arcs at different radii (near tip, mid-blade, inner)
+            for (let i = 0; i < 3; i++) {
+                const radius = swordLen - 1 - i * 5;
+                const alpha = (0.35 - i * 0.1) * (1 - Math.abs(progress - 0.5) * 1.5);
+                if (alpha <= 0 || radius <= 0) continue;
+                ctx.strokeStyle = trailColor;
+                ctx.lineWidth = 1.5 - i * 0.3;
+                ctx.globalAlpha = Math.max(0, alpha);
+                ctx.beginPath();
+                ctx.arc(handX, handY, radius, arcFrom, arcTo);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1;
+        }
+
+        // === BLADE with glow ===
         ctx.save();
         if (isSilver) {
-            ctx.shadowColor = '#8888dd';
-            ctx.shadowBlur = 8;
+            ctx.shadowColor = '#aaccff';
+            ctx.shadowBlur = 10;
         } else {
-            ctx.shadowColor = '#cc8844';
-            ctx.shadowBlur = 6;
+            ctx.shadowColor = '#ff8833';
+            ctx.shadowBlur = 8;
         }
+        // Main blade line
         ctx.strokeStyle = isSilver ? C.SILVER_BLADE : C.IRON_BLADE;
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(handX, handY);
         ctx.lineTo(tipX, tipY);
         ctx.stroke();
         ctx.restore();
 
-        // Glowing aura around blade
-        ctx.strokeStyle = isSilver ? C.SILVER_GLOW : C.IRON_GLOW;
-        ctx.lineWidth = 7;
-        ctx.globalAlpha = 0.3;
+        // Subtle glow aura along the blade
+        ctx.strokeStyle = isSilver ? 'rgba(180,200,255,0.25)' : 'rgba(255,160,60,0.25)';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(handX, handY);
         ctx.lineTo(tipX, tipY);
         ctx.stroke();
-        ctx.globalAlpha = 1;
 
-        // Multi-layered slash arc trail
-        if (progress > 0.15 && progress < 0.85) {
-            const trailColor = isSilver ? C.SILVER_TRAIL : C.IRON_TRAIL;
-            // 3 trailing arcs with decreasing opacity
-            for (let trail = 0; trail < 3; trail++) {
-                const trailProgress = Math.max(0.15, progress - trail * 0.08);
-                const trailAngle = startAngle + swingRange * trailProgress;
-                ctx.strokeStyle = trailColor;
-                ctx.lineWidth = 3 - trail;
-                ctx.globalAlpha = (0.5 - trail * 0.15) * (1 - progress);
+        // Hilt (pommel behind the hand)
+        ctx.strokeStyle = '#654';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(handX, handY);
+        ctx.lineTo(hiltEndX, hiltEndY);
+        ctx.stroke();
+
+        // Crossguard
+        ctx.strokeStyle = MEDAL;
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'butt';
+        ctx.beginPath();
+        ctx.moveTo(g1x, g1y);
+        ctx.lineTo(g2x, g2y);
+        ctx.stroke();
+
+        // Tip effect: small sparkle (silver) or ember (iron) during active swing
+        if (progress > 0.2 && progress < 0.7) {
+            const intensity = 1 - Math.abs(progress - 0.45) * 3;
+            if (isSilver) {
+                ctx.fillStyle = '#ddeeff';
+                ctx.globalAlpha = 0.6 * Math.max(0, intensity);
                 ctx.beginPath();
-                ctx.arc(handX, handY, swordLen - 2 - trail * 3,
-                    Math.min(trailAngle, currentAngle),
-                    Math.max(trailAngle, currentAngle));
-                ctx.stroke();
+                ctx.arc(tipX, tipY, 2, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.fillStyle = '#ffaa33';
+                ctx.globalAlpha = 0.5 * Math.max(0, intensity);
+                ctx.beginPath();
+                ctx.arc(tipX, tipY, 2, 0, Math.PI * 2);
+                ctx.fill();
             }
             ctx.globalAlpha = 1;
         }
-
-        // Sword tip sparkle (silver) or ember (iron)
-        if (progress > 0.2 && progress < 0.7) {
-            if (isSilver) {
-                ctx.fillStyle = '#ddeeff';
-                ctx.globalAlpha = 0.8;
-                ctx.beginPath();
-                ctx.arc(tipX, tipY, 3 + Math.random() * 2, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.globalAlpha = 1;
-            } else {
-                ctx.fillStyle = '#ffaa33';
-                ctx.globalAlpha = 0.7;
-                ctx.fillRect(tipX - 2, tipY - 2, 4, 4);
-                ctx.fillStyle = '#ff6600';
-                ctx.fillRect(tipX - 1, tipY + 2, 2, 3);
-                ctx.globalAlpha = 1;
-            }
-        }
-
-        // Guard/crossguard
-        const guardAngle = currentAngle + Math.PI / 2;
-        ctx.strokeStyle = MEDAL;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(handX + Math.cos(guardAngle) * 4, handY + Math.sin(guardAngle) * 4);
-        ctx.lineTo(handX - Math.cos(guardAngle) * 4, handY - Math.sin(guardAngle) * 4);
-        ctx.stroke();
     }
 };
 

@@ -16,32 +16,32 @@ W.StoryLevel1 = {
         {x:900, y:370, w:120, h:16}, // rooftop
         {x:1080, y:330, w:100, h:16}, // higher roof
         // Screen 3: bridge area
-        {x:1420, y:480, w:400, h:60},
+        {x:1420, y:480, w:460, h:60},
         {x:1600, y:390, w:80, h:16},
         // Screen 4: gap then more village
-        {x:1920, y:480, w:600, h:60},
+        {x:1940, y:480, w:600, h:60},
         {x:2000, y:380, w:140, h:16},
         {x:2200, y:340, w:100, h:16},
         // Screen 5: marketplace
-        {x:2620, y:480, w:700, h:60},
+        {x:2600, y:480, w:700, h:60},
         {x:2700, y:400, w:80, h:16, type:'wood'},
         {x:2900, y:360, w:100, h:16, type:'wood'},
         {x:3100, y:400, w:80, h:16, type:'wood'},
         // Screen 6: damaged area
-        {x:3440, y:480, w:500, h:60},
+        {x:3360, y:480, w:560, h:60},
         {x:3500, y:380, w:120, h:16},
         {x:3700, y:340, w:100, h:16},
         // Screen 7: nekker nest area
-        {x:4040, y:480, w:800, h:60},
+        {x:3980, y:480, w:860, h:60},
         {x:4200, y:390, w:100, h:16},
         {x:4400, y:350, w:80, h:16},
         {x:4600, y:390, w:100, h:16},
         // Screen 8: swamp edge - boss
-        {x:4960, y:480, w:960, h:60},
+        {x:4900, y:480, w:1020, h:60},
         {x:5100, y:380, w:140, h:16},
         {x:5400, y:340, w:160, h:16},
         // Extended ground to end
-        {x:6000, y:480, w:1680, h:60},
+        {x:5980, y:480, w:1700, h:60},
     ],
     enemies: [
         // Screen 2-3: drowners
