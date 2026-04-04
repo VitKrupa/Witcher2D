@@ -309,11 +309,11 @@ W.WaveManager = class {
 W.createWaveLevel = function() {
     const platforms = [];
     // Main ground
-    platforms.push({x:0, y:200, w:960, h:60});
+    platforms.push({x:0, y:W.GROUND_Y, w:960, h:60});
     // Some elevated platforms
-    platforms.push({x:150, y:240, w:120, h:16});
-    platforms.push({x:400, y:200, w:160, h:16});
-    platforms.push({x:700, y:240, w:120, h:16});
+    platforms.push({x:150, y:W.GROUND_Y - 60, w:120, h:16});
+    platforms.push({x:400, y:W.GROUND_Y - 80, w:160, h:16});
+    platforms.push({x:700, y:W.GROUND_Y - 60, w:120, h:16});
     return new W.Level({
         name: 'Arena',
         width: 960,
