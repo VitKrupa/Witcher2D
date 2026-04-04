@@ -71,23 +71,35 @@ W.Room = class {
         // 2. Draw brick texture on walls
         this._drawBricks(ctx, x, y, w, h);
 
-        // 3. CARVE OUT interior (clearRect to show dark interior)
-        ctx.fillStyle = c.interior;
+        // 3. CARVE OUT interior with rich gradient (not flat black)
+        var interiorGrad = ctx.createLinearGradient(x, y + wt, x, y + h - wt);
+        interiorGrad.addColorStop(0, c.interior);
+        interiorGrad.addColorStop(0.3, c.wallDark);
+        interiorGrad.addColorStop(1, c.floor);
+        ctx.fillStyle = interiorGrad;
         ctx.fillRect(x + wt, y + wt, w - wt * 2, h - wt * 2);
+
+        // Interior subtle back wall texture (faint bricks)
+        ctx.globalAlpha = 0.08;
+        this._drawBricks(ctx, x + wt, y + wt, w - wt * 2, h - wt * 2);
+        ctx.globalAlpha = 1;
 
         // 4. CARVE OUT door openings
         for (var i = 0; i < this.doors.length; i++) {
             var d = this.doors[i];
-            ctx.fillStyle = c.interior;
+            // Door opening
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             if (d.side === 'left') {
                 ctx.fillRect(x, y + d.offset, wt, d.size);
-                // Door frame
-                ctx.fillStyle = c.wallDark;
-                ctx.fillRect(x + wt - 3, y + d.offset, 3, d.size);
+                // Door frame (stone arch)
+                ctx.fillStyle = c.wallLight;
+                ctx.fillRect(x + wt - 4, y + d.offset - 2, 4, d.size + 4);
+                ctx.fillRect(x, y + d.offset - 2, wt, 4);
             } else if (d.side === 'right') {
                 ctx.fillRect(x + w - wt, y + d.offset, wt, d.size);
-                ctx.fillStyle = c.wallDark;
-                ctx.fillRect(x + w - wt, y + d.offset, 3, d.size);
+                ctx.fillStyle = c.wallLight;
+                ctx.fillRect(x + w - wt, y + d.offset - 2, 4, d.size + 4);
+                ctx.fillRect(x + w - wt, y + d.offset - 2, wt, 4);
             } else if (d.side === 'top') {
                 ctx.fillRect(x + d.offset, y, d.size, wt);
             } else if (d.side === 'bottom') {
@@ -95,15 +107,28 @@ W.Room = class {
             }
         }
 
-        // 5. Floor texture inside room
-        this._drawFloor(ctx, x + wt, y + h - wt - 8, w - wt * 2, 8);
+        // 5. Floor — thick stone floor integrated into room
+        var floorH = 12;
+        this._drawFloor(ctx, x + wt, y + h - wt - floorH, w - wt * 2, floorH);
 
-        // 6. Ceiling shadow gradient
-        var grad = ctx.createLinearGradient(x, y + wt, x, y + wt + 30);
-        grad.addColorStop(0, 'rgba(0,0,0,0.5)');
+        // Interior floors (multi-story)
+        if (this.floors) {
+            for (var fi = 0; fi < this.floors.length; fi++) {
+                var fl = this.floors[fi];
+                var flx = x + (fl.x || wt);
+                var fly = y + fl.y;
+                var flw = fl.w || (w - wt * 2);
+                var flh = fl.h || 20;
+                this._drawFloor(ctx, flx, fly, flw, flh);
+            }
+        }
+
+        // 6. Ceiling shadow + side vignette
+        var grad = ctx.createLinearGradient(x, y + wt, x, y + wt + 40);
+        grad.addColorStop(0, 'rgba(0,0,0,0.6)');
         grad.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = grad;
-        ctx.fillRect(x + wt, y + wt, w - wt * 2, 30);
+        ctx.fillRect(x + wt, y + wt, w - wt * 2, 40);
 
         // Side wall shadows
         var sGrad = ctx.createLinearGradient(x + wt, 0, x + wt + 15, 0);
@@ -152,16 +177,25 @@ W.Room = class {
 
     _drawFloor(ctx, x, y, w, h) {
         var c = this._colors;
-        ctx.fillStyle = c.floor;
+        // Floor with top highlight gradient
+        var fGrad = ctx.createLinearGradient(x, y, x, y + h);
+        fGrad.addColorStop(0, c.wallLight || c.floor);
+        fGrad.addColorStop(0.15, c.floor);
+        fGrad.addColorStop(1, c.floorDark);
+        ctx.fillStyle = fGrad;
         ctx.fillRect(x, y, w, h);
-        // Tile lines
+        // Stone tile pattern
         ctx.fillStyle = c.floorDark;
-        for (var fx = 0; fx < w; fx += 24) {
-            ctx.fillRect(x + fx, y, 1, h);
+        for (var fx = 0; fx < w; fx += 20) {
+            ctx.fillRect(x + fx, y + 1, 1, h - 2);
         }
-        // Highlight
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
+        ctx.fillRect(x, y + Math.floor(h / 2), w, 1);
+        // Top edge bright line (light source)
+        ctx.fillStyle = 'rgba(255,255,255,0.12)';
         ctx.fillRect(x, y, w, 1);
+        // Bottom edge dark (shadow under floor)
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillRect(x, y + h, w, 3);
     }
 
     _drawFeatures(ctx) {

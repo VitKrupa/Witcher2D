@@ -65,6 +65,9 @@ W.Level = class {
     }
 
     drawForeground(ctx, cameraX) {
+        // Skip foreground details when rooms exist (rooms handle their own visuals)
+        if (this.rooms.length > 0) return;
+
         // Deterministic hash for position-based details
         function ph(x, y, s) {
             let h = (x * 374761393 + y * 668265263 + s * 1274126177) | 0;
