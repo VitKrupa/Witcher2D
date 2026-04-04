@@ -9,7 +9,7 @@ W.StoryLevel3 = {
     storyText: 'Captured documents reveal Nilfgaard funds the Witch Hunters. Their base: an old fortress.',
     platforms: [
         // Screen 1: castle gate
-        {x:0, y:480, w:700, h:60},
+        {x:0, y:480, w:720, h:60},
         {x:200, y:390, w:120, h:16},
         {x:450, y:340, w:100, h:16},
         // Screen 2: wall climb
@@ -18,16 +18,16 @@ W.StoryLevel3 = {
         {x:950, y:300, w:120, h:16},
         {x:1050, y:380, w:80, h:16},
         // Screen 3: interior corridor
-        {x:1250, y:480, w:960, h:60},
+        {x:1190, y:480, w:1020, h:60},
         {x:1400, y:390, w:200, h:16},
         {x:1700, y:350, w:120, h:16},
         // Screen 4: great hall
-        {x:2300, y:480, w:800, h:60},
+        {x:2270, y:480, w:830, h:60},
         {x:2400, y:370, w:150, h:16},
         {x:2650, y:320, w:180, h:16},
         {x:2900, y:370, w:100, h:16},
         // Screen 5: stairwell
-        {x:3200, y:480, w:300, h:60},
+        {x:3160, y:480, w:340, h:60},
         {x:3300, y:430, w:150, h:16},
         {x:3200, y:380, w:150, h:16},
         {x:3300, y:330, w:150, h:16},
@@ -38,19 +38,19 @@ W.StoryLevel3 = {
         {x:3800, y:340, w:140, h:16},
         {x:4050, y:380, w:100, h:16},
         // Screens 7-8: deeper halls
-        {x:4560, y:480, w:800, h:60},
+        {x:4520, y:480, w:840, h:60},
         {x:4700, y:370, w:160, h:16},
         {x:4950, y:320, w:120, h:16},
         {x:5100, y:370, w:100, h:16},
         // Screen 9-10: dungeon descent
-        {x:5460, y:480, w:600, h:60},
+        {x:5420, y:480, w:640, h:60},
         {x:5500, y:400, w:100, h:16},
         {x:5650, y:350, w:80, h:16},
         {x:5800, y:400, w:100, h:16},
         {x:6100, y:480, w:800, h:60},
         {x:6200, y:380, w:140, h:16},
         // Screen 11: dungeon
-        {x:6960, y:480, w:700, h:60},
+        {x:6960, y:480, w:740, h:60},
         {x:7050, y:380, w:120, h:16},
         {x:7300, y:340, w:100, h:16},
         // Screen 12: boss chamber
@@ -59,7 +59,7 @@ W.StoryLevel3 = {
         {x:8200, y:330, w:140, h:16},
         {x:8500, y:370, w:120, h:16},
         // Extended to end
-        {x:8800, y:480, w:2720, h:60},
+        {x:8780, y:480, w:2740, h:60},
     ],
     enemies: [
         // Nilfgaardians screens 2,4,6,8
@@ -93,7 +93,7 @@ W.StoryLevel4 = {
     storyText: 'An ancient battlefield where Nilfgaard performs a dark ritual to bind a griffin as weapon.',
     platforms: [
         // Screen 1: trench entrance
-        {x:0, y:480, w:600, h:60},
+        {x:0, y:480, w:620, h:60},
         {x:100, y:420, w:80, h:16},
         {x:350, y:380, w:100, h:16},
         // Screen 2: no man's land
@@ -101,42 +101,42 @@ W.StoryLevel4 = {
         {x:750, y:400, w:80, h:16},
         {x:900, y:360, w:80, h:16},
         // Screen 3: catapult wreckage
-        {x:1160, y:480, w:500, h:60},
+        {x:1140, y:480, w:520, h:60},
         {x:1200, y:380, w:150, h:16, type:'wood'},
         {x:1450, y:340, w:100, h:16, type:'wood'},
         // Screen 4: open field
-        {x:1760, y:480, w:800, h:60},
+        {x:1720, y:480, w:840, h:60},
         {x:1900, y:390, w:100, h:16},
         {x:2100, y:350, w:120, h:16},
         {x:2350, y:390, w:80, h:16},
         // Screen 5: rubble
-        {x:2660, y:480, w:500, h:60},
+        {x:2620, y:480, w:540, h:60},
         {x:2700, y:400, w:120, h:16},
         {x:2900, y:360, w:80, h:16},
         // Screen 6-7: assault uphill
-        {x:3260, y:480, w:600, h:60},
+        {x:3220, y:480, w:640, h:60},
         {x:3360, y:400, w:100, h:16},
         {x:3550, y:350, w:120, h:16},
         {x:3750, y:300, w:100, h:16},
-        {x:3950, y:460, w:500, h:60},
+        {x:3910, y:460, w:540, h:60},
         {x:4050, y:380, w:100, h:16},
         {x:4250, y:340, w:120, h:16},
         // Screen 8: wild hunt territory
-        {x:4560, y:480, w:800, h:60},
+        {x:4510, y:480, w:850, h:60},
         {x:4700, y:370, w:140, h:16},
         {x:4950, y:320, w:120, h:16},
         {x:5100, y:370, w:100, h:16},
         // Screen 9: ritual circle approach
-        {x:5460, y:480, w:600, h:60},
+        {x:5420, y:480, w:640, h:60},
         {x:5600, y:380, w:120, h:16},
         {x:5800, y:340, w:100, h:16},
         // Screen 10: boss arena
-        {x:6160, y:480, w:960, h:60},
+        {x:6120, y:480, w:1000, h:60},
         {x:6300, y:370, w:160, h:16},
         {x:6600, y:320, w:140, h:16},
         {x:6900, y:370, w:120, h:16},
         // Extended to end
-        {x:7200, y:480, w:2400, h:60},
+        {x:7180, y:480, w:2420, h:60},
     ],
     enemies: [
         // Wraiths screens 1,3,5
