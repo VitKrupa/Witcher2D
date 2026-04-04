@@ -52,6 +52,7 @@ W.Backgrounds = {
 
     swamp: function(ctx, cameraX) {
         const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 400;
+        const gnd = W.GROUND_Y || 340;
         // Sky - murky green
         const sky = ctx.createLinearGradient(0, 0, 0, ch);
         sky.addColorStop(0, '#0a1a0a');
@@ -66,7 +67,7 @@ W.Backgrounds = {
         for (let i = -1; i < 5; i++) {
             const fx = i * 300 - (fogOff % 300);
             ctx.beginPath();
-            ctx.ellipse(fx+150, 360, 180, 40, 0, 0, Math.PI*2);
+            ctx.ellipse(fx+150, gnd - 20, 180, 40, 0, 0, Math.PI*2);
             ctx.fill();
         }
 
@@ -76,22 +77,22 @@ W.Backgrounds = {
         for (let i = -1; i < 8; i++) {
             const tx = i * 160 - (mid % 160);
             // Trunk
-            ctx.fillRect(tx+70, 250, 8, 170);
+            ctx.fillRect(tx+70, gnd - 170, 8, 170);
             // Branches - twisted
             ctx.save();
-            ctx.translate(tx+74, 280);
+            ctx.translate(tx+74, gnd - 140);
             ctx.rotate(-0.4);
             ctx.fillRect(0, 0, 40, 4);
             ctx.restore();
             ctx.save();
-            ctx.translate(tx+74, 300);
+            ctx.translate(tx+74, gnd - 120);
             ctx.rotate(0.3);
             ctx.fillRect(0, 0, 35, 4);
             ctx.restore();
             // Hanging moss
             ctx.fillStyle = '#2a3a1a';
-            ctx.fillRect(tx+90, 278, 2, 20);
-            ctx.fillRect(tx+100, 275, 2, 15);
+            ctx.fillRect(tx+90, gnd - 142, 2, 20);
+            ctx.fillRect(tx+100, gnd - 145, 2, 15);
             ctx.fillStyle = '#1a1a0a';
         }
 
@@ -101,7 +102,7 @@ W.Backgrounds = {
         for (let i = 0; i < 10; i++) {
             const gx = ((i*137+50) % 900) - (cameraX*0.2 % 300);
             ctx.beginPath();
-            ctx.arc(gx, 420 + (i%3)*15, 3, 0, Math.PI*2);
+            ctx.arc(gx, gnd - 10 + (i%3)*15, 3, 0, Math.PI*2);
             ctx.fill();
         }
         ctx.globalAlpha = 1;
@@ -138,8 +139,8 @@ W.Backgrounds = {
             // Moonlight through window
             ctx.fillStyle = 'rgba(60,60,100,0.15)';
             ctx.beginPath();
-            ctx.moveTo(wx+90, 160); ctx.lineTo(wx+70, 450);
-            ctx.lineTo(wx+150, 450); ctx.lineTo(wx+130, 160);
+            ctx.moveTo(wx+90, 160); ctx.lineTo(wx+70, ch);
+            ctx.lineTo(wx+150, ch); ctx.lineTo(wx+130, 160);
             ctx.fill();
         }
 
@@ -201,8 +202,8 @@ W.Backgrounds = {
         ctx.fillStyle = '#bba888';
         for (let i = 0; i < 15; i++) {
             const bx = ((i*97+30) % 800) - (mid % 200);
-            ctx.fillRect(bx, 430 + (i%3)*8, 12, 2);
-            ctx.fillRect(bx+4, 428+(i%3)*8, 2, 6);
+            ctx.fillRect(bx, ch - 40 + (i%3)*8, 12, 2);
+            ctx.fillRect(bx+4, ch - 42 + (i%3)*8, 2, 6);
         }
 
         // Smoke columns
@@ -253,7 +254,7 @@ W.Backgrounds = {
         for (let i = -1; i < 5; i++) {
             const mx = i * 350 - (far % 350);
             ctx.beginPath();
-            ctx.moveTo(mx, 400); ctx.lineTo(mx+175, 180); ctx.lineTo(mx+350, 400); ctx.fill();
+            ctx.moveTo(mx, ch); ctx.lineTo(mx+175, 180); ctx.lineTo(mx+350, ch); ctx.fill();
             // Snow caps
             ctx.fillStyle = '#ddeeff';
             ctx.beginPath();
@@ -268,7 +269,7 @@ W.Backgrounds = {
         for (let i = -1; i < 6; i++) {
             const mx = i * 250 - (mid % 250);
             ctx.beginPath();
-            ctx.moveTo(mx, 420); ctx.lineTo(mx+125, 300); ctx.lineTo(mx+250, 420);
+            ctx.moveTo(mx, ch); ctx.lineTo(mx+125, 300); ctx.lineTo(mx+250, ch);
             ctx.lineTo(mx+250, ch); ctx.lineTo(mx, ch);
             ctx.fill();
         }
