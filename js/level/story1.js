@@ -45,6 +45,14 @@ W.StoryLevel1 = {
         // SECRET: Hidden rooftop platform high above the village
         {x:2250, y:160, w:140, h:16, type:'wood'},
     ],
+    spikes: [
+        // Gap between screen 1 and screen 2 (x:800..860)
+        {x: 810, y: 384, w: 48},
+        // Gap between screen 3 and screen 4 (x:1880..1940)
+        {x: 1890, y: 384, w: 48},
+        // Nekker nest area - dangerous ground
+        {x: 4500, y: 324, w: 60},
+    ],
     secrets: [
         {
             x: 2250, y: 160, w: 140, h: 16,
