@@ -7,14 +7,34 @@ W.Level = class {
         this.width = config.width || 3840;
         this.bgTheme = config.bgTheme || 'village';
         this.storyText = config.storyText || '';
-        this.platforms = (config.platforms || []).map(p =>
-            p instanceof W.Platform ? p : new W.Platform(p.x, p.y, p.w, p.h, p.type)
-        );
+        this.rooms = (config.rooms || []).map(r => new W.Room(r));
+
+        // If rooms exist, generate collision from rooms (no manual platforms needed)
+        if (this.rooms.length > 0) {
+            this.platforms = [];
+            for (var i = 0; i < this.rooms.length; i++) {
+                var roomCollision = this.rooms[i].generateCollision();
+                for (var j = 0; j < roomCollision.length; j++) {
+                    this.platforms.push(roomCollision[j]);
+                }
+            }
+            // Also add any explicit platforms from config (for special cases)
+            if (config.platforms) {
+                for (var i = 0; i < config.platforms.length; i++) {
+                    var p = config.platforms[i];
+                    this.platforms.push(p instanceof W.Platform ? p : new W.Platform(p.x, p.y, p.w, p.h, p.type));
+                }
+            }
+        } else {
+            this.platforms = (config.platforms || []).map(p =>
+                p instanceof W.Platform ? p : new W.Platform(p.x, p.y, p.w, p.h, p.type)
+            );
+        }
+
         this.spikes = (config.spikes || []).map(function(s) {
             return s instanceof W.Spike ? s : new W.Spike(s.x, s.y, s.w, s.direction);
         });
         this.enemySpawns = config.enemies || [];
-        this.rooms = (config.rooms || []).map(r => new W.Room(r));
         this.secrets = (config.secrets || []).map(function(s) {
             return {x: s.x, y: s.y, w: s.w, h: s.h, triggerX: s.triggerX, triggerY: s.triggerY,
                     enemies: s.enemies || [], found: false, reward: s.reward || 200};

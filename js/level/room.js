@@ -52,6 +52,8 @@ W.Room = class {
         this.wallThick = 28;
         this.doors = cfg.doors || [];
         this.features = cfg.features || [];
+        this.noCeiling = cfg.noCeiling || false;
+        this.floors = cfg.floors || [];  // interior floors: [{y, w, h, x}]
         this._colors = THEMES[this.theme] || THEMES.castle;
     }
 
@@ -297,6 +299,70 @@ W.Room = class {
             }
         }
     }
+    // Generate invisible collision rectangles from room definition
+    generateCollision() {
+        var x = this.x, y = this.y, w = this.w, h = this.h;
+        var wt = this.wallThick;
+        var rects = [];
+
+        // Floor (bottom of room)
+        rects.push({x: x, y: y + h - wt, w: w, h: wt});
+
+        // Ceiling (top of room) — if room has ceiling
+        if (!this.noCeiling) {
+            rects.push({x: x, y: y, w: w, h: wt});
+        }
+
+        // Left wall — with door cutouts
+        var leftDoors = this.doors.filter(function(d) { return d.side === 'left'; });
+        if (leftDoors.length === 0) {
+            rects.push({x: x, y: y, w: wt, h: h});
+        } else {
+            // Wall segments around doors
+            for (var i = 0; i < leftDoors.length; i++) {
+                var d = leftDoors[i];
+                // Above door
+                if (d.offset > 0) {
+                    rects.push({x: x, y: y, w: wt, h: d.offset});
+                }
+                // Below door
+                var doorBottom = d.offset + d.size;
+                if (doorBottom < h) {
+                    rects.push({x: x, y: y + doorBottom, w: wt, h: h - doorBottom});
+                }
+            }
+        }
+
+        // Right wall — with door cutouts
+        var rightDoors = this.doors.filter(function(d) { return d.side === 'right'; });
+        if (rightDoors.length === 0) {
+            rects.push({x: x + w - wt, y: y, w: wt, h: h});
+        } else {
+            for (var i = 0; i < rightDoors.length; i++) {
+                var d = rightDoors[i];
+                if (d.offset > 0) {
+                    rects.push({x: x + w - wt, y: y, w: wt, h: d.offset});
+                }
+                var doorBottom = d.offset + d.size;
+                if (doorBottom < h) {
+                    rects.push({x: x + w - wt, y: y + doorBottom, w: wt, h: h - doorBottom});
+                }
+            }
+        }
+
+        // Interior floors (for multi-story rooms)
+        if (this.floors) {
+            for (var i = 0; i < this.floors.length; i++) {
+                var f = this.floors[i];
+                rects.push({x: x + (f.x || wt), y: y + f.y, w: f.w || (w - wt * 2), h: f.h || 20});
+            }
+        }
+
+        // Convert to Platform-like objects with rect getter
+        return rects.map(function(r) {
+            return { x: r.x, y: r.y, w: r.w, h: r.h, rect: r, draw: function() {} };
+        });
+    }
 };
 
-})();
+})();;
