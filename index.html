@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>The Witcher 2D - Prince of Persia Style</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -299,10 +299,10 @@
             <div id="enemyHint" style="font-size:11px; color:#999;">Use the right sword!</div>
         </div>
         <div id="waveAnnounce"></div>
-        <div id="ageGate" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.95);z-index:200;color:#ddd;">
-            <h1 style="font-size:42px;color:#c8a032;text-shadow:0 0 20px rgba(200,160,50,0.6);margin-bottom:8px;letter-spacing:4px;">THE WITCHER 2D</h1>
-            <div style="font-size:16px;color:#888;margin-bottom:30px;font-style:italic;">A Prince of Persia Tribute</div>
-            <div style="font-size:15px;color:#aaa;margin-bottom:15px;">This game contains combat violence. Enter your age:</div>
+        <div id="ageGate" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.95);z-index:200;color:#ddd;padding:env(safe-area-inset-top, 10px) 15px 10px 15px;">
+            <h1 style="font-size:min(42px, 6vw);color:#c8a032;text-shadow:0 0 20px rgba(200,160,50,0.6);margin-bottom:5px;letter-spacing:3px;">THE WITCHER 2D</h1>
+            <div style="font-size:min(16px, 2.5vw);color:#888;margin-bottom:15px;font-style:italic;">A Prince of Persia Tribute</div>
+            <div style="font-size:min(15px, 2.3vw);color:#aaa;margin-bottom:10px;">This game contains combat violence. Enter your age:</div>
             <input type="number" id="ageInput" min="1" max="120" value="" placeholder="Your age"
                 style="width:120px;padding:10px 15px;font-size:22px;text-align:center;background:#1a1a1a;border:2px solid #555;color:#fff;border-radius:6px;margin-bottom:20px;outline:none;">
             <button class="start-btn" onclick="game.confirmAge()" id="ageConfirmBtn">CONFIRM</button>
