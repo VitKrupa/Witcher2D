@@ -62,14 +62,19 @@
                 border: none;
                 border-radius: 0;
                 box-shadow: none;
+                overflow: hidden;
             }
             canvas {
                 width: 100vw !important;
-                height: 100vh !important;
+                height: auto !important;
+                max-height: 100vh;
+                aspect-ratio: 960 / 540;
+                object-fit: contain;
             }
             body {
-                justify-content: flex-start;
-                align-items: flex-start;
+                justify-content: center;
+                align-items: center;
+                background: #000;
             }
             #startScreen h1, #ageGate h1 { font-size: 28px !important; }
             .start-btn { padding: 10px 30px !important; font-size: 16px !important; margin-bottom: 10px !important; }
