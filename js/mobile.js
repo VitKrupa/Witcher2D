@@ -18,7 +18,7 @@ W.Mobile = {
     joyTouchId: null,
     joyCenterX: 0,
     joyCenterY: 0,
-    joyRadius: 50,
+    joyRadius: 60,
 
     // Check if device supports touch
     isTouchDevice: function() {
@@ -59,18 +59,18 @@ W.Mobile = {
         // === LEFT SIDE: Virtual Joystick ===
         var joyArea = document.createElement('div');
         joyArea.id = 'joyArea';
-        joyArea.style.cssText = 'position:absolute;left:10px;bottom:40px;width:150px;height:150px;pointer-events:all;';
+        joyArea.style.cssText = 'position:absolute;left:8px;bottom:30px;width:180px;height:180px;pointer-events:all;';
 
         var joyBase = document.createElement('div');
         joyBase.id = 'joyBase';
         joyBase.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
-            'width:120px;height:120px;border-radius:50%;' +
+            'width:150px;height:150px;border-radius:50%;' +
             'background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.12);';
 
         var joyKnob = document.createElement('div');
         joyKnob.id = 'joyKnob';
         joyKnob.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
-            'width:48px;height:48px;border-radius:50%;' +
+            'width:56px;height:56px;border-radius:50%;' +
             'background:rgba(200,160,50,0.25);border:2px solid rgba(200,160,50,0.4);' +
             'transition:none;';
 

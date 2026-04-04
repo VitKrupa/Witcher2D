@@ -505,8 +505,8 @@ W.Player = class {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.w = 40;
-        this.h = 56;
+        this.w = 52;
+        this.h = 72;
         this.vx = 0;
         this.vy = 0;
         this.speed = 2.2;
@@ -735,20 +735,19 @@ W.Player = class {
         ctx.save();
         const t = this.animTimer;
         const f = this.facing;
+        const S = 1.3; // scale factor (bigger Geralt)
 
         // Invincibility flicker
         if (this.invincible && Math.floor(t) % 3 === 0) ctx.globalAlpha = 0.4;
 
-        // Mirror for facing left
-        if (f === -1) {
-            ctx.translate(this.x + this.w / 2, 0);
-            ctx.scale(-1, 1);
-            ctx.translate(-(this.x + this.w / 2), 0);
-        }
+        // Scale up from center-bottom of character
+        ctx.translate(this.x + this.w / 2, this.y + this.h);
+        ctx.scale(f * S, S); // flip + scale in one
+        ctx.translate(-this.x - this.w / 2, -this.y - this.h);
 
-        // Body center reference point
+        // Body center reference point (in unscaled coords)
         const cx = this.x + this.w / 2;
-        const cy = this.y + 14; // shoulder height
+        const cy = this.y + 18; // shoulder height adjusted for scale
 
         // Ground shadow
         W.Draw.shadow(ctx, cx, this.y + this.h + 2, this.w * 0.8);
