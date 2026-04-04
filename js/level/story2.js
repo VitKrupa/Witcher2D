@@ -307,107 +307,187 @@ W.StoryLevel3 = {
     ]
 };
 
-// Level 4: The Cursed Battlefield (10 screens = 9600px)
+// Level 4: The Cursed Battlefield (10 rooms, ~960px each = 9600px)
+// Prince-of-Persia room-based design: walls w:16 h:200+, floor y:340, ceiling y:80
 W.StoryLevel4 = {
     name: 'The Cursed Battlefield',
     width: 9600,
     bgTheme: 'battlefield',
     storyText: 'An ancient battlefield where Nilfgaard performs a dark ritual to bind a griffin as weapon.',
     platforms: [
-        // Screen 1: trench entrance
-        {x:0, y:340, w:620, h:60},
-        {x:100, y:280, w:80, h:16},
-        {x:350, y:290, w:100, h:16},
-        // Screen 2: no man's land
-        {x:680, y:340, w:400, h:60},
-        {x:750, y:270, w:80, h:16},
-        {x:900, y:295, w:80, h:16},
-        // Screen 3: catapult wreckage
-        {x:1140, y:340, w:520, h:60},
-        {x:1200, y:290, w:150, h:16, type:'wood'},
-        {x:1410, y:275, w:100, h:16, type:'wood'},
-        // Screen 4: open field
-        {x:1720, y:340, w:840, h:60},
-        {x:1900, y:280, w:100, h:16},
-        {x:2060, y:275, w:120, h:16},
-        {x:2240, y:280, w:80, h:16},
-        // Screen 5: rubble
-        {x:2620, y:340, w:540, h:60},
-        {x:2700, y:270, w:120, h:16},
-        {x:2880, y:270, w:80, h:16},
-        // Screen 6-7: assault uphill
-        {x:3220, y:340, w:640, h:60},
-        {x:3360, y:270, w:100, h:16},
-        {x:3520, y:275, w:120, h:16},
-        {x:3700, y:280, w:100, h:16},
-        {x:3910, y:320, w:540, h:60},
-        {x:4050, y:290, w:100, h:16},
-        {x:4210, y:275, w:120, h:16},
-        // Screen 8: wild hunt territory
-        {x:4510, y:340, w:850, h:60},
-        {x:4700, y:300, w:140, h:16},
-        {x:4900, y:275, w:120, h:16},
-        {x:5080, y:300, w:100, h:16},
-        // Screen 9: ritual circle approach
-        {x:5420, y:340, w:640, h:60},
-        {x:5600, y:290, w:120, h:16},
-        {x:5780, y:275, w:100, h:16},
-        // Screen 10: boss arena
-        {x:6120, y:340, w:1000, h:60},
-        {x:6300, y:300, w:160, h:16},
-        {x:6520, y:275, w:140, h:16},
-        {x:6720, y:300, w:120, h:16},
-        // Extended to end
-        {x:7180, y:340, w:2420, h:60},
-        // SECRET: Buried treasure pit
-        {x:3950, y:380, w:160, h:16},
+        // ===== ROOM 1: Trench Entrance (x:0–960) =====
+        // Drop down to trench floor y:380, low ceiling y:300. Tight.
+        {x:0, y:340, w:200, h:60},              // entry ledge before drop
+        {x:0, y:80, w:16, h:260},               // left wall (full height)
+        {x:200, y:380, w:744, h:60},             // trench floor (sunken)
+        {x:0, y:300, w:960, h:16},              // low ceiling
+        {x:944, y:300, w:16, h:140},            // right wall
+        {x:400, y:350, w:100, h:16},            // small step in trench
+        {x:650, y:350, w:80, h:16},             // small step
+
+        // ===== ROOM 2: Trench Corridor (x:960–1920) =====
+        // Long low trench continues. Spikes on floor.
+        {x:960, y:380, w:960, h:60},            // trench floor
+        {x:960, y:300, w:960, h:16},            // low ceiling
+        {x:960, y:300, w:16, h:140},            // left wall
+        {x:1904, y:300, w:16, h:140},           // right wall
+        {x:1200, y:350, w:80, h:16},            // step over spikes
+        {x:1500, y:350, w:80, h:16},            // step over spikes
+        {x:1750, y:350, w:80, h:16},            // step
+
+        // ===== ROOM 3: Surface Breakout (x:1920–2880) =====
+        // Climb up from trench y:380 to surface y:200. Open top.
+        {x:1920, y:380, w:200, h:60},           // trench start
+        {x:1920, y:80, w:16, h:360},            // left wall
+        {x:2864, y:80, w:16, h:260},            // right wall
+        {x:1980, y:320, w:120, h:16},           // climb step 1
+        {x:2060, y:260, w:120, h:16},           // climb step 2
+        {x:2160, y:200, w:140, h:16},           // climb step 3 — surface
+        {x:2360, y:200, w:520, h:16},           // surface floor
+        {x:2500, y:170, w:100, h:16},           // high platform
+
+        // ===== ROOM 4: Siege Tower Interior (x:2880–3840) =====
+        // Vertical climb inside wooden walls. 4 floors.
+        {x:2880, y:340, w:960, h:60},           // ground floor
+        {x:2880, y:80, w:16, h:260},            // left wall
+        {x:3824, y:80, w:16, h:260},            // right wall
+        {x:2880, y:80, w:960, h:16},            // ceiling
+        // Interior walls creating tight corridors
+        {x:3200, y:140, w:16, h:200},           // interior divider
+        {x:3500, y:140, w:16, h:200},           // interior divider
+        // Floor 2
+        {x:2920, y:275, w:260, h:16},
+        // Floor 3
+        {x:3236, y:210, w:244, h:16},
+        // Floor 4 (top)
+        {x:3536, y:145, w:260, h:16},
+
+        // ===== ROOM 5: Siege Tower Top + Descent (x:3840–4800) =====
+        // High floor y:120, stepping down to landing
+        {x:3840, y:80, w:16, h:260},            // left wall
+        {x:4784, y:80, w:16, h:260},            // right wall
+        {x:3840, y:80, w:960, h:16},            // ceiling
+        {x:3880, y:120, w:200, h:16},           // top platform
+        {x:3880, y:180, w:160, h:16},           // step down 1
+        {x:4100, y:220, w:160, h:16},           // step down 2
+        {x:4300, y:270, w:160, h:16},           // step down 3
+        {x:4500, y:340, w:300, h:60},           // landing floor
+
+        // ===== ROOM 6: No Man's Land (x:4800–5760) =====
+        // Rubble walls creating short corridors. Tight.
+        {x:4800, y:340, w:960, h:60},           // floor
+        {x:4800, y:80, w:16, h:260},            // left wall
+        {x:5744, y:80, w:16, h:260},            // right wall
+        {x:4800, y:80, w:960, h:16},            // ceiling
+        // Rubble walls — short corridors
+        {x:5000, y:140, w:16, h:200},           // rubble wall 1
+        {x:5200, y:140, w:16, h:200},           // rubble wall 2
+        {x:5400, y:140, w:16, h:200},           // rubble wall 3
+        {x:5050, y:280, w:100, h:16},           // rubble step
+        {x:5280, y:260, w:80, h:16},            // rubble step
+
+        // ===== ROOM 7: Ritual Approach (x:5760–6720) =====
+        // Walls closing in. Tighter and tighter.
+        {x:5760, y:340, w:960, h:60},           // floor
+        {x:5760, y:80, w:16, h:260},            // left wall
+        {x:6704, y:80, w:16, h:260},            // right wall
+        {x:5760, y:80, w:960, h:16},            // ceiling
+        // Closing walls — corridor narrows
+        {x:5900, y:140, w:16, h:200},           // wall 1
+        {x:6100, y:120, w:16, h:220},           // wall 2 (taller)
+        {x:6300, y:100, w:16, h:240},           // wall 3 (tallest)
+        {x:6500, y:100, w:16, h:240},           // wall 4
+        {x:6000, y:280, w:80, h:16},            // step
+        {x:6200, y:270, w:80, h:16},            // step
+
+        // ===== ROOM 8: Ritual Chamber (x:6720–7680) =====
+        // Sunken pit floor y:400. Walled and ceilinged.
+        {x:6720, y:340, w:100, h:60},           // entry ledge
+        {x:6820, y:400, w:760, h:60},           // sunken pit floor
+        {x:6720, y:80, w:16, h:260},            // left wall
+        {x:7664, y:80, w:16, h:380},            // right wall (extends to pit)
+        {x:6720, y:80, w:960, h:16},            // ceiling
+        {x:6900, y:360, w:100, h:16},           // pit step 1
+        {x:7200, y:360, w:100, h:16},           // pit step 2
+        {x:7400, y:340, w:100, h:16},           // climb-out step
+
+        // ===== ROOMS 9–10: Boss Arena (x:7680–9600) =====
+        // Walled arena with pillars. Two connected rooms.
+        {x:7680, y:340, w:1920, h:60},          // wide arena floor
+        {x:7680, y:80, w:16, h:260},            // left wall
+        {x:9584, y:80, w:16, h:260},            // right wall
+        {x:7680, y:80, w:1920, h:16},           // ceiling
+        // Pillars
+        {x:8060, y:140, w:16, h:200},           // pillar 1
+        {x:8440, y:140, w:16, h:200},           // pillar 2
+        {x:8820, y:140, w:16, h:200},           // pillar 3
+        {x:9200, y:140, w:16, h:200},           // pillar 4
+        // Mid-arena divider (partial wall from ceiling)
+        {x:8640, y:80, w:16, h:120},
+        // Combat platforms
+        {x:8100, y:280, w:100, h:16},
+        {x:8500, y:260, w:100, h:16},
+        {x:8900, y:280, w:100, h:16},
+        {x:9250, y:260, w:100, h:16},
+
+        // SECRET: Buried treasure beneath no man's land rubble
+        {x:5100, y:380, w:160, h:16},
     ],
     secrets: [
         {
-            x: 3950, y: 380, w: 160, h: 16,
-            triggerX: 4000, triggerY: 380,
+            x: 5100, y: 380, w: 160, h: 16,
+            triggerX: 5150, triggerY: 380,
             reward: 300,
             enemies: [
-                {type: 'wildHunt', x: 3970, y: 360},
-                {type: 'wildHunt', x: 4060, y: 360}
+                {type: 'wildHunt', x: 5120, y: 360},
+                {type: 'wildHunt', x: 5200, y: 360}
             ]
         }
     ],
     spikes: [
-        // Trench spikes - screen 1
-        {x: 450, y: 324, w: 60},
-        // No man's land gap (x:620..680)
-        {x: 630, y: 384, w: 48},
-        // Catapult wreckage traps - screen 3
-        {x: 1350, y: 324, w: 48},
-        // Spike trenches in open field - screen 4
-        {x: 1850, y: 324, w: 72},
-        {x: 2100, y: 324, w: 48},
-        // Rubble area - screen 5
-        {x: 2650, y: 324, w: 60},
+        // Room 1: trench floor spikes
+        {x: 500, y: 364, w: 60},
+        {x: 780, y: 364, w: 48},
+        // Room 2: trench corridor spikes
+        {x: 1050, y: 364, w: 60},
+        {x: 1350, y: 364, w: 60},
+        {x: 1680, y: 364, w: 48},
+        // Room 5: descent hazards
+        {x: 4450, y: 324, w: 48},
+        // Room 6: no man's land floor spikes
+        {x: 5100, y: 324, w: 60},
+        {x: 5500, y: 324, w: 48},
+        // Room 8: ritual pit ceiling spikes
+        {x: 7000, y: 100, w: 72, direction: 'down'},
+        {x: 7300, y: 100, w: 60, direction: 'down'},
     ],
     enemies: [
-        // Wraiths screens 1,3,5
-        {type:'wraith', x:300, y:260},
-        {type:'wraith', x:1350, y:260},
-        {type:'wraith', x:2800, y:260},
-        // Nekkers screens 2,4
-        {type:'nekker', x:800, y:280},
-        {type:'nekker', x:900, y:280},
-        {type:'nekker', x:2000, y:280},
-        {type:'nekker', x:2200, y:280},
-        // Wild Hunt screens 6,7,8
-        {type:'wildHunt', x:3500, y:280},
-        {type:'wildHunt', x:3800, y:280},
-        {type:'wildHunt', x:4150, y:280},
-        {type:'wildHunt', x:4800, y:280},
-        // Ghouls screen 9
-        {type:'ghoul', x:5650, y:280},
-        {type:'ghoul', x:5850, y:280},
-        // Boss: Wild Hunt Rider
-        {type:'wildHunt', x:6500, y:280},
-        {type:'wildHunt', x:6700, y:280},
-        {type:'wildHunt', x:6900, y:280},
+        // Room 1: Trench entrance — 2 nekkers
+        {type:'nekker', x:500, y:360},
+        {type:'nekker', x:750, y:360},
+        // Room 2: Trench corridor — 1 wraith
+        {type:'wraith', x:1400, y:360},
+        // Room 3: Surface breakout — 2 ghouls
+        {type:'ghoul', x:2400, y:180},
+        {type:'ghoul', x:2650, y:180},
+        // Room 4: Siege tower floor 1 — 1 nekker
+        {type:'nekker', x:3050, y:320},
+        // Room 4: Siege tower floor 2 — 1 nekker
+        {type:'nekker', x:3100, y:255},
+        // Room 4: Siege tower floor 3 — 1 wraith
+        {type:'wraith', x:3350, y:190},
+        // Room 6: No man's land — 2 wild hunt
+        {type:'wildHunt', x:5050, y:320},
+        {type:'wildHunt', x:5350, y:320},
+        // Room 7: Ritual approach — 1 wraith
+        {type:'wraith', x:6150, y:320},
+        // Room 8: Ritual chamber — 2 wild hunt
+        {type:'wildHunt', x:7000, y:380},
+        {type:'wildHunt', x:7300, y:380},
+        // Rooms 9–10: Boss arena — 3 wild hunt
+        {type:'wildHunt', x:8200, y:320},
+        {type:'wildHunt', x:8700, y:320},
+        {type:'wildHunt', x:9100, y:320},
     ]
 };
 
