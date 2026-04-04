@@ -14,6 +14,7 @@ W.Level = class {
             return s instanceof W.Spike ? s : new W.Spike(s.x, s.y, s.w, s.direction);
         });
         this.enemySpawns = config.enemies || [];
+        this.rooms = (config.rooms || []).map(r => new W.Room(r));
         this.secrets = (config.secrets || []).map(function(s) {
             return {x: s.x, y: s.y, w: s.w, h: s.h, triggerX: s.triggerX, triggerY: s.triggerY,
                     enemies: s.enemies || [], found: false, reward: s.reward || 200};
@@ -28,6 +29,7 @@ W.Level = class {
     }
 
     drawPlatforms(ctx) {
+        for (var i = 0; i < this.rooms.length; i++) this.rooms[i].draw(ctx);
         for (const p of this.platforms) {
             try { p.draw(ctx); } catch(e) { /* fallback: simple rect */
                 ctx.fillStyle = '#6b4226';
