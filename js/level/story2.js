@@ -232,6 +232,114 @@ W.StoryLevel3 = {
         // SECRET 2: Hidden armory above great hall (room 5 area)
         {x:4200, y:90, w:160, h:16},
     ],
+    rooms: [
+        // Room 1: Gate Room
+        {x:0, y:60, w:960, h:340, theme:'castle',
+            doors:[{side:'right', offset:200, size:60}],
+            features:[
+                {type:'torch', x:80, y:160},
+                {type:'torch', x:800, y:160},
+                {type:'banner', x:460, y:100},
+                {type:'cobweb', x:16, y:80}
+            ]},
+        // Room 2: Entry Hall
+        {x:960, y:60, w:960, h:340, theme:'castle',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'torch', x:1060, y:180},
+                {type:'torch', x:1800, y:180},
+                {type:'banner', x:1400, y:100},
+                {type:'window', x:1440, y:120}
+            ]},
+        // Room 3: Staircase Room
+        {x:1920, y:60, w:960, h:340, theme:'castle',
+            doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
+            features:[
+                {type:'torch', x:2000, y:160},
+                {type:'torch', x:2750, y:160},
+                {type:'chains', x:2400, y:100}
+            ]},
+        // Room 4: Upper Corridor (raised floor y:140–240)
+        {x:2880, y:120, w:960, h:180, theme:'castle',
+            doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
+            features:[
+                {type:'torch', x:2980, y:170},
+                {type:'torch', x:3700, y:170},
+                {type:'cobweb', x:3200, y:140},
+                {type:'cobweb', x:3400, y:140}
+            ]},
+        // Room 5: Great Hall (tall, ceiling y:60)
+        {x:3840, y:40, w:960, h:360, theme:'castle',
+            doors:[{side:'left', offset:200, size:80}, {side:'right', offset:200, size:80}],
+            features:[
+                {type:'torch', x:3940, y:140},
+                {type:'torch', x:4700, y:140},
+                {type:'banner', x:4080, y:80},
+                {type:'banner', x:4560, y:80},
+                {type:'window', x:4300, y:80}
+            ]},
+        // Room 6: Kitchen / Storage (low ceiling y:240)
+        {x:4800, y:220, w:960, h:180, theme:'castle',
+            doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
+            features:[
+                {type:'torch', x:4880, y:260},
+                {type:'cobweb', x:5050, y:240},
+                {type:'cobweb', x:5400, y:240}
+            ]},
+        // Room 7: Dungeon Descent (deep pit to y:480)
+        {x:5760, y:60, w:960, h:420, theme:'castle',
+            doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
+            features:[
+                {type:'torch', x:5860, y:160},
+                {type:'chains', x:6200, y:100},
+                {type:'chains', x:6500, y:100},
+                {type:'cobweb', x:5900, y:80}
+            ]},
+        // Room 8: Dungeon Cells (underground y:340–420)
+        {x:6720, y:320, w:960, h:160, theme:'castle',
+            doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
+            features:[
+                {type:'chains', x:6850, y:350},
+                {type:'chains', x:7150, y:350},
+                {type:'chains', x:7450, y:350},
+                {type:'cobweb', x:7000, y:340}
+            ]},
+        // Room 9: Dungeon Exit (climb from y:420 to y:160)
+        {x:7680, y:60, w:960, h:420, theme:'castle',
+            doors:[{side:'left', offset:0, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'torch', x:7780, y:160},
+                {type:'torch', x:8500, y:180},
+                {type:'chains', x:8100, y:100}
+            ]},
+        // Room 10: Tower Climb (tall, ceiling y:60)
+        {x:8640, y:40, w:960, h:360, theme:'castle',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'torch', x:8740, y:140},
+                {type:'torch', x:9480, y:140},
+                {type:'window', x:9100, y:80},
+                {type:'banner', x:9200, y:100}
+            ]},
+        // Room 11: Sky Bridge (high floor y:120, very short room)
+        {x:9600, y:60, w:960, h:76, theme:'castle',
+            doors:[{side:'left', offset:0, size:40}, {side:'right', offset:0, size:40}],
+            features:[
+                {type:'banner', x:9850, y:80},
+                {type:'banner', x:10200, y:80},
+                {type:'window', x:10050, y:80}
+            ]},
+        // Room 12: Boss Chamber
+        {x:10560, y:60, w:960, h:340, theme:'castle',
+            doors:[{side:'left', offset:0, size:60}],
+            features:[
+                {type:'torch', x:10660, y:160},
+                {type:'torch', x:11400, y:160},
+                {type:'banner', x:10950, y:100},
+                {type:'banner', x:11200, y:100},
+                {type:'chains', x:10800, y:100}
+            ]},
+    ],
     secrets: [
         {
             x: 7100, y: 460, w: 160, h: 16,
@@ -432,6 +540,93 @@ W.StoryLevel4 = {
 
         // SECRET: Buried treasure beneath no man's land rubble
         {x:5100, y:380, w:160, h:16},
+    ],
+    rooms: [
+        // Room 1: Trench Entrance (drop to y:380)
+        {x:0, y:60, w:960, h:380, theme:'battlefield',
+            doors:[{side:'right', offset:240, size:60}],
+            features:[
+                {type:'torch', x:80, y:180},
+                {type:'roots', x:400, y:360},
+                {type:'roots', x:700, y:360},
+                {type:'cobweb', x:16, y:300}
+            ]},
+        // Room 2: Trench Corridor (sunken y:300–380)
+        {x:960, y:280, w:960, h:160, theme:'battlefield',
+            doors:[{side:'left', offset:100, size:40}, {side:'right', offset:100, size:40}],
+            features:[
+                {type:'roots', x:1100, y:360},
+                {type:'roots', x:1600, y:360},
+                {type:'cobweb', x:1400, y:300}
+            ]},
+        // Room 3: Surface Breakout (climb from y:380 to y:200)
+        {x:1920, y:60, w:960, h:380, theme:'battlefield',
+            doors:[{side:'left', offset:240, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'torch', x:2020, y:160},
+                {type:'roots', x:1980, y:340},
+                {type:'cobweb', x:2500, y:170}
+            ]},
+        // Room 4: Siege Tower Interior (vertical climb)
+        {x:2880, y:60, w:960, h:340, theme:'battlefield',
+            doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
+            features:[
+                {type:'torch', x:2980, y:160},
+                {type:'torch', x:3700, y:160},
+                {type:'cobweb', x:3200, y:140},
+                {type:'cobweb', x:3500, y:140}
+            ]},
+        // Room 5: Siege Tower Top + Descent
+        {x:3840, y:60, w:960, h:340, theme:'battlefield',
+            doors:[{side:'left', offset:0, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'torch', x:3940, y:140},
+                {type:'cobweb', x:4300, y:100},
+                {type:'roots', x:4600, y:320}
+            ]},
+        // Room 6: No Man's Land (rubble corridors)
+        {x:4800, y:60, w:960, h:340, theme:'battlefield',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'torch', x:4900, y:160},
+                {type:'roots', x:5050, y:320},
+                {type:'roots', x:5350, y:320},
+                {type:'cobweb', x:5200, y:140}
+            ]},
+        // Room 7: Ritual Approach (walls closing in)
+        {x:5760, y:60, w:960, h:340, theme:'battlefield',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'torch', x:5860, y:160},
+                {type:'cobweb', x:6100, y:120},
+                {type:'roots', x:6400, y:320}
+            ]},
+        // Room 8: Ritual Chamber (sunken pit y:400)
+        {x:6720, y:60, w:960, h:400, theme:'battlefield',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:0, size:60}],
+            features:[
+                {type:'torch', x:6820, y:160},
+                {type:'torch', x:7500, y:160},
+                {type:'roots', x:7000, y:380},
+                {type:'cobweb', x:7200, y:100}
+            ]},
+        // Room 9: Boss Arena West (x:7680–8640)
+        {x:7680, y:60, w:960, h:340, theme:'battlefield',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:80, size:60}],
+            features:[
+                {type:'torch', x:7780, y:160},
+                {type:'cobweb', x:8060, y:140},
+                {type:'roots', x:8300, y:320}
+            ]},
+        // Room 10: Boss Arena East (x:8640–9600)
+        {x:8640, y:60, w:960, h:340, theme:'battlefield',
+            doors:[{side:'left', offset:80, size:60}],
+            features:[
+                {type:'torch', x:8740, y:160},
+                {type:'torch', x:9400, y:160},
+                {type:'cobweb', x:9200, y:140},
+                {type:'roots', x:8900, y:320}
+            ]},
     ],
     secrets: [
         {

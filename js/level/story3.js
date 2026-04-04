@@ -232,6 +232,133 @@ W.StoryLevel5 = {
         // SECRET: Dragon's cache — hidden high in ascent shaft
         {x:6150, y:90, w:160, h:16, type:'ice'},
     ],
+    rooms: [
+        // Room 1: Mountain Path West (wind corridors)
+        {x:0, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:150, y:300},
+                {type:'crystal', x:500, y:280},
+                {type:'chains', x:300, y:140},
+                {type:'chains', x:600, y:140}
+            ]},
+        // Room 2: Mountain Path East
+        {x:960, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:1100, y:300},
+                {type:'crystal', x:1500, y:280},
+                {type:'chains', x:1400, y:120},
+                {type:'chains', x:1650, y:120}
+            ]},
+        // Room 3: Ice Cave West (tight passages)
+        {x:1920, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:2050, y:300},
+                {type:'crystal', x:2550, y:280},
+                {type:'chains', x:2150, y:120},
+                {type:'chains', x:2650, y:120}
+            ]},
+        // Room 4: Ice Cave East (even tighter)
+        {x:2880, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:2980, y:300},
+                {type:'crystal', x:3400, y:280},
+                {type:'crystal', x:3700, y:290},
+                {type:'chains', x:3250, y:120}
+            ]},
+        // Room 5: Frozen Hall West (ice pillars)
+        {x:3840, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:3950, y:300},
+                {type:'crystal', x:4400, y:260},
+                {type:'chains', x:4080, y:100},
+                {type:'chains', x:4560, y:100}
+            ]},
+        // Room 6: Frozen Hall East
+        {x:4800, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:4950, y:290},
+                {type:'crystal', x:5400, y:280},
+                {type:'chains', x:5040, y:100},
+                {type:'chains', x:5520, y:100}
+            ]},
+        // Room 7: Ascent Shaft Lower (vertical climb)
+        {x:5760, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:5860, y:300},
+                {type:'crystal', x:6400, y:300},
+                {type:'chains', x:5960, y:100},
+                {type:'chains', x:6504, y:100}
+            ]},
+        // Room 8: Ascent Shaft Upper
+        {x:6720, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:6820, y:300},
+                {type:'crystal', x:7350, y:300},
+                {type:'chains', x:6920, y:100},
+                {type:'chains', x:7464, y:100}
+            ]},
+        // Room 9: Wild Hunt Fortress West
+        {x:7680, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:7800, y:300},
+                {type:'crystal', x:8300, y:280},
+                {type:'chains', x:7920, y:140}
+            ]},
+        // Room 10: Wild Hunt Fortress East
+        {x:8640, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:8780, y:300},
+                {type:'crystal', x:9250, y:280},
+                {type:'chains', x:8880, y:120},
+                {type:'chains', x:9360, y:120}
+            ]},
+        // Room 11: Throne Room Approach West (narrowing)
+        {x:9600, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:9720, y:300},
+                {type:'crystal', x:10150, y:280},
+                {type:'chains', x:9800, y:100},
+                {type:'chains', x:10200, y:100}
+            ]},
+        // Room 12: Throne Room Approach East (tightest)
+        {x:10560, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
+            features:[
+                {type:'crystal', x:10660, y:300},
+                {type:'crystal', x:11180, y:280},
+                {type:'chains', x:10700, y:100},
+                {type:'chains', x:11240, y:100},
+                {type:'crystal', x:11350, y:290}
+            ]},
+        // Room 13: Griffin Arena West (open sky, no ceiling)
+        {x:11520, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:200, size:60}, {side:'right', offset:0, size:340}],
+            features:[
+                {type:'crystal', x:11650, y:300},
+                {type:'crystal', x:12050, y:260},
+                {type:'chains', x:11900, y:200}
+            ]},
+        // Room 14: Griffin Arena East (open sky, no ceiling)
+        {x:12480, y:60, w:960, h:340, theme:'mountain',
+            doors:[{side:'left', offset:0, size:340}],
+            features:[
+                {type:'crystal', x:12600, y:300},
+                {type:'crystal', x:13000, y:260},
+                {type:'crystal', x:13200, y:280},
+                {type:'chains', x:12700, y:200}
+            ]},
+    ],
     secrets: [
         {
             x: 6150, y: 90, w: 160, h: 16,
