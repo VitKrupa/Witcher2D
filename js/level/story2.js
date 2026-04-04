@@ -253,7 +253,7 @@ W.StoryLevel3 = {
     ],
     secrets: [
         {
-            x: 7100, y: 460, w: 160, h: 16,
+            x: 7100, y: 460, w: 160, h: 40,
             triggerX: 7150, triggerY: 460,
             reward: 300,
             enemies: [
@@ -262,7 +262,7 @@ W.StoryLevel3 = {
             ]
         },
         {
-            x: 4200, y: 90, w: 160, h: 16,
+            x: 4200, y: 90, w: 160, h: 40,
             triggerX: 4250, triggerY: 90,
             reward: 350,
             enemies: [
@@ -520,7 +520,7 @@ W.StoryLevel4 = {
     ],
     secrets: [
         {
-            x: 5100, y: 380, w: 160, h: 16,
+            x: 5100, y: 380, w: 160, h: 40,
             triggerX: 5150, triggerY: 380,
             reward: 300,
             enemies: [
