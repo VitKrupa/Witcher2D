@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Witcher 2D - Prince of Persia Style</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,24 +26,58 @@
             display: block;
             image-rendering: pixelated;
         }
-        @media (max-width: 970px) {
+        /* === MOBILE: portrait — show rotate prompt === */
+        #rotatePrompt {
+            display: none;
+            position: fixed; top:0; left:0; right:0; bottom:0;
+            background: #0a0a0a;
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #c8a032;
+            font-size: 20px;
+            text-align: center;
+            padding: 30px;
+        }
+        #rotatePrompt .rotate-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: rotateHint 2s ease-in-out infinite;
+        }
+        @keyframes rotateHint {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+        }
+        @media (max-width: 970px) and (orientation: portrait) {
+            #rotatePrompt { display: flex !important; }
+            #gameContainer { display: none !important; }
+        }
+        @media (max-width: 970px) and (orientation: landscape) {
+            #rotatePrompt { display: none !important; }
             #gameContainer {
+                display: block !important;
                 width: 100vw !important;
+                height: 100vh !important;
                 border: none;
                 border-radius: 0;
+                box-shadow: none;
             }
             canvas {
-                width: 100vw;
-                height: auto;
+                width: 100vw !important;
+                height: 100vh !important;
             }
-        }
-        @media (max-height: 560px) and (orientation: landscape) {
-            body { justify-content: flex-start; }
-            canvas {
-                width: 100vw;
-                height: 100vh;
-                object-fit: contain;
+            body {
+                justify-content: flex-start;
+                align-items: flex-start;
             }
+            #startScreen h1, #ageGate h1 { font-size: 28px !important; }
+            .start-btn { padding: 10px 30px !important; font-size: 16px !important; margin-bottom: 10px !important; }
+            .controls-info { font-size: 11px !important; line-height: 1.5 !important; }
+            #ui-overlay { padding: 5px 10px !important; }
+            .health-bar-container { width: 140px !important; height: 14px !important; }
+            .info-panel { display: none !important; }
+            .sword-buttons { display: none !important; }
         }
         #ui-overlay {
             position: absolute;
@@ -229,6 +263,11 @@
     </style>
 </head>
 <body>
+    <div id="rotatePrompt">
+        <div class="rotate-icon">📱</div>
+        <div>Otoč telefon na šířku</div>
+        <div style="font-size:14px;color:#888;margin-top:10px;">Rotate your phone to landscape</div>
+    </div>
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
         <div id="ui-overlay">

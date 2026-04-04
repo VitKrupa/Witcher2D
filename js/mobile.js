@@ -18,7 +18,7 @@ W.Mobile = {
     joyTouchId: null,
     joyCenterX: 0,
     joyCenterY: 0,
-    joyRadius: 50,
+    joyRadius: 40,
 
     // Check if device supports touch
     isTouchDevice: function() {
@@ -59,24 +59,24 @@ W.Mobile = {
         // === LEFT SIDE: Virtual Joystick ===
         var joyArea = document.createElement('div');
         joyArea.id = 'joyArea';
-        joyArea.style.cssText = 'position:absolute;left:10px;bottom:10px;width:160px;height:160px;pointer-events:all;';
+        joyArea.style.cssText = 'position:absolute;left:5px;bottom:5px;width:130px;height:130px;pointer-events:all;';
 
         var joyBase = document.createElement('div');
         joyBase.id = 'joyBase';
         joyBase.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
-            'width:120px;height:120px;border-radius:50%;' +
+            'width:100px;height:100px;border-radius:50%;' +
             'background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.15);';
 
         var joyKnob = document.createElement('div');
         joyKnob.id = 'joyKnob';
         joyKnob.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
-            'width:50px;height:50px;border-radius:50%;' +
+            'width:40px;height:40px;border-radius:50%;' +
             'background:rgba(200,160,50,0.35);border:2px solid rgba(200,160,50,0.5);' +
             'transition:none;';
 
         // Direction arrows overlay
         var arrows = document.createElement('div');
-        arrows.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100px;height:100px;pointer-events:none;';
+        arrows.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:80px;height:80px;pointer-events:none;';
         arrows.innerHTML =
             '<div style="position:absolute;top:5px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.2);font-size:14px;">↑</div>' +
             '<div style="position:absolute;bottom:5px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.2);font-size:14px;">↓</div>' +
@@ -88,26 +88,26 @@ W.Mobile = {
         joyArea.appendChild(joyBase);
         container.appendChild(joyArea);
 
-        // === RIGHT SIDE: Action Buttons ===
+        // === RIGHT SIDE: Action Buttons (diamond layout, smaller) ===
         var btnArea = document.createElement('div');
         btnArea.id = 'btnArea';
-        btnArea.style.cssText = 'position:absolute;right:10px;bottom:10px;pointer-events:all;';
+        btnArea.style.cssText = 'position:absolute;right:5px;bottom:5px;width:160px;height:130px;pointer-events:all;';
 
-        // Silver sword (top-left of button cluster)
+        // Silver sword (left)
         var silverBtn = this.makeButton('silverTouch', '⚔', 'SILVER',
-            'rgba(30,30,80,0.7)', '#8888cc', 0, 70);
-        // Iron sword (top-right)
+            'rgba(30,30,80,0.7)', '#8888cc', 0, 40);
+        // Iron sword (right)
         var ironBtn = this.makeButton('ironTouch', '🗡', 'IRON',
-            'rgba(80,40,20,0.7)', '#cc8844', 80, 70);
-        // Jump (above swords)
+            'rgba(80,40,20,0.7)', '#cc8844', 105, 40);
+        // Jump (top center)
         var jumpBtn = this.makeButton('jumpTouch', '⬆', 'JUMP',
-            'rgba(40,60,40,0.7)', '#66aa66', 40, 0);
-        // Block (below swords)
-        var blockBtn = this.makeButton('blockTouch', '🛡', 'BLOCK',
-            'rgba(60,60,60,0.7)', '#999', 40, 140);
-        // Roll (left of block)
+            'rgba(40,60,40,0.7)', '#66aa66', 52, 0);
+        // Roll (bottom center)
         var rollBtn = this.makeButton('rollTouch', '↻', 'ROLL',
-            'rgba(50,50,30,0.7)', '#aaaa66', -30, 120);
+            'rgba(50,50,30,0.7)', '#aaaa66', 52, 80);
+        // Block (far left, smaller)
+        var blockBtn = this.makeButton('blockTouch', '🛡', 'BLK',
+            'rgba(60,60,60,0.7)', '#999', -45, 60);
 
         btnArea.appendChild(silverBtn);
         btnArea.appendChild(ironBtn);
@@ -124,15 +124,15 @@ W.Mobile = {
     makeButton: function(id, icon, label, bg, borderColor, offsetX, offsetY) {
         var btn = document.createElement('div');
         btn.id = id;
-        btn.style.cssText = 'position:absolute;width:65px;height:65px;border-radius:50%;' +
+        btn.style.cssText = 'position:absolute;width:50px;height:50px;border-radius:50%;' +
             'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
             'background:' + bg + ';border:2px solid ' + borderColor + ';' +
-            'color:' + borderColor + ';font-size:10px;font-weight:bold;' +
+            'color:' + borderColor + ';font-size:9px;font-weight:bold;' +
             'left:' + offsetX + 'px;top:' + offsetY + 'px;' +
             'user-select:none;-webkit-user-select:none;' +
-            'box-shadow:0 0 10px rgba(0,0,0,0.5);';
-        btn.innerHTML = '<span style="font-size:22px;line-height:1;">' + icon + '</span>' +
-                        '<span style="font-size:8px;margin-top:2px;">' + label + '</span>';
+            'box-shadow:0 0 8px rgba(0,0,0,0.5);';
+        btn.innerHTML = '<span style="font-size:18px;line-height:1;">' + icon + '</span>' +
+                        '<span style="font-size:7px;margin-top:1px;">' + label + '</span>';
         this.buttons[id] = btn;
         return btn;
     },

@@ -118,29 +118,7 @@
         // -----------------------------------------------------------
 
         setupStartScreen() {
-            var startScreen = document.getElementById('startScreen');
-            // Replace the single button with two mode buttons
-            var existingBtn = startScreen.querySelector('.start-btn');
-            if (existingBtn) {
-                // Build a container for two buttons
-                var container = document.createElement('div');
-                container.style.cssText = 'display:flex; gap:20px; margin-bottom:30px;';
-
-                var storyBtn = document.createElement('button');
-                storyBtn.className = 'start-btn';
-                storyBtn.textContent = 'STORY MODE';
-                storyBtn.onclick = function () { window.game.start('story'); };
-
-                var waveBtn = document.createElement('button');
-                waveBtn.className = 'start-btn';
-                waveBtn.textContent = 'WAVE MODE';
-                waveBtn.onclick = function () { window.game.start('wave'); };
-
-                container.appendChild(storyBtn);
-                container.appendChild(waveBtn);
-
-                existingBtn.parentNode.replaceChild(container, existingBtn);
-            }
+            // Buttons are already in HTML — no dynamic creation needed
         }
 
         showStartScreen() {
