@@ -56,7 +56,7 @@ W.Camera = class Camera {
         this.offsetY = W.lerp(this.offsetY, targetOffsetY, 0.05);
 
         this.offsetX = W.clamp(this.offsetX, 0, Math.max(0, levelWidth - visW));
-        this.offsetY = W.clamp(this.offsetY, -20, 100);
+        this.offsetY = W.clamp(this.offsetY, -100, 200);
     }
 
     /**
