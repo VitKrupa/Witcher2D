@@ -3,3 +3,4 @@ package.json
 package-lock.json
 screenshot.js
 generate-demo.js
+test-game.js
