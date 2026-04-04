@@ -72,8 +72,8 @@ W.Backgrounds.mountain = function(ctx, cameraX) {
     }
     // Pine tree silhouettes (3 sizes)
     ctx.fillStyle = '#0e1a22';
-    var pines = [[80,420,12,30],[160,430,8,20],[230,425,15,38],[350,435,10,24],[440,418,14,35],
-                 [550,432,9,22],[640,420,13,32],[750,428,11,26],[860,422,16,40],[950,434,7,18]];
+    var pines = [[80,340,12,30],[160,350,8,20],[230,345,15,38],[350,355,10,24],[440,338,14,35],
+                 [550,352,9,22],[640,340,13,32],[750,348,11,26],[860,342,16,40],[950,354,7,18]];
     for (var p = 0; p < pines.length; p++) {
         var pp = pines[p], px = pp[0] + midOff;
         ctx.beginPath(); ctx.moveTo(px, pp[1] - pp[3]); ctx.lineTo(px - pp[2], pp[1]); ctx.lineTo(px + pp[2], pp[1]); ctx.fill();
@@ -89,11 +89,11 @@ W.Backgrounds.mountain = function(ctx, cameraX) {
     var nearOff = -(cameraX * 0.6) % cw;
     // Frozen stream
     ctx.fillStyle = 'rgba(120,180,220,0.35)';
-    ctx.fillRect(0, ch - 50, cw, 20);
+    ctx.fillRect(0, ch - 40, cw, 20);
     ctx.fillStyle = 'rgba(255,255,255,0.15)';
     for (var sl = 0; sl < 8; sl++) {
         var slx = sl * 130 + 20 + nearOff * 0.5;
-        ctx.fillRect(slx % cw, ch - 45, 40, 3);
+        ctx.fillRect(slx % cw, ch - 35, 40, 3);
     }
     // Icicles from top of screen
     ctx.fillStyle = 'rgba(180,210,240,0.7)';

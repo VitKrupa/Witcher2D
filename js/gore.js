@@ -188,7 +188,7 @@ W.Gore = {
             g.life -= spd;
 
             // Stop at ground (use enemy's foot position, fallback to 500)
-            const floorY = g.groundY || 500;
+            const floorY = g.groundY || (W.GROUND_Y + 60) || 400;
             if (g.y > floorY) {
                 g.y = floorY;
                 g.vy = 0;

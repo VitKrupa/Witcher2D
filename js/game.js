@@ -265,6 +265,8 @@
                 this.player.vy = 0;
                 this.player.hp = this.player.maxHp;
             }
+            // Set dark level flag for cat-eye glow effect in castle theme
+            this.player._darkLevel = (storyData.bgTheme === 'castle');
 
             // Show story intro text (only on first visit)
             if (!this._levelVisited) this._levelVisited = {};
@@ -450,7 +452,7 @@
                 if (this.waveManager.betweenWaves && this.waveManager.waveTimer > 100) {
                     var announceEl = document.getElementById('waveAnnounce');
                     if (announceEl) {
-                        announceEl.textContent = 'WAVE ' + this.waveManager.currentWave;
+                        announceEl.textContent = 'WAVE ' + (this.waveManager.currentWave + 1);
                         announceEl.style.opacity = '1';
                     }
                 } else {
@@ -562,31 +564,33 @@
         // -----------------------------------------------------------
 
         resolveCombat() {
-            if (!this.player || !this.player.isAttacking || !this.player.attackHitbox) return;
+            if (!this.player || !this.player.isAttacking || !this.player.attackHitbox) {
+                // Reset hit tracking when not attacking
+                if (this.player) {
+                    this.player._hitEnemies = null;
+                    this.player._hitEnemy = false;
+                }
+                return;
+            }
+            // Track which enemies have been hit during this attack
+            if (!this.player._hitEnemies) this.player._hitEnemies = [];
 
             for (var i = 0; i < this.enemies.length; i++) {
                 var enemy = this.enemies[i];
-                if (enemy.dead || !enemy.alive) continue;
+                if (!enemy.alive) continue;
                 if (!enemy.hitbox) continue;
+                if (this.player._hitEnemies.indexOf(enemy) !== -1) continue; // already hit
 
                 if (W.boxCollision(this.player.attackHitbox, enemy.hitbox)) {
-                    // Determine if correct sword is being used
+                    this.player._hitEnemies.push(enemy);
+                    this.player._hitEnemy = true; // signal for weapon effects
                     var swordType = this.player.activeSword || 'silver';
-                    var category = enemy.category || 'creature';
-                    var correctSword = (
-                        (swordType === 'silver' && category === 'creature') ||
-                        (swordType === 'iron' && category === 'human')
-                    );
 
-                    var damage;
-                    if (correctSword) {
-                        damage = W.randInt(20, 25);
-                    } else {
-                        damage = W.randInt(6, 8);
-                    }
-
-                    // Apply damage
-                    enemy.takeDamage(damage);
+                    // Base damage; takeDamage handles sword effectiveness (1/3 for wrong sword)
+                    var baseDamage = W.randInt(20, 25);
+                    var result = enemy.takeDamage(baseDamage, swordType);
+                    var damage = result.dmg;
+                    var correctSword = result.effective;
 
                     // Determine direction for particles
                     var dir = this.player.facing || 1;
