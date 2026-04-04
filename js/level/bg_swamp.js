@@ -3,7 +3,7 @@
 if (!W.Backgrounds) W.Backgrounds = {};
 
 W.Backgrounds.swamp = function(ctx, cameraX) {
-    const cw = 960, ch = 540;
+    const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
     const t = Date.now() * 0.001;
 
     // === SKY: sickly murky green ===

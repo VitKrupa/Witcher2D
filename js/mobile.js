@@ -271,22 +271,14 @@ W.Mobile = {
             keys['d'] = false;
         }
 
-        // Vertical: up = jump (single press with cooldown)
-        if (!this._jumpCooldown) this._jumpCooldown = 0;
-        if (this._jumpCooldown > 0) this._jumpCooldown--;
-
-        if (this.joyY < -0.4) {
-            if (!this._jumpTriggered && this._jumpCooldown <= 0) {
-                keys['w'] = true;
-                this._jumpTriggered = true;
-                this._jumpCooldown = 30; // ~0.5s cooldown at 60fps
-            } else {
-                keys['w'] = false;
-            }
+        // Vertical: up = jump (edge-triggered: fires once per push)
+        var wantJump = this.joyY < -0.4;
+        if (wantJump && !this._prevJoyUp) {
+            keys['w'] = true;
         } else {
             keys['w'] = false;
-            this._jumpTriggered = false;
         }
+        this._prevJoyUp = wantJump;
         if (this.joyY > 0.5) {
             keys['s'] = true;
             // Brief press for roll

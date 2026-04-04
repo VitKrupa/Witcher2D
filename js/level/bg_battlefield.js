@@ -2,7 +2,7 @@
 'use strict';
 if (!W.Backgrounds) W.Backgrounds = {};
 W.Backgrounds.battlefield = function(ctx, cameraX) {
-    const cw = 960, ch = 540, t = Date.now() * 0.001;
+    const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540, t = Date.now() * 0.001;
 
     // SKY gradient: deep purple -> orange -> blood red at horizon
     var sky = ctx.createLinearGradient(0, 0, 0, ch * 0.55);

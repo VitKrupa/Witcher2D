@@ -4,7 +4,7 @@
 if (!W.Backgrounds) W.Backgrounds = {};
 
 W.Backgrounds.village = function(ctx, cameraX) {
-    const cw = 960, ch = 540;
+    const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
     const t = Date.now() * 0.001; // time in seconds
 
     // === SKY: overcast gradient with clouds ===

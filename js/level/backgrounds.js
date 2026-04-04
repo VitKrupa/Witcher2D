@@ -6,7 +6,7 @@ W.Backgrounds = {
     // cameraX = current camera offset, canvasW/H = 960/540
 
     village: function(ctx, cameraX) {
-        const cw = 960, ch = 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
         // Sky - overcast grey
         const sky = ctx.createLinearGradient(0, 0, 0, ch);
         sky.addColorStop(0, '#3a3a44');
@@ -50,7 +50,7 @@ W.Backgrounds = {
     },
 
     swamp: function(ctx, cameraX) {
-        const cw = 960, ch = 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
         // Sky - murky green
         const sky = ctx.createLinearGradient(0, 0, 0, ch);
         sky.addColorStop(0, '#0a1a0a');
@@ -107,7 +107,7 @@ W.Backgrounds = {
     },
 
     castle: function(ctx, cameraX) {
-        const cw = 960, ch = 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
         // Dark interior
         ctx.fillStyle = '#0e0e14';
         ctx.fillRect(0, 0, cw, ch);
@@ -162,7 +162,7 @@ W.Backgrounds = {
     },
 
     battlefield: function(ctx, cameraX) {
-        const cw = 960, ch = 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
         // Dusk sky - red/orange
         const sky = ctx.createLinearGradient(0, 0, 0, ch);
         sky.addColorStop(0, '#1a0a0a');
@@ -216,7 +216,7 @@ W.Backgrounds = {
     },
 
     mountain: function(ctx, cameraX) {
-        const cw = 960, ch = 540;
+        const cw = W.CANVAS_W || 960, ch = W.CANVAS_H || 540;
         // Night sky
         const sky = ctx.createLinearGradient(0, 0, 0, ch);
         sky.addColorStop(0, '#050818');
