@@ -37,25 +37,27 @@ W.WildHuntWarrior = class extends W.Enemy {
         const isHit = this.state === 'hit';
         const attackProgress = isAttacking ? (1 - this.stateTimer / 20) : 0;
 
-        // Menacing stride - heavy, deliberate
-        const strideBob = isChasing ? Math.abs(Math.sin(t * 1.8)) * 2 : Math.sin(t * 0.5) * 1;
-        const walkCycle = isChasing ? Math.sin(t * 1.8) : 0;
+        // Walk cycle - heavy menacing stride
+        const walkCycle = t * 1.8;
+        const stride = isChasing ? Math.sin(walkCycle) : 0;
+        const bodyBob = isChasing ? Math.abs(Math.sin(walkCycle)) * 2 : Math.sin(t * 0.4) * 0.8;
+        const breathe = Math.sin(t * 0.5) * 0.5;
+        const atkLean = isAttacking ? attackProgress * 5 : 0;
 
         ctx.save();
         if (this.facing === -1) { ctx.translate(x + this.w / 2, 0); ctx.scale(-1, 1); ctx.translate(-(x + this.w / 2), 0); }
 
         if (isHit && Math.floor(t * 10) % 2 === 0) ctx.globalAlpha = 0.5;
 
-        const by = y - strideBob;
+        const by = y - bodyBob;
 
-        // Frost aura - pulses with intensity
+        // Frost aura
         const auraSize = 26 + Math.sin(this.frostAura * 1.2) * 5;
         ctx.globalAlpha = 0.12 + Math.sin(this.frostAura) * 0.06;
         ctx.fillStyle = C.WILD_HUNT_ICE || '#88aacc';
         ctx.beginPath();
         ctx.arc(x + 18, by + 28, auraSize, 0, Math.PI * 2);
         ctx.fill();
-        // Inner aura
         ctx.globalAlpha = 0.08 + Math.sin(this.frostAura * 1.5) * 0.04;
         ctx.fillStyle = '#aaccee';
         ctx.beginPath();
@@ -63,7 +65,7 @@ W.WildHuntWarrior = class extends W.Enemy {
         ctx.fill();
         ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
 
-        // Ice particles floating around body - 3 orbiting particles
+        // Ice particles
         ctx.fillStyle = '#aaddff';
         for (let i = 0; i < 3; i++) {
             const angle = t * 0.8 + i * (Math.PI * 2 / 3);
@@ -71,104 +73,109 @@ W.WildHuntWarrior = class extends W.Enemy {
             const px = x + 18 + Math.cos(angle) * radius;
             const py = by + 26 + Math.sin(angle) * radius * 0.6;
             ctx.fillRect(px, py, 2, 2);
-            // Particle trail
             ctx.globalAlpha = 0.3;
             ctx.fillRect(px - Math.cos(angle) * 3, py - Math.sin(angle) * 2, 2, 2);
             ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
         }
 
-        // Legs - heavy, menacing stride
-        const legSwing1 = walkCycle * 4;
-        const legSwing2 = -walkCycle * 4;
-        ctx.fillStyle = '#111';
-        ctx.fillRect(x + 8 + legSwing1 * 0.4, by + 38, 7, 14);
-        ctx.fillRect(x + 21 + legSwing2 * 0.4, by + 38, 7, 14);
+        // --- Legs as jointed limbs ---
+        const hipLX = x + 11, hipRX = x + 24, hipY = by + 38;
+        const footStride = stride * 6;
+        const kneeBendL = (1 - Math.abs(stride)) * 3;
+        const kneeBendR = (1 - Math.abs(-stride)) * 3;
+        const footLY = by + 51 - Math.max(0, stride) * 2;
+        const footRY = by + 51 - Math.max(0, -stride) * 2;
+
+        const legColor = '#111';
+        this._drawJointedLimb(ctx, hipLX, hipY, hipLX + footStride * 0.3, hipY + 6 + kneeBendL, hipLX + footStride, footLY, 7, legColor);
+        this._drawJointedLimb(ctx, hipRX, hipY, hipRX - footStride * 0.3, hipY + 6 + kneeBendR, hipRX - footStride, footRY, 7, legColor);
 
         // Boots with spikes
         ctx.fillStyle = '#0a0a1a';
-        ctx.fillRect(x + 6 + legSwing1 * 0.4, by + 50, 10, 6);
-        ctx.fillRect(x + 20 + legSwing2 * 0.4, by + 50, 10, 6);
-        // Boot spikes
+        ctx.fillRect(hipLX + footStride - 4, footLY, 10, 6);
+        ctx.fillRect(hipRX - footStride - 4, footRY, 10, 6);
         ctx.fillStyle = '#334';
-        ctx.fillRect(x + 5 + legSwing1 * 0.4, by + 50, 3, 3);
-        ctx.fillRect(x + 28 + legSwing2 * 0.4, by + 50, 3, 3);
+        ctx.fillRect(hipLX + footStride - 5, footLY, 3, 3);
+        ctx.fillRect(hipRX - footStride + 6, footRY, 3, 3);
 
-        // Dark plate armor body
+        // --- Dark plate armor body ---
         ctx.fillStyle = '#0a0a1a';
-        ctx.fillRect(x + 5, by + 18, 26, 20);
+        ctx.fillRect(x + 5 + atkLean, by + 18, 26, 20 + breathe);
 
-        // Ice accents on armor - pulse with frost aura
+        // Ice accents
         const icePulse = 0.7 + Math.sin(this.frostAura * 1.5) * 0.3;
         const iceR = Math.floor(68 * icePulse);
         const iceG = Math.floor(136 * icePulse);
         const iceB = Math.floor(170 * icePulse);
         ctx.fillStyle = `rgb(${iceR},${iceG},${iceB})`;
-        ctx.fillRect(x + 7, by + 20, 2, 8);
-        ctx.fillRect(x + 27, by + 20, 2, 8);
-        ctx.fillRect(x + 14, by + 24, 8, 2);
-        // Additional ice detail
-        ctx.fillRect(x + 12, by + 30, 12, 1);
+        ctx.fillRect(x + 7 + atkLean, by + 20, 2, 8);
+        ctx.fillRect(x + 27 + atkLean, by + 20, 2, 8);
+        ctx.fillRect(x + 14 + atkLean, by + 24, 8, 2);
+        ctx.fillRect(x + 12 + atkLean, by + 30, 12, 1);
 
-        // Spiked shoulders - menacing
+        // Spiked shoulders
         ctx.fillStyle = '#1a1a2a';
-        ctx.fillRect(x + 1, by + 16, 7, 8);
-        ctx.fillRect(x + 28, by + 16, 7, 8);
-        // Shoulder spikes
+        ctx.fillRect(x + 1 + atkLean, by + 16, 7, 8);
+        ctx.fillRect(x + 28 + atkLean, by + 16, 7, 8);
         ctx.fillStyle = '#0a0a1a';
-        ctx.fillRect(x - 1, by + 13, 3, 5);
-        ctx.fillRect(x + 34, by + 13, 3, 5);
-        // Spike tips with ice glow
+        ctx.fillRect(x - 1 + atkLean, by + 13, 3, 5);
+        ctx.fillRect(x + 34 + atkLean, by + 13, 3, 5);
         ctx.fillStyle = `rgb(${iceR},${iceG},${iceB})`;
-        ctx.fillRect(x - 1, by + 13, 1, 2);
-        ctx.fillRect(x + 36, by + 13, 1, 2);
+        ctx.fillRect(x - 1 + atkLean, by + 13, 1, 2);
+        ctx.fillRect(x + 36 + atkLean, by + 13, 1, 2);
 
-        // Arms - swing with stride
-        const armSwing = isChasing ? Math.sin(t * 1.8) * 3 : 0;
-        ctx.fillStyle = '#0a0a1a';
-        ctx.fillRect(x + 1, by + 24 + armSwing, 5, 14);
-        ctx.fillRect(x + 30, by + 24 - armSwing, 5, 14);
+        // --- Arms as jointed limbs, opposite to legs ---
+        const armSwingL = isChasing ? -stride * 4 : Math.sin(t * 0.4) * 1;
+        const armSwingR = isChasing ? stride * 4 : -Math.sin(t * 0.4) * 1;
+        const armColor = '#0a0a1a';
 
-        // Large sword - raised high during attack
+        // Left arm
+        const shLX = x + 3 + atkLean, shLY = by + 24;
+        this._drawJointedLimb(ctx, shLX, shLY, shLX - 1 + armSwingL * 0.3, shLY + 6, shLX - 1 + armSwingL, shLY + 13, 5, armColor);
+
+        // Right arm
+        const shRX = x + 32 + atkLean, shRY = by + 24;
+        this._drawJointedLimb(ctx, shRX, shRY, shRX + 1 + armSwingR * 0.3, shRY + 6, shRX + 1 + armSwingR, shRY + 13, 5, armColor);
+
+        // --- Large sword ---
         const swordRaise = isAttacking ? (1 - attackProgress) * 12 : 0;
         const swordSwing = isAttacking ? attackProgress * 14 : 0;
+        const swordX = shRX + 1 + armSwingR;
         ctx.fillStyle = '#8ab';
-        ctx.fillRect(x + 32, by + 4 - swordRaise + swordSwing, 3, 26);
-        // Sword ice crystals
+        ctx.fillRect(swordX, by + 4 - swordRaise + swordSwing, 3, 26);
         ctx.fillStyle = '#aaddff';
-        ctx.fillRect(x + 33, by + 6 - swordRaise + swordSwing, 2, 3);
-        ctx.fillRect(x + 31, by + 12 - swordRaise + swordSwing, 2, 3);
-        ctx.fillRect(x + 33, by + 18 - swordRaise + swordSwing, 2, 3);
-        // Sword hilt
+        ctx.fillRect(swordX + 1, by + 6 - swordRaise + swordSwing, 2, 3);
+        ctx.fillRect(swordX - 1, by + 12 - swordRaise + swordSwing, 2, 3);
+        ctx.fillRect(swordX + 1, by + 18 - swordRaise + swordSwing, 2, 3);
+        // Hilt
         ctx.fillStyle = '#0a0a2a';
-        ctx.fillRect(x + 30, by + 18 - swordRaise * 0.5, 7, 3);
-        // Hilt ice accent
+        ctx.fillRect(swordX - 2, by + 18 - swordRaise * 0.5, 7, 3);
         ctx.fillStyle = `rgb(${iceR},${iceG},${iceB})`;
-        ctx.fillRect(x + 30, by + 18 - swordRaise * 0.5, 7, 1);
+        ctx.fillRect(swordX - 2, by + 18 - swordRaise * 0.5, 7, 1);
 
-        // Spiked helmet
-        const headBob = isChasing ? Math.sin(t * 1.8) * 1 : 0;
+        // --- Spiked helmet ---
+        const headBob = isChasing ? Math.sin(walkCycle) * 1 : Math.sin(t * 0.4) * 0.3;
         ctx.fillStyle = C.WILD_HUNT_DARK || '#0a0a1a';
-        ctx.fillRect(x + 8, by + 2 + headBob, 20, 16);
+        ctx.fillRect(x + 8 + atkLean, by + 2 + headBob, 20, 16);
 
         // Helmet spikes
-        ctx.fillRect(x + 6, by + headBob, 3, 6);
-        ctx.fillRect(x + 16, by - 3 + headBob, 4, 6);
-        ctx.fillRect(x + 27, by + headBob, 3, 6);
+        ctx.fillRect(x + 6 + atkLean, by + headBob, 3, 6);
+        ctx.fillRect(x + 16 + atkLean, by - 3 + headBob, 4, 6);
+        ctx.fillRect(x + 27 + atkLean, by + headBob, 3, 6);
 
-        // Ice-blue eye glow - intense, pulsing
+        // Ice-blue eye glow
         const eyeGlow = 0.7 + Math.sin(t * 2) * 0.3;
         ctx.fillStyle = `rgba(102,204,255,${eyeGlow})`;
-        ctx.fillRect(x + 12, by + 8 + headBob, 4, 3);
-        ctx.fillRect(x + 20, by + 8 + headBob, 4, 3);
+        ctx.fillRect(x + 12 + atkLean, by + 8 + headBob, 4, 3);
+        ctx.fillRect(x + 20 + atkLean, by + 8 + headBob, 4, 3);
 
-        // Eye glow bleed effect
+        // Eye glow bleed
         ctx.globalAlpha = 0.35 + Math.sin(t * 2) * 0.15;
         ctx.fillStyle = '#44aaff';
-        ctx.fillRect(x + 10, by + 7 + headBob, 16, 5);
-        // Eye trail when moving
+        ctx.fillRect(x + 10 + atkLean, by + 7 + headBob, 16, 5);
         if (isChasing) {
             ctx.globalAlpha = 0.15;
-            ctx.fillRect(x + 8, by + 8 + headBob, 4, 3);
+            ctx.fillRect(x + 8 + atkLean, by + 8 + headBob, 4, 3);
         }
         ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
 
@@ -229,106 +236,112 @@ W.WitchHunter = class extends W.Enemy {
         const isHit = this.state === 'hit';
         const attackProgress = isAttacking ? (1 - this.stateTimer / 20) : 0;
 
-        // Is shooting (cooldown just reset recently)
         const isShooting = this.shootCooldown > 60;
 
-        const walkBob = isChasing ? Math.abs(Math.sin(t * 2)) * 1.5 : Math.sin(t * 0.6) * 0.8;
-        const walkCycle = isChasing ? Math.sin(t * 2) : 0;
+        // Walk cycle
+        const walkCycle = t * 2;
+        const stride = isChasing ? Math.sin(walkCycle) : 0;
+        const bodyBob = isChasing ? Math.abs(Math.sin(walkCycle)) * 1.5 : Math.sin(t * 0.4) * 0.6;
+        const breathe = Math.sin(t * 0.5) * 0.4;
+        const atkLean = isAttacking ? attackProgress * 3 : 0;
 
         ctx.save();
         if (this.facing === -1) { ctx.translate(x + this.w / 2, 0); ctx.scale(-1, 1); ctx.translate(-(x + this.w / 2), 0); }
 
         if (isHit && Math.floor(t * 10) % 2 === 0) ctx.globalAlpha = 0.5;
 
-        const by = y - walkBob;
+        const by = y - bodyBob;
 
-        // Legs under robe - walk cycle
-        const legSwing1 = walkCycle * 4;
-        const legSwing2 = -walkCycle * 4;
-        ctx.fillStyle = '#3a1a0a';
-        ctx.fillRect(x + 8 + legSwing1 * 0.4, by + 36, 6, 12);
-        ctx.fillRect(x + 16 + legSwing2 * 0.4, by + 36, 6, 12);
+        // --- Legs as jointed limbs ---
+        const hipLX = x + 11, hipRX = x + 19, hipY = by + 36;
+        const footStride = stride * 6;
+        const kneeBendL = (1 - Math.abs(stride)) * 3;
+        const kneeBendR = (1 - Math.abs(-stride)) * 3;
+        const footLY = by + 48 - Math.max(0, stride) * 2;
+        const footRY = by + 48 - Math.max(0, -stride) * 2;
+
+        const legColor = '#3a1a0a';
+        this._drawJointedLimb(ctx, hipLX, hipY, hipLX + footStride * 0.3, hipY + 5 + kneeBendL, hipLX + footStride, footLY, 6, legColor);
+        this._drawJointedLimb(ctx, hipRX, hipY, hipRX - footStride * 0.3, hipY + 5 + kneeBendR, hipRX - footStride, footRY, 6, legColor);
 
         // Boots
         ctx.fillStyle = '#2a1a0a';
-        ctx.fillRect(x + 7 + legSwing1 * 0.4, by + 47, 7, 5);
-        ctx.fillRect(x + 16 + legSwing2 * 0.4, by + 47, 7, 5);
+        ctx.fillRect(hipLX + footStride - 3, footLY, 7, 5);
+        ctx.fillRect(hipRX - footStride - 3, footRY, 7, 5);
 
-        // Dark red robes - sway at bottom
+        // --- Dark red robes ---
         ctx.fillStyle = C.WITCH_HUNTER_RED || '#8a2a1a';
-        ctx.fillRect(x + 5, by + 18, 20, 18);
+        ctx.fillRect(x + 5 + atkLean, by + 18, 20, 18 + breathe);
         // Robe bottom sway
         const robeSway1 = Math.sin(t * 1.5) * 1.5;
         const robeSway2 = Math.sin(t * 1.5 + 1) * 1.5;
-        ctx.fillRect(x + 4 + robeSway1, by + 34, 6, 4);
-        ctx.fillRect(x + 20 + robeSway2, by + 34, 6, 4);
+        ctx.fillRect(x + 4 + atkLean + robeSway1, by + 34, 6, 4);
+        ctx.fillRect(x + 20 + atkLean + robeSway2, by + 34, 6, 4);
 
-        // Robe center seam
+        // Robe seam
         ctx.fillStyle = '#6a1a0a';
-        ctx.fillRect(x + 14, by + 18, 2, 18);
+        ctx.fillRect(x + 14 + atkLean, by + 18, 2, 18);
 
-        // Cross/emblem on chest
+        // Cross emblem
         ctx.fillStyle = '#ddd';
-        ctx.fillRect(x + 13, by + 22, 4, 6);
-        ctx.fillRect(x + 11, by + 24, 8, 2);
-        // Emblem glow
+        ctx.fillRect(x + 13 + atkLean, by + 22, 4, 6);
+        ctx.fillRect(x + 11 + atkLean, by + 24, 8, 2);
         ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.1 : 0.15;
         ctx.fillStyle = '#fff';
-        ctx.fillRect(x + 11, by + 22, 8, 6);
+        ctx.fillRect(x + 11 + atkLean, by + 22, 8, 6);
         ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
 
-        // Left arm - holds crossbow support
-        const leftArmSwing = isShooting ? -2 : (isChasing ? Math.sin(t * 2) * 3 : 0);
-        ctx.fillStyle = '#7a2a1a';
-        ctx.fillRect(x + 1, by + 20 + leftArmSwing, 5, 12);
+        // --- Left arm (opposite to legs) ---
+        const armSwingL = isShooting ? -2 : (isChasing ? -stride * 4 : Math.sin(t * 0.4) * 1);
+        const shLX = x + 3 + atkLean, shLY = by + 22;
+        this._drawJointedLimb(ctx, shLX, shLY, shLX - 1 + armSwingL * 0.3, shLY + 5, shLX - 1 + armSwingL, shLY + 11, 5, '#7a2a1a');
 
-        // Right arm - extends forward when shooting, swings during attack
-        const rightArmExtend = isShooting ? 6 : (isAttacking ? attackProgress * 6 : (isChasing ? -Math.sin(t * 2) * 3 : 0));
-        ctx.fillStyle = '#7a2a1a';
-        ctx.fillRect(x + 24 + rightArmExtend * 0.5, by + 20 - rightArmExtend * 0.3, 5, 12);
+        // --- Right arm + crossbow ---
+        const armSwingR = isChasing ? stride * 4 : -Math.sin(t * 0.4) * 1;
+        const rightArmExtend = isShooting ? 6 : (isAttacking ? attackProgress * 6 : 0);
+        const shRX = x + 26 + atkLean, shRY = by + 22;
+        this._drawJointedLimb(ctx, shRX, shRY, shRX + 1 + armSwingR * 0.3 + rightArmExtend * 0.3, shRY + 5 - rightArmExtend * 0.2, shRX + 1 + armSwingR + rightArmExtend * 0.5, shRY + 11 - rightArmExtend * 0.3, 5, '#7a2a1a');
 
-        // Crossbow - aims forward when shooting
+        // Crossbow
         const bowExtend = isShooting ? 4 : 0;
+        const bowX = shRX + 1 + armSwingR + rightArmExtend * 0.5;
+        const bowY = shRY + 6 - rightArmExtend * 0.2;
         ctx.fillStyle = '#5a4020';
-        ctx.fillRect(x + 24 + bowExtend, by + 22 - bowExtend * 0.3, 8, 3);
-        // Crossbow arms
+        ctx.fillRect(bowX + bowExtend, bowY - bowExtend * 0.3, 8, 3);
         ctx.fillStyle = '#888';
-        ctx.fillRect(x + 22 + bowExtend, by + 20 - bowExtend * 0.3, 2, 7);
-        // Bowstring
+        ctx.fillRect(bowX - 2 + bowExtend, bowY - 2 - bowExtend * 0.3, 2, 7);
         ctx.fillStyle = '#aaa';
-        ctx.fillRect(x + 22 + bowExtend, by + 20 - bowExtend * 0.3, 1, 1);
-        ctx.fillRect(x + 22 + bowExtend, by + 26 - bowExtend * 0.3, 1, 1);
+        ctx.fillRect(bowX - 2 + bowExtend, bowY - 2 - bowExtend * 0.3, 1, 1);
+        ctx.fillRect(bowX - 2 + bowExtend, bowY + 4 - bowExtend * 0.3, 1, 1);
 
-        // Face
+        // --- Face ---
         ctx.fillStyle = '#d4a574';
-        ctx.fillRect(x + 8, by + 8, 14, 10);
+        ctx.fillRect(x + 8 + atkLean, by + 8, 14, 10);
 
-        // Stern eyes
+        // Eyes
         ctx.fillStyle = '#333';
-        ctx.fillRect(x + 10, by + 11, 3, 2);
-        ctx.fillRect(x + 17, by + 11, 3, 2);
-        // Furrowed brows
+        ctx.fillRect(x + 10 + atkLean, by + 11, 3, 2);
+        ctx.fillRect(x + 17 + atkLean, by + 11, 3, 2);
         ctx.fillStyle = '#9a7a5a';
-        ctx.fillRect(x + 10, by + 10, 3, 1);
-        ctx.fillRect(x + 17, by + 10, 3, 1);
+        ctx.fillRect(x + 10 + atkLean, by + 10, 3, 1);
+        ctx.fillRect(x + 17 + atkLean, by + 10, 3, 1);
 
         // Frown
         ctx.fillStyle = '#9a7a5a';
-        ctx.fillRect(x + 11, by + 15, 8, 1);
+        ctx.fillRect(x + 11 + atkLean, by + 15, 8, 1);
 
-        // Wide-brim hat - bobs slightly
-        const hatBob = isChasing ? Math.sin(t * 2) * 0.5 : 0;
+        // --- Wide-brim hat ---
+        const headBob = isChasing ? Math.sin(walkCycle) * 0.8 : Math.sin(t * 0.4) * 0.3;
         ctx.fillStyle = '#2a1a0a';
-        ctx.fillRect(x + 2, by + 4 + hatBob, 26, 4); // brim
-        ctx.fillRect(x + 8, by + hatBob, 14, 6); // crown
-        // Hat band
+        ctx.fillRect(x + 2 + atkLean, by + 4 + headBob, 26, 4);
+        ctx.fillRect(x + 8 + atkLean, by + headBob, 14, 6);
         ctx.fillStyle = '#444';
-        ctx.fillRect(x + 8, by + 4 + hatBob, 14, 1);
+        ctx.fillRect(x + 8 + atkLean, by + 4 + headBob, 14, 1);
 
-        // Hat shadow on face - darkens upper face
+        // Hat shadow
         ctx.globalAlpha = 0.3;
         ctx.fillStyle = '#000';
-        ctx.fillRect(x + 8, by + 8, 14, 4);
+        ctx.fillRect(x + 8 + atkLean, by + 8, 14, 4);
         ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
 
         ctx.restore();
