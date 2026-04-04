@@ -86,6 +86,21 @@ W.StoryLevel3 = {
             ]
         }
     ],
+    spikes: [
+        // Spike pit in gap between screen 1 and screen 2 (x:720..780)
+        {x: 725, y: 384, w: 48},
+        // Corridor traps - screen 3
+        {x: 1500, y: 324, w: 60},
+        {x: 1700, y: 324, w: 48},
+        // Ceiling spikes in great hall - screen 4
+        {x: 2500, y: 260, w: 72, direction: 'down'},
+        {x: 2750, y: 260, w: 60, direction: 'down'},
+        // Dungeon spike pits - screens 9-10
+        {x: 5380, y: 384, w: 36},
+        {x: 6080, y: 384, w: 36},
+        // Dungeon floor spikes - screen 11
+        {x: 7100, y: 324, w: 72},
+    ],
     enemies: [
         // Nilfgaardians screens 2,4,6,8
         {type:'nilfSoldier', x:900, y:280},
@@ -175,6 +190,19 @@ W.StoryLevel4 = {
                 {type: 'wildHunt', x: 4060, y: 360}
             ]
         }
+    ],
+    spikes: [
+        // Trench spikes - screen 1
+        {x: 450, y: 324, w: 60},
+        // No man's land gap (x:620..680)
+        {x: 630, y: 384, w: 48},
+        // Catapult wreckage traps - screen 3
+        {x: 1350, y: 324, w: 48},
+        // Spike trenches in open field - screen 4
+        {x: 1850, y: 324, w: 72},
+        {x: 2100, y: 324, w: 48},
+        // Rubble area - screen 5
+        {x: 2650, y: 324, w: 60},
     ],
     enemies: [
         // Wraiths screens 1,3,5
