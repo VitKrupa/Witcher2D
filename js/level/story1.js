@@ -181,143 +181,120 @@ W.StoryLevel2 = {
         // ==============================
         // ROOM 1: Swamp Entrance - wooden hut (0-960)
         // ==============================
-        {x:S1, y:340, w:960, h:60, type:'wood'},       // wooden floor
+        {x:S1, y:340, w:960, h:60, type:'wood'},       // wooden floor (solid, room-wide)
         {x:S1, y:80, w:16, h:260},                     // left wall
         {x:S1, y:80, w:960, h:16, type:'wood'},        // ceiling (wooden hut)
         {x:S1+944, y:80, w:16, h:180},                 // right wall upper
-        // Interior
-        {x:S1+100, y:260, w:120, h:16, type:'wood'},   // table
-        {x:S1+350, y:220, w:80, h:16, type:'wood'},    // crate
-        {x:S1+550, y:180, w:100, h:16, type:'wood'},   // upper shelf
-        {x:S1+750, y:260, w:100, h:16, type:'wood'},   // barrel stack
+        // Thick interior shelves
+        {x:S1+100, y:240, w:200, h:40, type:'wood'},   // thick table/shelf
+        {x:S1+550, y:200, w:250, h:40, type:'wood'},   // thick upper shelf
 
         // ==============================
-        // ROOM 2: Hollow Tree - tall room, branches (960-1920)
+        // ROOM 2: Hollow Tree - tall room (960-1920)
+        // Two thick floors spanning wall-to-wall, gap for climbing
         // ==============================
-        {x:S2, y:340, w:960, h:60},                    // ground
+        {x:S2, y:340, w:960, h:60},                    // ground floor (solid)
         {x:S2, y:40, w:16, h:300},                     // left wall (tall tree)
         {x:S2, y:40, w:960, h:16},                     // canopy ceiling
         {x:S2+944, y:40, w:16, h:220},                 // right wall upper
-        // Branch platforms to climb
-        {x:S2+80, y:280, w:120, h:12, type:'wood'},    // low branch
-        {x:S2+250, y:220, w:100, h:12, type:'wood'},   // branch 2
-        {x:S2+420, y:170, w:140, h:12, type:'wood'},   // branch 3
-        {x:S2+600, y:120, w:100, h:12, type:'wood'},   // high branch
-        {x:S2+750, y:180, w:120, h:12, type:'wood'},   // descent branch
-        {x:S2+350, y:100, w:80, h:12, type:'wood'},    // top perch
+        // Thick 2nd floor (gap 400-560 for climbing)
+        {x:S2+16, y:210, w:384, h:40, type:'wood'},    // 2nd floor left section
+        {x:S2+560, y:210, w:384, h:40, type:'wood'},   // 2nd floor right section
+        // Thick upper floor
+        {x:S2+200, y:120, w:500, h:40, type:'wood'},   // 3rd floor (canopy level)
+        // Climbing ledge
+        {x:S2+16, y:280, w:60, h:30},                  // wall stepping block
 
         // ==============================
         // ROOM 3: Cave Tunnel 1 - low ceiling, tight (1920-2880)
         // ==============================
-        {x:S3, y:340, w:960, h:60},                    // floor
+        {x:S3, y:340, w:960, h:60},                    // floor (solid)
         {x:S3, y:140, w:16, h:200},                    // left wall
         {x:S3, y:140, w:960, h:16},                    // ceiling (low)
         {x:S3+944, y:140, w:16, h:200},                // right wall full
-        // Cave internals
-        {x:S3+120, y:280, w:100, h:16},               // rock step
-        {x:S3+300, y:250, w:80, h:16},                // outcrop
-        {x:S3+500, y:220, w:120, h:16},               // ledge
-        {x:S3+700, y:270, w:100, h:16},               // rock shelf
-        {x:S3+450, y:180, w:60, h:16},                // nook near ceiling
+        // One thick rock shelf spanning most of room
+        {x:S3+100, y:240, w:700, h:40},                // thick cave shelf
 
         // ==============================
         // ROOM 4: Cave Tunnel 2 - continuation (2880-3840)
         // ==============================
-        {x:S4, y:340, w:960, h:60},                    // floor
+        {x:S4, y:340, w:960, h:60},                    // floor (solid)
         {x:S4, y:140, w:16, h:200},                    // left wall
         {x:S4, y:140, w:960, h:16},                    // ceiling (low)
         {x:S4+944, y:140, w:16, h:120},                // right wall upper (gap at bottom)
-        // Cave platforms
-        {x:S4+100, y:280, w:80, h:16},                // step
-        {x:S4+250, y:240, w:100, h:16},               // mid platform
-        {x:S4+450, y:200, w:120, h:16},               // upper ledge
-        {x:S4+650, y:260, w:100, h:16},               // descent
-        {x:S4+800, y:300, w:80, h:16},                // low step near exit
+        // Thick rock shelf
+        {x:S4+200, y:240, w:500, h:40},                // thick cave shelf
 
         // ==============================
         // ROOM 5: Witch Hunter Camp 1 - stockade (3840-4800)
         // ==============================
-        {x:S5, y:340, w:960, h:60, type:'wood'},       // wooden floor
+        {x:S5, y:340, w:960, h:60, type:'wood'},       // wooden floor (solid)
         {x:S5, y:80, w:16, h:260},                     // left wall
         {x:S5, y:80, w:960, h:16, type:'wood'},        // ceiling
         {x:S5+944, y:80, w:16, h:260},                 // right wall (full)
-        // Interior - camp structure
-        {x:S5+100, y:260, w:150, h:16, type:'wood'},   // bunk
-        {x:S5+350, y:200, w:120, h:16, type:'wood'},   // upper walkway
-        {x:S5+550, y:260, w:100, h:16, type:'wood'},   // crate platform
-        {x:S5+750, y:180, w:120, h:16, type:'wood'},   // watchtower base
-        {x:S5+780, y:120, w:80, h:16, type:'wood'},    // watchtower top
+        // Thick 2nd floor walkway (gap 600-720 for climbing)
+        {x:S5+16, y:210, w:584, h:40, type:'wood'},    // upper walkway left
+        {x:S5+720, y:210, w:224, h:40, type:'wood'},   // upper walkway right
+        // Climbing ledge
+        {x:S5+600, y:280, w:60, h:30, type:'wood'},    // stepping block
 
         // ==============================
         // ROOM 6: Witch Hunter Camp 2 - guard quarters (4800-5760)
         // ==============================
-        {x:S6, y:340, w:960, h:60, type:'wood'},       // wooden floor
+        {x:S6, y:340, w:960, h:60, type:'wood'},       // wooden floor (solid)
         {x:S6, y:80, w:16, h:260},                     // left wall
         {x:S6, y:80, w:960, h:16, type:'wood'},        // ceiling
         {x:S6+944, y:80, w:16, h:180},                 // right wall upper
-        // Interior
-        {x:S6+80, y:260, w:100, h:16, type:'wood'},    // shelf left
-        {x:S6+250, y:200, w:140, h:16, type:'wood'},   // upper walkway
-        {x:S6+500, y:260, w:120, h:16, type:'wood'},   // mid shelf
-        {x:S6+700, y:180, w:100, h:16, type:'wood'},   // upper right
-        {x:S6+400, y:140, w:80, h:16, type:'wood'},    // high center
+        // Thick 2nd floor (gap 400-560 for climbing)
+        {x:S6+16, y:210, w:384, h:40, type:'wood'},    // upper floor left
+        {x:S6+560, y:210, w:384, h:40, type:'wood'},   // upper floor right
+        // Climbing ledge
+        {x:S6+400, y:280, w:60, h:30, type:'wood'},    // stepping block
 
         // ==============================
-        // ROOM 7: Prison Cell - tiny, must fight to exit (5760-6720)
+        // ROOM 7: Prison Cell - tight, must fight to exit (5760-6720)
         // ==============================
-        {x:S7, y:340, w:960, h:60},                    // floor
+        {x:S7, y:340, w:960, h:60},                    // floor (solid)
         {x:S7, y:100, w:16, h:240},                    // left wall
         {x:S7, y:100, w:960, h:16},                    // ceiling
         {x:S7+944, y:100, w:16, h:160},                // right wall upper
-        // Cramped interior
-        {x:S7+150, y:280, w:80, h:16},                // bench
-        {x:S7+350, y:240, w:100, h:16},               // crate
-        {x:S7+600, y:200, w:80, h:16},                // high shelf
-        {x:S7+800, y:260, w:80, h:16},                // stepping stone
+        // One thick shelf
+        {x:S7+200, y:230, w:500, h:40},                // thick stone shelf
 
         // ==============================
         // ROOM 8: Underground River - spike pits (6720-7680)
         // ==============================
-        {x:S8, y:340, w:350, h:60},                    // floor left
+        {x:S8, y:340, w:350, h:60},                    // floor left (solid)
         {x:S8+450, y:340, w:200, h:60},                // floor center island
-        {x:S8+750, y:340, w:210, h:60},                // floor right
+        {x:S8+750, y:340, w:210, h:60},                // floor right (solid)
         {x:S8, y:80, w:16, h:260},                     // left wall
         {x:S8, y:80, w:960, h:16},                     // ceiling
         {x:S8+944, y:80, w:16, h:180},                 // right wall upper
-        // Bridges over spike pits
-        {x:S8+360, y:280, w:80, h:12, type:'wood'},    // bridge 1
-        {x:S8+660, y:280, w:80, h:12, type:'wood'},    // bridge 2
-        {x:S8+200, y:220, w:100, h:16},               // upper left
-        {x:S8+500, y:200, w:120, h:16},               // upper center
-        {x:S8+800, y:220, w:100, h:16},               // upper right
+        // Thick upper floor section
+        {x:S8+100, y:210, w:700, h:40},                // thick upper floor
 
         // ==============================
         // ROOM 9: Boss Cavern Entry (7680-8640)
         // ==============================
-        {x:S9, y:340, w:960, h:60},                    // floor
+        {x:S9, y:340, w:960, h:60},                    // floor (solid)
         {x:S9, y:60, w:16, h:280},                     // left wall
         {x:S9, y:60, w:960, h:16},                     // ceiling (tall cavern)
         {x:S9+944, y:60, w:16, h:280},                 // right wall (connects to R10)
-        // Arena platforms
-        {x:S9+100, y:260, w:150, h:16},               // low left
-        {x:S9+350, y:200, w:200, h:16},               // center elevated
-        {x:S9+650, y:260, w:150, h:16},               // low right
-        {x:S9+200, y:140, w:100, h:16},               // high left
-        {x:S9+600, y:140, w:100, h:16},               // high right
+        // Thick intermediate floor (gap 350-550 for climbing)
+        {x:S9+16, y:210, w:334, h:40},                 // floor 2 left
+        {x:S9+550, y:210, w:394, h:40},                // floor 2 right
+        // Climbing ledge
+        {x:S9+350, y:280, w:60, h:30},                 // stepping block
 
         // ==============================
         // ROOM 10: Boss Cavern - Witch Hunter Captain (8640-9600)
         // ==============================
-        {x:S10, y:340, w:960, h:60},                   // floor
+        {x:S10, y:340, w:960, h:60},                   // floor (solid)
         {x:S10, y:60, w:16, h:280},                    // left wall
         {x:S10, y:60, w:960, h:16},                    // ceiling
         // NO right wall - level exit
-        // Boss arena
-        {x:S10+100, y:260, w:120, h:16},              // low left
-        {x:S10+300, y:190, w:160, h:16},              // center platform
-        {x:S10+550, y:260, w:120, h:16},              // low right
-        {x:S10+750, y:200, w:120, h:16},              // exit platform
-        {x:S10+400, y:120, w:120, h:16},              // high center
+        // Thick elevated platform for boss arena
+        {x:S10+250, y:220, w:400, h:40},               // thick center platform
     ],
     enemies: [
         // Room 1: Ghouls in hut (2)
