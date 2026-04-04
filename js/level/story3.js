@@ -75,6 +75,21 @@ W.StoryLevel5 = {
             ]
         }
     ],
+    spikes: [
+        // Icy ledge gaps - screen 2 (between narrow ice platforms)
+        {x: 620, y: 384, w: 48},
+        // Narrow bridge hazards - screen 4
+        {x: 1740, y: 384, w: 36},
+        {x: 1870, y: 384, w: 36},
+        {x: 2010, y: 384, w: 36},
+        // Ice spikes near boss arena - screens 12-14
+        {x: 6700, y: 324, w: 72},
+        {x: 7400, y: 324, w: 60},
+        {x: 7850, y: 324, w: 48},
+        // Ceiling ice spikes in gauntlet
+        {x: 4500, y: 260, w: 60, direction: 'down'},
+        {x: 5300, y: 260, w: 48, direction: 'down'},
+    ],
     enemies: [
         // Screens 3-6: Wild Hunt + Wraiths
         {type:'wildHunt', x:1400, y:280},
