@@ -440,15 +440,23 @@ W.Player = class {
         const foreLen = 10;
 
         if (isAttack) {
-            // Sword arm: controlled slash from raised to forward
-            // Match the sword swing arc
+            // Ease-in-out for snappy strike timing
             const easedAtk = atkProgress < 0.5
-                ? 2 * atkProgress * atkProgress
-                : 1 - Math.pow(-2 * atkProgress + 2, 2) / 2;
-            rArmAngle = -0.6 + easedAtk * 0.9; // raised → forward
-            rElbowAngle = 0.3 - easedAtk * 0.2; // slight extension
-            lArmAngle = -0.2 - easedAtk * 0.15; // off-hand back slightly
-            lElbowAngle = 0.4;
+                ? 4 * atkProgress * atkProgress * atkProgress
+                : 1 - Math.pow(-2 * atkProgress + 2, 3) / 2;
+            if (this.activeSword === 'silver') {
+                // Silver: horizontal pirouette slash — arm goes from pulled back to extended forward
+                rArmAngle = -1.2 + easedAtk * 1.5;   // shoulder rotates from behind to forward-extended
+                rElbowAngle = 0.8 - easedAtk * 0.7;   // elbow straightens as arm extends
+                lArmAngle = 0.2 - easedAtk * 0.4;     // off-hand pulls back for balance
+                lElbowAngle = 0.5 + easedAtk * 0.2;
+            } else {
+                // Iron: overhead chop — arm raised high, comes down
+                rArmAngle = -1.6 + easedAtk * 1.8;    // from above head to below hip
+                rElbowAngle = 0.2 + easedAtk * 0.15;  // stays mostly straight (two-handed chop feel)
+                lArmAngle = -1.2 + easedAtk * 1.0;    // off-hand follows (supporting the chop)
+                lElbowAngle = 0.3 + easedAtk * 0.2;
+            }
         } else if (isBlock) {
             rArmAngle = -0.8; rElbowAngle = 1.2;
             lArmAngle = -0.5; lElbowAngle = 0.8;
