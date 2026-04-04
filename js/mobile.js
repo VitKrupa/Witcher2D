@@ -104,7 +104,9 @@ W.Mobile = {
         btnArea.appendChild(ironBtn);
         container.appendChild(btnArea);
 
-        document.getElementById('gameContainer').appendChild(container);
+        // Append to body (NOT gameContainer) to avoid CSS transform issues
+        document.body.appendChild(container);
+        container.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:1000;display:none;';
         this.container = container;
         this.joystick = { area: joyArea, base: joyBase, knob: joyKnob };
     },
