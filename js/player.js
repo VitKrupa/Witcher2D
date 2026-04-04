@@ -153,6 +153,7 @@ W.Player = class {
         this.attackHitbox = null;
         this.rollSpeed = 4.0;
         this.comboCount = 0;
+        this.jumpConsumed = false; // prevents repeated jumps while key/joystick held
     }
 
     get alive() { return this.hp > 0; }
@@ -173,7 +174,11 @@ W.Player = class {
             case States.IDLE:
             case States.RUN:
                 this.handleMovement(keys, spd);
-                if (keys['w'] || keys['arrowup']) this.jump();
+                if (keys['w'] || keys['arrowup']) {
+                    if (!this.jumpConsumed) { this.jump(); this.jumpConsumed = true; }
+                } else {
+                    this.jumpConsumed = false;
+                }
                 if (keys['s'] || keys['arrowdown']) this.rollDodge();
                 if (keys['shift']) { this.state = States.BLOCK; }
                 break;
