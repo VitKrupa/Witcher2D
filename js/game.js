@@ -351,7 +351,8 @@
             if (this.showingStoryText) {
                 this.storyTextTimer -= dt * 60;
                 // Dismiss on any key/touch OR after timer expires
-                var anyKey = false;
+                var anyKey = this._touchTapped || false;
+                this._touchTapped = false;
                 for (var k in this.keys) { if (this.keys[k]) anyKey = true; }
                 if (this.storyTextTimer <= 0 || (anyKey && this.storyTextTimer < 80)) {
                     this.showingStoryText = false;
@@ -381,8 +382,9 @@
                     this.activeDialog.charIndex++;
                     this.activeDialog.displayText = this.activeDialog.fullText.substring(0, this.activeDialog.charIndex);
                 }
-                // Check for advance input (tap/key)
-                var anyKey3 = false;
+                // Check for advance input (tap/key/touch)
+                var anyKey3 = this._touchTapped || false;
+                this._touchTapped = false;
                 for (var k3 in this.keys) { if (this.keys[k3]) anyKey3 = true; }
                 if (anyKey3) {
                     if (this._dialogAdvanceReady) {
@@ -1088,6 +1090,14 @@
 
         bindInput() {
             var self = this;
+
+            // Touch tap anywhere — for dialog advance + story text dismiss
+            window.addEventListener('touchstart', function(e) {
+                self._touchTapped = true;
+            }, { passive: true });
+            window.addEventListener('mousedown', function(e) {
+                self._touchTapped = true;
+            });
 
             window.addEventListener('keydown', function (e) {
                 var key = e.key.toLowerCase();
