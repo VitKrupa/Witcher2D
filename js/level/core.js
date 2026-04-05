@@ -66,25 +66,24 @@ W.Level = class {
                 W.DungeonRenderer.drawDecorations(ctx, cameraX, W.CANVAS_W, W.CANVAS_H);
             } catch(e) { console.error('Dungeon walls error:', e); }
         }
-        // Draw platforms as stone ledges (visible even with dungeon renderer)
+        // Draw ALL collision platforms as stone ledges
         for (var pi = 0; pi < this.platforms.length; pi++) {
             var p = this.platforms[pi];
             var pr = p.rect || p;
-            // Only draw floors (wider than tall) — walls are part of dungeon bg
-            if (pr.w > pr.h) {
-                try {
-                    if (p.draw && typeof p.draw === 'function') {
-                        p.draw(ctx);
-                    } else {
-                        // Simple stone ledge
-                        ctx.fillStyle = '#2a3038';
-                        ctx.fillRect(pr.x, pr.y, pr.w, pr.h);
-                        ctx.fillStyle = '#3a4250';
-                        ctx.fillRect(pr.x, pr.y, pr.w, 2);
-                        ctx.fillStyle = '#1a2028';
-                        ctx.fillRect(pr.x, pr.y + pr.h - 2, pr.w, 2);
-                    }
-                } catch(e) {}
+            // Skip very thin walls (w < 20), draw everything else
+            if (pr.w >= 20) {
+                ctx.fillStyle = '#2a3038';
+                ctx.fillRect(pr.x, pr.y, pr.w, pr.h);
+                // Top highlight
+                ctx.fillStyle = '#3a4a58';
+                ctx.fillRect(pr.x, pr.y, pr.w, 2);
+                // Bottom shadow
+                ctx.fillStyle = '#151a22';
+                ctx.fillRect(pr.x, pr.y + pr.h - 2, pr.w, 2);
+                // Side edges
+                ctx.fillStyle = '#1e2830';
+                ctx.fillRect(pr.x, pr.y, 2, pr.h);
+                ctx.fillRect(pr.x + pr.w - 2, pr.y, 2, pr.h);
             }
         }
         for (const s of this.spikes) s.draw(ctx);

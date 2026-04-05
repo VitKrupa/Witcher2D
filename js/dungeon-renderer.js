@@ -132,7 +132,7 @@ W.DungeonRenderer = {
 
         // Back wall with varied stones
         for (var x = startX; x < endX; x += 64) {
-            for (var y = 200; y < canvasH + cameraX * 0 + 500; y += 48) {
+            for (var y = 0; y < canvasH + 100; y += 48) {
                 var seed = x * 100 + y;
                 var shade = 0.7 + seededRandom(seed) * 0.3;
                 var r = Math.floor(20 * shade);
