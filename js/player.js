@@ -185,14 +185,17 @@ const Body = {
             ctx.beginPath();
             ctx.ellipse(cx + 2.7, cy - 1, 0.3, 0.9, 0, 0, Math.PI * 2);
             ctx.fill();
-            // Eye glow
-            ctx.fillStyle = 'rgba(218,165,32,0.25)';
-            ctx.beginPath();
-            ctx.ellipse(cx - 1.8, cy - 1, 3, 2, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(cx + 2.7, cy - 1, 3, 2, 0, 0, Math.PI * 2);
-            ctx.fill();
+            // Eye glow — radial gradient for atmospheric witcher cat-eye effect
+            var eyeGlowL = ctx.createRadialGradient(cx - 1.8, cy - 1, 0, cx - 1.8, cy - 1, 5);
+            eyeGlowL.addColorStop(0, 'rgba(255,215,0,0.18)');
+            eyeGlowL.addColorStop(1, 'rgba(255,215,0,0)');
+            ctx.fillStyle = eyeGlowL;
+            ctx.fillRect(cx - 6.8, cy - 6, 10, 10);
+            var eyeGlowR = ctx.createRadialGradient(cx + 2.7, cy - 1, 0, cx + 2.7, cy - 1, 5);
+            eyeGlowR.addColorStop(0, 'rgba(255,215,0,0.18)');
+            eyeGlowR.addColorStop(1, 'rgba(255,215,0,0)');
+            ctx.fillStyle = eyeGlowR;
+            ctx.fillRect(cx - 2.3, cy - 6, 10, 10);
         } else {
             // Closed eyes — thin lines
             ctx.strokeStyle = '#665544';
@@ -1304,18 +1307,33 @@ W.Player = class {
         ctx.lineTo(g2x, g2y);
         ctx.stroke();
 
-        // Tip effect: small sparkle (silver) or ember (iron) during active swing
-        if (progress > 0.2 && progress < 0.7) {
-            const intensity = 1 - Math.abs(progress - 0.45) * 3;
+        // Tip effect: glow aura + sparkle/ember during active swing (Lovable technique)
+        if (progress > 0.15 && progress < 0.75) {
+            const intensity = 1 - Math.abs(progress - 0.45) * 2.5;
+            const clampedI = Math.max(0, Math.min(1, intensity));
             if (isSilver) {
+                // Radial glow at tip
+                const tipGlow = ctx.createRadialGradient(tipX, tipY, 0, tipX, tipY, 8);
+                tipGlow.addColorStop(0, 'rgba(180,210,255,' + (0.4 * clampedI) + ')');
+                tipGlow.addColorStop(1, 'rgba(180,210,255,0)');
+                ctx.fillStyle = tipGlow;
+                ctx.fillRect(tipX - 8, tipY - 8, 16, 16);
+                // Bright core spark
                 ctx.fillStyle = '#ddeeff';
-                ctx.globalAlpha = 0.6 * Math.max(0, intensity);
+                ctx.globalAlpha = 0.7 * clampedI;
                 ctx.beginPath();
-                ctx.arc(tipX, tipY, 2, 0, Math.PI * 2);
+                ctx.arc(tipX, tipY, 2.5, 0, Math.PI * 2);
                 ctx.fill();
             } else {
-                ctx.fillStyle = '#ffaa33';
-                ctx.globalAlpha = 0.5 * Math.max(0, intensity);
+                // Warm ember glow at tip
+                const tipGlow = ctx.createRadialGradient(tipX, tipY, 0, tipX, tipY, 8);
+                tipGlow.addColorStop(0, 'rgba(255,160,60,' + (0.35 * clampedI) + ')');
+                tipGlow.addColorStop(1, 'rgba(255,100,20,0)');
+                ctx.fillStyle = tipGlow;
+                ctx.fillRect(tipX - 8, tipY - 8, 16, 16);
+                // Core ember
+                ctx.fillStyle = '#ffcc44';
+                ctx.globalAlpha = 0.6 * clampedI;
                 ctx.beginPath();
                 ctx.arc(tipX, tipY, 2, 0, Math.PI * 2);
                 ctx.fill();
