@@ -312,7 +312,7 @@
                 <button class="start-btn" onclick="game.start('wave')" style="margin-bottom:0; background:linear-gradient(135deg, #4a1a1a, #8a2222); border-color:#aa3333;">WAVE MODE</button>
             </div>
             <div style="margin-bottom:15px;">
-                <button onclick="game.changeAge()" style="background:none;border:1px solid #444;color:#888;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;">Change Age / Violence Level</button>
+                <button onclick="game.changeAge()" ontouchend="event.preventDefault();game.changeAge()" style="background:none;border:1px solid #444;color:#888;padding:8px 16px;border-radius:4px;cursor:pointer;font-size:13px;">Change Age / Violence Level</button>
             </div>
             <div class="controls-info">
                 <span>A/D</span> or <span>←/→</span> — Move &nbsp;|&nbsp; <span>W</span> or <span>↑</span> — Jump<br>
