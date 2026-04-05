@@ -42,18 +42,25 @@ W.Level = class {
     }
 
     drawBackground(ctx, cameraX) {
-        try {
-            const fn = W.Backgrounds[this.bgTheme];
-            if (fn) fn(ctx, cameraX);
-        } catch(e) { console.error('BG error:', e); }
+        // Use Lovable-style dungeon renderer if available
+        if (W.DungeonRenderer) {
+            try {
+                W.DungeonRenderer.drawBackground(ctx, cameraX, W.CANVAS_W, W.CANVAS_H);
+                W.DungeonRenderer.drawWalls(ctx, cameraX, W.CANVAS_W, W.CANVAS_H);
+                W.DungeonRenderer.drawDecorations(ctx, cameraX, W.CANVAS_W, W.CANVAS_H);
+            } catch(e) { console.error('Dungeon renderer error:', e); }
+        } else {
+            try {
+                const fn = W.Backgrounds[this.bgTheme];
+                if (fn) fn(ctx, cameraX);
+            } catch(e) {}
+        }
     }
 
     drawPlatforms(ctx) {
-        // Draw rooms (visual rendering of walls, floors, ceilings)
-        for (var i = 0; i < this.rooms.length; i++) this.rooms[i].draw(ctx);
-        // Platforms are INVISIBLE collision geometry when rooms exist
-        // Only draw platforms if no rooms defined (wave mode fallback)
-        if (this.rooms.length === 0) {
+        // Platforms are INVISIBLE collision geometry (rooms/dungeon handle visuals)
+        // Only draw platforms in wave mode (no rooms)
+        if (this.rooms.length === 0 && !W.DungeonRenderer) {
             for (const p of this.platforms) {
                 try { p.draw(ctx); } catch(e) {
                     ctx.fillStyle = '#6b4226';
@@ -62,10 +69,18 @@ W.Level = class {
             }
         }
         for (const s of this.spikes) s.draw(ctx);
+        // Ground fog
+        if (W.DungeonRenderer) {
+            try { W.DungeonRenderer.drawGroundFog(ctx, this._cameraX || 0, W.CANVAS_W, W.CANVAS_H); } catch(e) {}
+        }
     }
 
     drawForeground(ctx, cameraX) {
-        // Skip foreground details when rooms exist (rooms handle their own visuals)
+        // Lovable-style foreground atmosphere
+        if (W.DungeonRenderer) {
+            try { W.DungeonRenderer.drawForegroundFog(ctx, cameraX, W.CANVAS_W, W.CANVAS_H); } catch(e) {}
+            return;
+        }
         if (this.rooms.length > 0) return;
 
         // Deterministic hash for position-based details
