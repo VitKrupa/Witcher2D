@@ -40,6 +40,17 @@
             this.levelTransition = false;
             this.transitionAlpha = 0;
 
+            // NPC / dialog state
+            this.npcs = [];
+            this.activeDialog = null;    // {npc, lineIndex, charIndex, fullText, displayText}
+            this._dialogCooldown = 0;    // prevent re-trigger immediately after closing
+            this._dialogAdvanceReady = false;
+
+            // End-of-level cutscene
+            this.showingEndText = false;
+            this._endText = '';
+            this._endTextTimer = 0;
+
             // Bound reference so we can use it with requestAnimationFrame
             this._loopBound = this.loop.bind(this);
         }
@@ -199,6 +210,11 @@
             this.currentLevelIndex = 0;
             this.levelTransition = false;
             this.transitionAlpha = 0;
+            this.npcs = [];
+            this.activeDialog = null;
+            this._dialogCooldown = 0;
+            this.showingEndText = false;
+            this._endTextShown = false;
 
             if (this.gameMode === 'story') {
                 this.loadStoryLevel(0);
@@ -242,6 +258,7 @@
 
             this.currentLevelIndex = index;
             this._lastCheckpointX = 0; // reset checkpoint for new level
+            this._endTextShown = false;
             this._checkpointLevel = index;
             this.level = new W.Level(storyData);
             this.enemies = [];
@@ -255,6 +272,16 @@
                     if (enemy) this.enemies.push(enemy);
                 }
             }
+
+            // Spawn NPCs defined in the story level
+            this.npcs = [];
+            if (storyData.npcs) {
+                for (var n = 0; n < storyData.npcs.length; n++) {
+                    this.npcs.push(new W.Npc(storyData.npcs[n]));
+                }
+            }
+            this.activeDialog = null;
+            this._dialogCooldown = 0;
 
             // Create / reposition player
             if (!this.player) {
@@ -331,6 +358,64 @@
                 }
                 return;
             }
+
+            // End-of-level cutscene
+            if (this.showingEndText) {
+                this._endTextTimer -= dt * 60;
+                var anyKey2 = false;
+                for (var k2 in this.keys) { if (this.keys[k2]) anyKey2 = true; }
+                if (this._endTextTimer <= 0 || (anyKey2 && this._endTextTimer < 140)) {
+                    this.showingEndText = false;
+                    // Now trigger the actual level transition
+                    this.levelTransition = true;
+                    this.transitionAlpha = 0;
+                    this._transitionPhase = 'fadeOut';
+                }
+                return;
+            }
+
+            // NPC dialog
+            if (this.activeDialog) {
+                // Typewriter: reveal one char per frame
+                if (this.activeDialog.charIndex < this.activeDialog.fullText.length) {
+                    this.activeDialog.charIndex++;
+                    this.activeDialog.displayText = this.activeDialog.fullText.substring(0, this.activeDialog.charIndex);
+                }
+                // Check for advance input (tap/key)
+                var anyKey3 = false;
+                for (var k3 in this.keys) { if (this.keys[k3]) anyKey3 = true; }
+                if (anyKey3) {
+                    if (this._dialogAdvanceReady) {
+                        this._dialogAdvanceReady = false;
+                        // If text not fully revealed, reveal it instantly
+                        if (this.activeDialog.charIndex < this.activeDialog.fullText.length) {
+                            this.activeDialog.charIndex = this.activeDialog.fullText.length;
+                            this.activeDialog.displayText = this.activeDialog.fullText;
+                        } else {
+                            // Advance to next line
+                            var npc = this.activeDialog.npc;
+                            npc.currentLine++;
+                            if (npc.currentLine >= npc.lines.length) {
+                                // Dialog complete
+                                npc.triggered = true;
+                                this.activeDialog = null;
+                                this._dialogCooldown = 30;
+                            } else {
+                                this.activeDialog.lineIndex = npc.currentLine;
+                                this.activeDialog.fullText = npc.lines[npc.currentLine];
+                                this.activeDialog.charIndex = 0;
+                                this.activeDialog.displayText = '';
+                            }
+                        }
+                    }
+                } else {
+                    this._dialogAdvanceReady = true;
+                }
+                return; // freeze game while dialog is active
+            }
+
+            // Dialog cooldown
+            if (this._dialogCooldown > 0) this._dialogCooldown -= dt * 60;
 
             // Level transition fade
             if (this.levelTransition) {
@@ -459,6 +544,33 @@
                 }
             }
 
+            // --- NPC proximity check ---
+            if (this.player && this.npcs && this._dialogCooldown <= 0) {
+                var px = this.player.x + this.player.w / 2;
+                var py = this.player.y + this.player.h / 2;
+                for (var ni = 0; ni < this.npcs.length; ni++) {
+                    var npc = this.npcs[ni];
+                    if (npc.triggered) continue;
+                    var ncx = npc.x + npc.w / 2;
+                    var ncy = npc.y + npc.h / 2;
+                    var ndx = Math.abs(px - ncx);
+                    var ndy = Math.abs(py - ncy);
+                    if (ndx < 60 && ndy < 60) {
+                        // Trigger dialog
+                        npc.currentLine = 0;
+                        this.activeDialog = {
+                            npc: npc,
+                            lineIndex: 0,
+                            charIndex: 0,
+                            fullText: npc.lines[0],
+                            displayText: ''
+                        };
+                        this._dialogAdvanceReady = false;
+                        break;
+                    }
+                }
+            }
+
             // --- Ambient particles ---
             if (Math.random() < 0.03 && this.level) {
                 W.Emitters.ambient(this.particles, {
@@ -559,6 +671,17 @@
                 } catch(e) { ctx.restore(); }
             }
 
+            // NPCs
+            if (this.npcs) {
+                var pxDraw = this.player ? this.player.x + this.player.w / 2 : -999;
+                var pyDraw = this.player ? this.player.y + this.player.h / 2 : -999;
+                for (var ni2 = 0; ni2 < this.npcs.length; ni2++) {
+                    ctx.save();
+                    this.npcs[ni2].draw(ctx, pxDraw, pyDraw);
+                    ctx.restore();
+                }
+            }
+
             // Player
             if (this.player) {
                 try {
@@ -602,6 +725,16 @@
             // Story text overlay
             if (this.showingStoryText) {
                 this.drawStoryTextOverlay(ctx);
+            }
+
+            // NPC dialog overlay
+            if (this.activeDialog) {
+                this.drawDialogOverlay(ctx);
+            }
+
+            // End-of-level cutscene overlay
+            if (this.showingEndText) {
+                this.drawEndTextOverlay(ctx);
             }
 
             // Level transition fade
@@ -810,9 +943,24 @@
         // -----------------------------------------------------------
 
         nextLevel() {
-            if (this.levelTransition) return;
+            if (this.levelTransition || this.showingEndText) return;
 
-            this.currentLevelIndex++;
+            // Show end-of-level cutscene if available
+            var storyData = W.StoryLevels[this.currentLevelIndex];
+            if (storyData && storyData.endText && !this._endTextShown) {
+                this._endTextShown = true;
+                this.showingEndText = true;
+                this._endText = storyData.endText;
+                this._endTextTimer = 180; // 3 seconds at 60fps
+                // Increment index now so transition loads the right level
+                this.currentLevelIndex++;
+                return;
+            }
+
+            if (!this._endTextShown) {
+                this.currentLevelIndex++;
+            }
+            this._endTextShown = false;
 
             if (this.currentLevelIndex > 5 || this.currentLevelIndex >= W.StoryLevels.length) {
                 // Victory!
@@ -1132,6 +1280,141 @@
         }
 
         // -----------------------------------------------------------
+        // drawDialogOverlay — NPC dialog box at bottom of screen
+        // -----------------------------------------------------------
+
+        drawDialogOverlay(ctx) {
+            var dlg = this.activeDialog;
+            if (!dlg) return;
+
+            var boxH = 90;
+            var boxY = W.CANVAS_H - boxH - 8;
+            var boxX = 8;
+            var boxW = W.CANVAS_W - 16;
+
+            // Semi-transparent dark background
+            ctx.fillStyle = 'rgba(10,14,20,0.92)';
+            ctx.fillRect(boxX, boxY, boxW, boxH);
+
+            // Border
+            ctx.strokeStyle = 'rgba(218,165,32,0.4)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+            // Corner ornaments
+            var cs = 6;
+            ctx.fillStyle = '#daa520';
+            ctx.fillRect(boxX, boxY, cs, 2);
+            ctx.fillRect(boxX, boxY, 2, cs);
+            ctx.fillRect(boxX + boxW - cs, boxY, cs, 2);
+            ctx.fillRect(boxX + boxW - 2, boxY, 2, cs);
+            ctx.fillRect(boxX, boxY + boxH - 2, cs, 2);
+            ctx.fillRect(boxX, boxY + boxH - cs, 2, cs);
+            ctx.fillRect(boxX + boxW - cs, boxY + boxH - 2, cs, 2);
+            ctx.fillRect(boxX + boxW - 2, boxY + boxH - cs, 2, cs);
+
+            // NPC name in gold
+            ctx.save();
+            ctx.font = 'bold 11px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#daa520';
+            ctx.fillText(dlg.npc.name, boxX + 12, boxY + 18);
+
+            // Dialog text with word-wrap (typewriter text)
+            ctx.font = '11px monospace';
+            ctx.fillStyle = '#d4c5a9';
+            var maxLineW = boxW - 24;
+            var text = dlg.displayText || '';
+            var words = text.split(' ');
+            var currentLine = '';
+            var textY = boxY + 36;
+
+            for (var wi = 0; wi < words.length; wi++) {
+                var testLine = currentLine ? currentLine + ' ' + words[wi] : words[wi];
+                if (ctx.measureText(testLine).width > maxLineW && currentLine) {
+                    ctx.fillText(currentLine, boxX + 12, textY);
+                    currentLine = words[wi];
+                    textY += 14;
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            if (currentLine) {
+                ctx.fillText(currentLine, boxX + 12, textY);
+            }
+
+            // Line indicator
+            ctx.fillStyle = 'rgba(90,80,64,0.4)';
+            ctx.font = '8px monospace';
+            ctx.fillText((dlg.lineIndex + 1) + '/' + dlg.npc.lines.length, boxX + 12, boxY + boxH - 6);
+
+            // "Tap to continue" prompt (blinking)
+            var blink = Math.sin(Date.now() * 0.005) > 0;
+            if (blink && dlg.charIndex >= dlg.fullText.length) {
+                ctx.fillStyle = 'rgba(138,128,112,0.5)';
+                ctx.font = '9px monospace';
+                ctx.textAlign = 'right';
+                ctx.fillText('TAP / KEY >', boxX + boxW - 8, boxY + boxH - 6);
+            }
+
+            ctx.restore();
+        }
+
+        // -----------------------------------------------------------
+        // drawEndTextOverlay — end-of-level cutscene
+        // -----------------------------------------------------------
+
+        drawEndTextOverlay(ctx) {
+            // Full screen dark overlay
+            var alpha = Math.min(1, (180 - this._endTextTimer) / 30);
+            ctx.fillStyle = 'rgba(0,0,0,' + (0.85 * alpha).toFixed(2) + ')';
+            ctx.fillRect(0, 0, W.CANVAS_W, W.CANVAS_H);
+
+            // Cinematic bars
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, W.CANVAS_W, 30);
+            ctx.fillRect(0, W.CANVAS_H - 30, W.CANVAS_W, 30);
+
+            ctx.save();
+            ctx.globalAlpha = alpha;
+
+            // Gold italic text centered
+            ctx.font = 'italic 16px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#daa520';
+
+            // Word-wrap the end text
+            var words = this._endText.split(' ');
+            var lines = [];
+            var currentLine = '';
+            for (var w = 0; w < words.length; w++) {
+                var testLine = currentLine ? currentLine + ' ' + words[w] : words[w];
+                if (ctx.measureText(testLine).width > W.CANVAS_W - 100) {
+                    lines.push(currentLine);
+                    currentLine = words[w];
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+
+            var startY = W.CANVAS_H / 2 - (lines.length - 1) * 12;
+            for (var l = 0; l < lines.length; l++) {
+                ctx.fillText(lines[l], W.CANVAS_W / 2, startY + l * 24);
+            }
+
+            // Dismiss hint
+            if (this._endTextTimer < 140) {
+                ctx.font = '10px monospace';
+                ctx.fillStyle = '#666';
+                ctx.fillText('Tap to continue...', W.CANVAS_W / 2, W.CANVAS_H - 45);
+            }
+
+            ctx.restore();
+        }
+
+        // -----------------------------------------------------------
         // gameOver
         // -----------------------------------------------------------
 
@@ -1197,6 +1480,16 @@
                         var enemy = W.createEnemy(def.type, def.x, def.y);
                         if (enemy) this.enemies.push(enemy);
                     }
+                }
+            }
+
+            // Respawn NPCs (reset untriggered ones)
+            this.npcs = [];
+            this.activeDialog = null;
+            this._dialogCooldown = 0;
+            if (storyData && storyData.npcs) {
+                for (var n = 0; n < storyData.npcs.length; n++) {
+                    this.npcs.push(new W.Npc(storyData.npcs[n]));
                 }
             }
 

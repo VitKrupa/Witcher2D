@@ -8,7 +8,7 @@ W.StoryLevel3 = {
     name: 'The Abandoned Keep',
     width: 11520,
     bgTheme: 'castle',
-    storyText: 'Captured documents reveal Nilfgaard funds the Witch Hunters. Their base: an old fortress.',
+    storyText: 'Captured documents reveal Nilfgaard funds the operation. Their fortress holds answers...',
     platforms: [],
     rooms: [
         // Room 1: Gate Room (x:0-960) — floor Y=372, enemy Y≈320
@@ -244,7 +244,16 @@ W.StoryLevel3 = {
         {type:'nilfSoldier', x:10750, y:320},
         {type:'nilfSoldier', x:11050, y:158},
         {type:'nilfSoldier', x:11350, y:320},
-    ]
+    ],
+    npcs: [
+        {x: 6720+500, y: 332, name: 'Captive Sorceress Lyria', lines: [
+            'A witcher... I never thought I\'d be glad to see one of your kind.',
+            'The Nilfgaardians captured me to power their ritual. They\'re binding a griffin on the battlefield beyond.',
+            'The medallions channel wild magic — they\'re corrupting every creature in the region.',
+            'You must reach the battlefield. Stop the ritual before the griffin is fully bound.'
+        ]}
+    ],
+    endText: 'The fortress falls silent. But beyond its walls, an ancient battlefield stirs with dark magic.'
 };
 
 // Level 4: The Cursed Battlefield (10 rooms, ~960px each = 9600px)
@@ -254,7 +263,7 @@ W.StoryLevel4 = {
     name: 'The Cursed Battlefield',
     width: 9600,
     bgTheme: 'battlefield',
-    storyText: 'An ancient battlefield where Nilfgaard performs a dark ritual to bind a griffin as weapon.',
+    storyText: 'An ancient battlefield where the final ritual takes place...',
     platforms: [],
     rooms: [
         // Room 1: Trench Entrance (x:0-960) — drop to trench
@@ -449,7 +458,22 @@ W.StoryLevel4 = {
         {type:'wildHunt', x:8200, y:320},
         {type:'wildHunt', x:8700, y:320},
         {type:'wildHunt', x:9100, y:320},
-    ]
+    ],
+    npcs: [
+        {x: 3840+500, y: 332, name: 'Deserter Halvorsen', lines: [
+            'Don\'t swing that sword, witcher! I\'m no fighter. Not anymore.',
+            'I deserted when I saw what they were doing. Binding a griffin with blood magic...',
+            'The Wild Hunt appeared through a portal. They want the griffin for themselves.',
+            'The ritual site is ahead. Both sides will kill you on sight. Good luck.'
+        ]},
+        {x: 5760+500, y: 332, name: 'Dying Soldier Gregor', lines: [
+            '*cough* Witcher... the ritual... it\'s nearly complete.',
+            'The Wild Hunt and the Nilfgaardians are tearing each other apart over the griffin.',
+            'Break the binding stones in the arena. It\'s the only way to free the creature.',
+            'Tell my family... tell them I tried to do the right thing.'
+        ]}
+    ],
+    endText: 'The ritual circle shatters. Dark energy disperses across the battlefield. The summit awaits.'
 };
 
 })();

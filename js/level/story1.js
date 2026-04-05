@@ -14,7 +14,7 @@ W.StoryLevel1 = {
     name: 'The Blighted Village',
     width: 7680,
     bgTheme: 'village',
-    storyText: "A village plagued by drowners... The alderman's contract seems straightforward, but something feels wrong.",
+    storyText: "Villagers report monster attacks worse than ever. A strange medallion was found on a dead nekker...",
     platforms: [],
     rooms: [
         // ==============================
@@ -220,7 +220,16 @@ W.StoryLevel1 = {
         // Room 4: secret in church choir loft
         {triggerX:R4+450, triggerY:130, reward:200,
          enemies:[{type:'nobleman', x:R4+470, y:90}, {type:'nobleman', x:R4+530, y:90}]},
-    ]
+    ],
+    npcs: [
+        {x: R1+500, y: 332, name: 'Alderman Yorick', lines: [
+            'Witcher! Thank the gods you came. The nekkers have been worse than ever.',
+            'We found this medallion on one of the dead ones. Strange markings... Nilfgaardian, maybe.',
+            'The attacks started after witch hunters set up camp in the swamp to the east.',
+            'Clear the village and take the medallion. Follow the trail to the swamp.'
+        ]}
+    ],
+    endText: 'The medallion hums in Geralt\'s hand. Its magic is foreign — and dangerous.'
 };
 
 
@@ -237,7 +246,7 @@ W.StoryLevel2 = {
     name: 'The Swamp Depths',
     width: 9600,
     bgTheme: 'swamp',
-    storyText: "The trail leads deep into the swamp. Witch Hunter camps dot the mire - they're driving monsters toward the village.",
+    storyText: "The swamp hides witch hunters using cursed medallions to weaponize monsters...",
     platforms: [],
     rooms: [
         // ==============================
@@ -482,7 +491,16 @@ W.StoryLevel2 = {
         // Room 9: hidden on upper floor
         {triggerX:S9+400, triggerY:150, reward:250,
          enemies:[{type:'wraith', x:S9+430, y:110}, {type:'ghoul', x:S9+550, y:110}]},
-    ]
+    ],
+    npcs: [
+        {x: S7+500, y: 332, name: 'Prisoner Annika', lines: [
+            'You... you\'re a witcher? Please, get me out of these chains!',
+            'The witch hunters — they\'re not just hunting mages. They\'re using cursed medallions to control the monsters.',
+            'I overheard their captain. Nilfgaard is funding the whole operation. They have a fortress in the old keep.',
+            'Take the documents from the captain\'s quarters. They prove everything.'
+        ]}
+    ],
+    endText: 'Among the captain\'s papers, Geralt finds orders bearing the Nilfgaardian sun. The conspiracy runs deep.'
 };
 
 })();

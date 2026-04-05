@@ -9,7 +9,7 @@ W.StoryLevel5 = {
     name: 'The Summit',
     width: 13440,
     bgTheme: 'mountain',
-    storyText: 'The mountain peak. The bound griffin must be freed — but the Wild Hunt wants it as a weapon.',
+    storyText: 'The frozen citadel atop the summit. Vorn of Kaer Seren awaits...',
     platforms: [],
     rooms: [
         // Room 1: Mountain Path West (x:0-960) — wind corridors
@@ -280,7 +280,8 @@ W.StoryLevel5 = {
         {type:'griffin', x:12400, y:270},
         {type:'nobleman', x:11800, y:320},
         {type:'nobleman', x:13000, y:320},
-    ]
+    ],
+    npcs: []
 };
 
 // STORY LEVELS REGISTRY — collects all 5 levels in order
