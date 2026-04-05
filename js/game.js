@@ -145,6 +145,14 @@
             this.showStartScreen();
         }
 
+        changeAge() {
+            this._ageConfirmed = false;
+            sessionStorage.removeItem('witcher2d_age');
+            document.getElementById('startScreen').style.display = 'none';
+            var ageGate = document.getElementById('ageGate');
+            if (ageGate) ageGate.style.display = 'flex';
+        }
+
         // -----------------------------------------------------------
         // Start-screen mode picker
         // -----------------------------------------------------------
