@@ -60,7 +60,9 @@ W.StoryLevel1 = {
         {x:R3, y:60, w:960, h:340, theme:'village',
             noCeiling: true,
             floors: [
-                {y:180, w:700, h:20}        // balcony at abs y:240
+                {y:260, w:250, h:20, x:620},  // low step right (abs y:320) — reachable from main floor (52px gap)
+                {y:180, w:400, h:20, x:28},    // balcony left (abs y:240) — reachable from low step (80px gap)
+                {y:100, w:300, h:20, x:560}    // upper balcony right (abs y:160) — reachable from balcony (80px gap)
             ],
             doors: [
                 {side:'left', offset:200, size:140},
@@ -78,8 +80,11 @@ W.StoryLevel1 = {
         {x:R4, y:20, w:960, h:380, theme:'village',
             noCeiling: true,
             floors: [
-                {y:220, w:904, h:20},       // mid floor at abs y:240
-                {y:120, w:600, h:20, x:180} // choir loft at abs y:140
+                {y:310, w:300, h:20, x:580},  // low step right (abs y:330) — reachable from main floor at 372
+                {y:220, w:904, h:20},          // mid floor at abs y:240 — reachable from low step (90px gap)
+                {y:150, w:350, h:20, x:28},   // zigzag left (abs y:170) — reachable from mid floor (70px gap)
+                {y:120, w:600, h:20, x:180},  // choir loft at abs y:140 — reachable from zigzag left (30px gap)
+                {y:50, w:280, h:20, x:600}    // bell tower ledge right (abs y:70) — reachable from choir loft (70px gap)
             ],
             doors: [
                 {side:'left', offset:240, size:140},
@@ -138,7 +143,9 @@ W.StoryLevel1 = {
         {x:R7, y:100, w:960, h:300, theme:'village',
             noCeiling: false,
             floors: [
-                {y:150, w:500, h:20, x:200} // cave ledge at abs y:250
+                {y:230, w:300, h:20, x:28},   // low step left (abs y:330) — reachable from main floor at 372
+                {y:150, w:500, h:20, x:200},   // cave ledge at abs y:250 — reachable from low step (80px gap)
+                {y:70, w:280, h:20, x:580}     // upper cave perch right (abs y:170) — reachable from cave ledge (80px gap)
             ],
             doors: [
                 {side:'left', offset:160, size:140},
@@ -273,8 +280,11 @@ W.StoryLevel2 = {
         {x:S2, y:20, w:960, h:380, theme:'swamp',
             noCeiling: true,
             floors: [
-                {y:200, w:904, h:20},       // 2nd floor at abs y:220
-                {y:110, w:600, h:20, x:160} // canopy level at abs y:130
+                {y:290, w:280, h:20, x:600},  // low branch right (abs y:310) — reachable from main floor at 372 (62px gap)
+                {y:200, w:400, h:20, x:28},    // branch left (abs y:220) — reachable from low branch (90px gap)
+                {y:200, w:400, h:20, x:500},   // branch right (abs y:220) — alternate path
+                {y:110, w:600, h:20, x:160},   // canopy level at abs y:130 — reachable from branches (90px gap)
+                {y:40, w:250, h:20, x:28}      // high canopy left (abs y:60) — reachable from canopy (70px gap)
             ],
             doors: [
                 {side:'left', offset:240, size:140},

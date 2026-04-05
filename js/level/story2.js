@@ -92,13 +92,15 @@ W.StoryLevel3 = {
                 {type:'cobweb', x:600, y:28}
             ]},
         // Room 7: Dungeon Descent (x:5760-6720) — deep room, floor Y=372
-        // Floors: entry ledge, descent platforms
+        // Floors: entry ledge, zigzag descent platforms
         {x:5760, y:60, w:960, h:340, theme:'castle',
             doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
             floors:[
-                {y:190, w:300, h:40, x:40},     // upper ledge
-                {y:280, w:400, h:40, x:440},    // mid ledge
-                {y:320, w:60, h:30, x:640}      // climbing block
+                {y:100, w:280, h:40, x:620},    // high perch right (abs y:160) — zigzag top
+                {y:190, w:300, h:40, x:40},      // upper ledge left (abs y:250) — 90px drop from high perch
+                {y:240, w:250, h:40, x:500},     // mid-step right (abs y:300) — 50px drop, zigzag
+                {y:280, w:400, h:40, x:440},     // mid ledge (abs y:340) — 40px drop
+                {y:320, w:60, h:30, x:200}       // low stepping block left (abs y:380)
             ],
             features:[
                 {type:'torch', x:100, y:160},
@@ -129,14 +131,16 @@ W.StoryLevel3 = {
                 {type:'torch', x:820, y:180},
                 {type:'chains', x:420, y:100}
             ]},
-        // Room 10: Tower Climb (x:8640-9600) — tall room, floor Y=372, 3 interior floors
+        // Room 10: Tower Climb (x:8640-9600) — tall room, floor Y=372, zigzag interior floors
         {x:8640, y:40, w:960, h:360, theme:'castle',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
             floors:[
-                {y:220, w:880, h:40, x:28},     // floor 2 (full width)
-                {y:140, w:400, h:40, x:28},     // floor 3 left
-                {y:140, w:380, h:40, x:560},    // floor 3 right
-                {y:60, w:400, h:40, x:260}      // floor 4 (top)
+                {y:300, w:300, h:40, x:28},      // step 1 left (abs y:340) — reachable from main floor (32px gap)
+                {y:300, w:300, h:40, x:620},     // step 1 right (abs y:340) — alternate start
+                {y:220, w:350, h:40, x:300},     // floor 2 center (abs y:260) — zigzag from step 1 (80px gap)
+                {y:140, w:300, h:40, x:28},      // floor 3 left (abs y:180) — zigzag from center (80px gap)
+                {y:140, w:300, h:40, x:620},     // floor 3 right (abs y:180) — alternate path
+                {y:60, w:400, h:40, x:260}       // floor 4 top center (abs y:100) — zigzag from floor 3 (80px gap)
             ],
             features:[
                 {type:'torch', x:100, y:140},
@@ -306,14 +310,15 @@ W.StoryLevel4 = {
                 {type:'roots', x:60, y:280},
                 {type:'cobweb', x:580, y:110}
             ]},
-        // Room 4: Siege Tower Interior (x:2880-3840) — vertical climb
-        // y:60, h:340, floor Y=372, enemy Y≈320. 3 interior floors
+        // Room 4: Siege Tower Interior (x:2880-3840) — zigzag vertical climb
+        // y:60, h:340, floor Y=372, enemy Y≈320. Zigzag ascent floors
         {x:2880, y:60, w:960, h:340, theme:'battlefield',
             doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
             floors:[
-                {y:200, w:260, h:40, x:40},     // floor 2
-                {y:140, w:244, h:40, x:356},    // floor 3
-                {y:80, w:260, h:40, x:656}      // floor 4 (top)
+                {y:280, w:280, h:40, x:40},     // step 1 left (abs y:340) — from main floor (32px gap)
+                {y:200, w:260, h:40, x:350},    // floor 2 center (abs y:260) — zigzag from step 1 (80px gap)
+                {y:140, w:244, h:40, x:40},     // floor 3 left (abs y:200) — zigzag back left (60px gap)
+                {y:80, w:260, h:40, x:656}      // floor 4 top right (abs y:140) — zigzag to right (60px gap)
             ],
             features:[
                 {type:'torch', x:100, y:160},
@@ -354,7 +359,9 @@ W.StoryLevel4 = {
         {x:5760, y:60, w:960, h:340, theme:'battlefield',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
             floors:[
-                {y:170, w:400, h:40, x:280}        // central platform
+                {y:260, w:250, h:40, x:40},         // low step left (abs y:320) — from main floor (52px gap)
+                {y:170, w:400, h:40, x:280},         // central platform (abs y:230) — from low step (90px gap)
+                {y:90, w:280, h:40, x:600}           // high perch right (abs y:150) — from central (80px gap)
             ],
             features:[
                 {type:'torch', x:100, y:160},

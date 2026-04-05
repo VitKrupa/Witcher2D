@@ -94,14 +94,15 @@ W.StoryLevel5 = {
                 {type:'chains', x:240, y:40},
                 {type:'chains', x:720, y:40}
             ]},
-        // Room 7: Ascent Shaft Lower (x:5760-6720) — vertical climb
-        // y:60, h:340, floor Y=372, 3 ascending floors inside shaft
+        // Room 7: Ascent Shaft Lower (x:5760-6720) — zigzag vertical climb
+        // y:60, h:340, floor Y=372, zigzag ascending floors inside shaft
         {x:5760, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
             floors:[
-                {y:200, w:520, h:40, x:220},    // floor 2
-                {y:120, w:520, h:40, x:220},    // floor 3
-                {y:40, w:520, h:40, x:220}      // floor 4 (top)
+                {y:290, w:300, h:40, x:28},      // step 1 left (abs y:350) — from main floor (22px gap)
+                {y:200, w:320, h:40, x:580},     // floor 2 right (abs y:260) — zigzag right (90px gap)
+                {y:120, w:300, h:40, x:28},       // floor 3 left (abs y:180) — zigzag left (80px gap)
+                {y:40, w:320, h:40, x:580}        // floor 4 top right (abs y:100) — zigzag right (80px gap)
             ],
             features:[
                 {type:'crystals', x:100, y:260},
@@ -110,13 +111,14 @@ W.StoryLevel5 = {
                 {type:'chains', x:744, y:40}
             ]},
         // Room 8: Ascent Shaft Upper (x:6720-7680)
-        // y:60, h:340, floor Y=372, 3 ascending floors
+        // y:60, h:340, floor Y=372, zigzag ascending floors
         {x:6720, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
             floors:[
-                {y:200, w:520, h:40, x:220},    // floor 2
-                {y:120, w:520, h:40, x:220},    // floor 3
-                {y:40, w:520, h:40, x:220}      // floor 4 (top)
+                {y:290, w:320, h:40, x:580},     // step 1 right (abs y:350) — from main floor (22px gap)
+                {y:200, w:300, h:40, x:28},       // floor 2 left (abs y:260) — zigzag left (90px gap)
+                {y:120, w:320, h:40, x:580},      // floor 3 right (abs y:180) — zigzag right (80px gap)
+                {y:40, w:300, h:40, x:28}          // floor 4 top left (abs y:100) — zigzag left (80px gap)
             ],
             features:[
                 {type:'crystals', x:100, y:260},
@@ -142,7 +144,9 @@ W.StoryLevel5 = {
         {x:8640, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
             floors:[
-                {y:160, w:380, h:40, x:280}        // central fortress platform
+                {y:250, w:280, h:40, x:28},         // low step left (abs y:310) — from main floor (62px gap)
+                {y:160, w:380, h:40, x:280},         // central fortress platform (abs y:220) — from step (90px gap)
+                {y:80, w:260, h:40, x:640}           // high battlement right (abs y:140) — from central (80px gap)
             ],
             features:[
                 {type:'crystals', x:140, y:260},
