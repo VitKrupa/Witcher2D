@@ -128,7 +128,10 @@ W.StoryLevel5 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:7680, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:170, w:400, h:40, x:40},        // fortress ledge left
+                {y:140, w:350, h:40, x:560}         // fortress ledge right
+            ],
             features:[
                 {type:'crystals', x:120, y:260},
                 {type:'crystals', x:620, y:240},
@@ -138,7 +141,9 @@ W.StoryLevel5 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:8640, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:160, w:380, h:40, x:280}        // central fortress platform
+            ],
             features:[
                 {type:'crystals', x:140, y:260},
                 {type:'crystals', x:610, y:240},
@@ -149,7 +154,10 @@ W.StoryLevel5 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:9600, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:180, w:300, h:40, x:60},        // approach ledge left
+                {y:150, w:320, h:40, x:580}        // approach ledge right
+            ],
             features:[
                 {type:'crystals', x:120, y:260},
                 {type:'crystals', x:550, y:240},
@@ -160,7 +168,9 @@ W.StoryLevel5 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:10560, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:170, w:700, h:40, x:130}        // wide approach floor
+            ],
             features:[
                 {type:'crystals', x:100, y:260},
                 {type:'crystals', x:620, y:240},
