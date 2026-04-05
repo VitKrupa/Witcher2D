@@ -370,80 +370,35 @@ W.Player = class {
         return true; // signal to shake camera
     }
 
+    // ================================================================
+    // Lovable-style drawing: simple roundRect body parts, no joint math
+    // Origin at feet center, scale for facing direction
+    // ================================================================
     draw(ctx) {
-        ctx.save();
-        const t = this.animTimer; // continuous timer for smooth sin/cos animations
-        const f = this.facing;
-        // Invincibility flicker
-        if (this.invincible && Math.floor(t) % 3 === 0) ctx.globalAlpha = 0.4;
+        if (this.state === States.DEAD) { this.drawDead(ctx); return; }
 
-        // Mirror for facing left
-        if (f === -1) {
-            ctx.translate(this.x + this.w / 2, 0);
-            ctx.scale(-1, 1);
-            ctx.translate(-(this.x + this.w / 2), 0);
-        }
-
-        // Body center reference point
         const cx = this.x + this.w / 2;
-        const cy = this.y + 14; // shoulder height
+        const bottomY = this.y + this.h;
+        const flash = this.invincible && Math.floor(this.invincibleTimer / 4) % 2 === 0;
+        if (flash) ctx.globalAlpha = 0.5;
 
-        // Ground shadow
-        W.Draw.shadow(ctx, cx, this.y + this.h + 2, this.w * 0.8);
+        ctx.save();
+        ctx.translate(cx, bottomY);
+        ctx.scale(this.facing, 1);
 
-        // Animation parameters by state
-        const breathe = wave(t, 0.05, 1);
-        const isRun = this.state === States.RUN;
-        const isAttack = this.state === States.ATTACK;
-        const isBlock = this.state === States.BLOCK;
-        const isHurt = this.state === States.HURT;
-        const isRoll = this.state === States.ROLL;
-        const isDead = this.state === States.DEAD;
-        const isJump = this.state === States.JUMP || this.state === States.FALL;
-        const isHang = this.state === States.HANG;
-        const isClimb = this.state === States.CLIMB;
-        const runCycle = t * 0.15; // smooth run phase
-        const atkProgress = isAttack ? (1 - this.stateTimer / 22) : 0;
+        const t = this.animTimer;
+        const legAnim = this.state === States.RUN ? Math.sin(t * 0.3) * 6 : 0;
+        const breathe = Math.sin(t * 0.05) * 0.5;
 
-        if (isRoll) {
-            this.drawRoll(ctx, cx, cy + 14, t);
-            ctx.restore();
-            return;
-        }
+        if (this.state === States.ROLL) { ctx.restore(); ctx.globalAlpha = 1; this.drawRoll(ctx); return; }
+        if (this.state === States.HANG) { ctx.restore(); ctx.globalAlpha = 1; this.drawHang(ctx); return; }
+        if (this.state === States.CLIMB) { ctx.restore(); ctx.globalAlpha = 1; this.drawClimb(ctx); return; }
 
-        if (isHang) {
-            this.drawHang(ctx, cx, cy, t);
-            ctx.restore();
-            return;
-        }
-
-        if (isClimb) {
-            this.drawClimb(ctx, cx, cy, t);
-            ctx.restore();
-            return;
-        }
-
-        if (isDead) {
-            this.drawDead(ctx, cx, cy);
-            ctx.restore();
-            return;
-        }
-
-        // === CALCULATE JOINT POSITIONS ===
-
-        // Hurt jolt: shift entire body backward
-        const hurtJolt = isHurt ? (this.stateTimer / 12) * 6 : 0;
-        const joltX = -this.facing * hurtJolt; // jolt opposite to facing
-
-        // Run: upper body leans forward slightly
-        const bodyLean = isRun ? 0.08 : 0;
-
-        // Head bob synced with step cycle (double frequency since 2 steps per cycle)
-        const headBob = isRun ? Math.abs(Math.sin(runCycle)) * 1.2 : 0;
-
-        // Hip position — reduced lateral sway during run
-        const hipX = cx + joltX;
-        const hipY = cy + 16 + breathe * 0.3 + (isRun ? Math.abs(Math.sin(runCycle)) * 1.0 : 0);
+        // Shadow
+        ctx.fillStyle = '#00000030';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 10, 3, 0, 0, Math.PI * 2);
+        ctx.fill();
 
         // Leg angles (radians from vertical) — more forward/back, less lateral spread
         let lLegAngle, rLegAngle, lKneeAngle, rKneeAngle;
