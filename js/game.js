@@ -181,14 +181,17 @@
             gameW = Math.max(gameW, 800);  // minimum width
             gameW = Math.min(gameW, 1400); // maximum width
 
-            // Update internal canvas resolution
-            if (this.canvas.width !== gameW || this.canvas.height !== gameH) {
-                this.canvas.width = gameW;
-                this.canvas.height = gameH;
-                W.CANVAS_W = gameW; // update global
-            }
+            // Update internal canvas resolution (account for device pixel ratio for sharpness)
+            var dpr = window.devicePixelRatio || 1;
+            W.CANVAS_W = gameW;
+            W.CANVAS_H = gameH;
+            this.canvas.width = gameW * dpr;
+            this.canvas.height = gameH * dpr;
+            this.canvas.style.width = gameW + 'px';
+            this.canvas.style.height = gameH + 'px';
+            this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            // Scale to fill screen — width matches exactly, height fills
+            // Scale container to fill screen
             var scale = vw / gameW;
             container.style.width = gameW + 'px';
             container.style.height = gameH + 'px';
@@ -379,7 +382,8 @@
             // End-of-level cutscene
             if (this.showingEndText) {
                 this._endTextTimer -= dt * 60;
-                var anyKey2 = false;
+                var anyKey2 = this._touchTapped || false;
+                if (anyKey2) this._touchTapped = false;
                 for (var k2 in this.keys) { if (this.keys[k2]) anyKey2 = true; }
                 if (this._endTextTimer <= 0 || (anyKey2 && this._endTextTimer < 140)) {
                     this.showingEndText = false;
@@ -398,36 +402,28 @@
                     this.activeDialog.charIndex++;
                     this.activeDialog.displayText = this.activeDialog.fullText.substring(0, this.activeDialog.charIndex);
                 }
-                // Check for advance input (tap/key/touch)
-                var anyKey3 = this._touchTapped || false;
-                this._touchTapped = false;
-                for (var k3 in this.keys) { if (this.keys[k3]) anyKey3 = true; }
-                if (anyKey3) {
-                    if (this._dialogAdvanceReady) {
-                        this._dialogAdvanceReady = false;
-                        // If text not fully revealed, reveal it instantly
-                        if (this.activeDialog.charIndex < this.activeDialog.fullText.length) {
-                            this.activeDialog.charIndex = this.activeDialog.fullText.length;
-                            this.activeDialog.displayText = this.activeDialog.fullText;
+                // Check for advance input (tap/touch — single tap advances)
+                if (this._touchTapped) {
+                    this._touchTapped = false;
+                    // If text not fully revealed, reveal it instantly
+                    if (this.activeDialog.charIndex < this.activeDialog.fullText.length) {
+                        this.activeDialog.charIndex = this.activeDialog.fullText.length;
+                        this.activeDialog.displayText = this.activeDialog.fullText;
+                    } else {
+                        // Advance to next line
+                        var npc = this.activeDialog.npc;
+                        npc.currentLine++;
+                        if (npc.currentLine >= npc.lines.length) {
+                            npc.triggered = true;
+                            this.activeDialog = null;
+                            this._dialogCooldown = 30;
                         } else {
-                            // Advance to next line
-                            var npc = this.activeDialog.npc;
-                            npc.currentLine++;
-                            if (npc.currentLine >= npc.lines.length) {
-                                // Dialog complete
-                                npc.triggered = true;
-                                this.activeDialog = null;
-                                this._dialogCooldown = 30;
-                            } else {
-                                this.activeDialog.lineIndex = npc.currentLine;
-                                this.activeDialog.fullText = npc.lines[npc.currentLine];
-                                this.activeDialog.charIndex = 0;
-                                this.activeDialog.displayText = '';
-                            }
+                            this.activeDialog.lineIndex = npc.currentLine;
+                            this.activeDialog.fullText = npc.lines[npc.currentLine];
+                            this.activeDialog.charIndex = 0;
+                            this.activeDialog.displayText = '';
                         }
                     }
-                } else {
-                    this._dialogAdvanceReady = true;
                 }
                 return; // freeze game while dialog is active
             }
