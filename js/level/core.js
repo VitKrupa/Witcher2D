@@ -42,24 +42,32 @@ W.Level = class {
     }
 
     drawBackground(ctx, cameraX) {
+        // Store cameraX for use by drawPlatforms/drawForeground
+        this._cameraX = cameraX;
         // Use Lovable-style dungeon renderer if available
         if (W.DungeonRenderer) {
             try {
                 W.DungeonRenderer.drawBackground(ctx, cameraX, W.CANVAS_W, W.CANVAS_H);
-                W.DungeonRenderer.drawWalls(ctx, cameraX, W.CANVAS_W, W.CANVAS_H);
-                W.DungeonRenderer.drawDecorations(ctx, cameraX, W.CANVAS_W, W.CANVAS_H);
-            } catch(e) { console.error('Dungeon renderer error:', e); }
-        } else {
-            try {
-                const fn = W.Backgrounds[this.bgTheme];
-                if (fn) fn(ctx, cameraX);
-            } catch(e) {}
+            } catch(e) { console.error('Dungeon BG error:', e); }
+            return;
         }
+        try {
+            const fn = W.Backgrounds[this.bgTheme];
+            if (fn) fn(ctx, cameraX);
+        } catch(e) {}
     }
 
     drawPlatforms(ctx) {
-        // Platforms are INVISIBLE collision geometry (rooms/dungeon handle visuals)
-        // Only draw platforms in wave mode (no rooms)
+        var cameraX = this._cameraX || 0;
+        // Lovable-style continuous dungeon walls + decorations (world-space, behind platforms)
+        if (W.DungeonRenderer) {
+            try {
+                W.DungeonRenderer.drawWalls(ctx, cameraX, W.CANVAS_W, W.CANVAS_H);
+                W.DungeonRenderer.drawDecorations(ctx, cameraX, W.CANVAS_W, W.CANVAS_H);
+            } catch(e) { console.error('Dungeon walls error:', e); }
+        }
+        // Platforms are INVISIBLE collision geometry when dungeon renderer active
+        // Only draw platforms in wave mode fallback (no rooms, no dungeon renderer)
         if (this.rooms.length === 0 && !W.DungeonRenderer) {
             for (const p of this.platforms) {
                 try { p.draw(ctx); } catch(e) {
@@ -69,9 +77,9 @@ W.Level = class {
             }
         }
         for (const s of this.spikes) s.draw(ctx);
-        // Ground fog
+        // Ground fog (world-space, just above floor)
         if (W.DungeonRenderer) {
-            try { W.DungeonRenderer.drawGroundFog(ctx, this._cameraX || 0, W.CANVAS_W, W.CANVAS_H); } catch(e) {}
+            try { W.DungeonRenderer.drawGroundFog(ctx, cameraX, W.CANVAS_W, W.CANVAS_H); } catch(e) {}
         }
     }
 

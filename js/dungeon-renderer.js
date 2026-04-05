@@ -225,20 +225,20 @@ W.DungeonRenderer = {
     // drawForegroundFog — vignette/atmosphere overlay
     // Renders in WORLD SPACE (uses camera coords for positioning)
     // ---------------------------------------------------------------
-    drawForegroundFog: function(ctx, cameraX, cameraY, canvasW, canvasH) {
+    drawForegroundFog: function(ctx, cameraX, canvasW, canvasH) {
         // Top darkness vignette
-        var topGrad = ctx.createLinearGradient(0, cameraY, 0, cameraY + 80);
+        var topGrad = ctx.createLinearGradient(0, 0, 0, 80);
         topGrad.addColorStop(0, 'rgba(8,12,18,0.5)');
         topGrad.addColorStop(1, 'rgba(8,12,18,0)');
         ctx.fillStyle = topGrad;
-        ctx.fillRect(cameraX, cameraY, canvasW, 80);
+        ctx.fillRect(cameraX, 0, canvasW, 80);
 
         // Bottom subtle fog
-        var botGrad = ctx.createLinearGradient(0, cameraY + canvasH - 40, 0, cameraY + canvasH);
+        var botGrad = ctx.createLinearGradient(0, canvasH - 40, 0, canvasH);
         botGrad.addColorStop(0, 'rgba(10,14,20,0)');
         botGrad.addColorStop(1, 'rgba(10,14,20,0.251)');
         ctx.fillStyle = botGrad;
-        ctx.fillRect(cameraX, cameraY + canvasH - 40, canvasW, 40);
+        ctx.fillRect(cameraX, canvasH - 40, canvasW, 40);
     },
 
     // ---------------------------------------------------------------
