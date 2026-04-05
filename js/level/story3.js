@@ -16,7 +16,10 @@ W.StoryLevel5 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:0, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:180, w:320, h:40, x:50},        // rocky ledge left
+                {y:160, w:280, h:40, x:620}        // rocky ledge right
+            ],
             features:[
                 {type:'crystals', x:150, y:260},
                 {type:'crystals', x:500, y:240},
@@ -27,7 +30,9 @@ W.StoryLevel5 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:960, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:170, w:400, h:40, x:280}        // mountain shelf
+            ],
             features:[
                 {type:'crystals', x:140, y:260},
                 {type:'crystals', x:540, y:240},
@@ -38,7 +43,10 @@ W.StoryLevel5 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:1920, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:180, w:300, h:40, x:40},        // ice ledge left
+                {y:160, w:260, h:40, x:640}        // ice ledge right
+            ],
             features:[
                 {type:'crystals', x:130, y:260},
                 {type:'crystals', x:630, y:240},
@@ -49,7 +57,10 @@ W.StoryLevel5 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:2880, y:60, w:960, h:340, theme:'mountain',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:180, w:350, h:40, x:50},        // ice shelf left
+                {y:150, w:300, h:40, x:600}         // ice shelf right
+            ],
             features:[
                 {type:'crystals', x:100, y:260},
                 {type:'crystals', x:520, y:240},

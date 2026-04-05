@@ -91,9 +91,9 @@ W.StoryLevel3 = {
                 {type:'cobweb', x:250, y:28},
                 {type:'cobweb', x:600, y:28}
             ]},
-        // Room 7: Dungeon Descent (x:5760-6720) — deep room, floor Y=452
+        // Room 7: Dungeon Descent (x:5760-6720) — deep room, floor Y=372
         // Floors: entry ledge, descent platforms
-        {x:5760, y:60, w:960, h:420, theme:'castle',
+        {x:5760, y:60, w:960, h:340, theme:'castle',
             doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
             floors:[
                 {y:190, w:300, h:40, x:40},     // upper ledge
@@ -106,8 +106,8 @@ W.StoryLevel3 = {
                 {type:'chains', x:740, y:100},
                 {type:'cobweb', x:140, y:80}
             ]},
-        // Room 8: Dungeon Cells (x:6720-7680) — underground, floor Y=452, enemy Y≈400
-        {x:6720, y:320, w:960, h:160, theme:'castle',
+        // Room 8: Dungeon Cells (x:6720-7680) — underground, floor Y=372, enemy Y≈320
+        {x:6720, y:260, w:960, h:140, theme:'castle',
             doors:[{side:'left', offset:0, size:60}, {side:'right', offset:0, size:60}],
             floors:[],
             features:[
@@ -117,7 +117,7 @@ W.StoryLevel3 = {
                 {type:'cobweb', x:280, y:28}
             ]},
         // Room 9: Dungeon Exit (x:7680-8640) — deep room, ascending floors
-        {x:7680, y:60, w:960, h:420, theme:'castle',
+        {x:7680, y:60, w:960, h:340, theme:'castle',
             doors:[{side:'left', offset:0, size:60}, {side:'right', offset:200, size:60}],
             floors:[
                 {y:280, w:300, h:40, x:120},    // floor 2
@@ -173,12 +173,12 @@ W.StoryLevel3 = {
     secrets: [
         // Hidden dungeon alcove (below room 8 floor)
         {
-            x: 7100, y: 460, w: 160, h: 40,
-            triggerX: 7150, triggerY: 460,
+            x: 7100, y: 380, w: 160, h: 40,
+            triggerX: 7150, triggerY: 380,
             reward: 300,
             enemies: [
-                {type: 'wraith', x: 7120, y: 440},
-                {type: 'nilfSoldier', x: 7200, y: 440}
+                {type: 'wraith', x: 7120, y: 360},
+                {type: 'nilfSoldier', x: 7200, y: 360}
             ]
         },
         // Hidden armory above great hall (room 5 area)
@@ -203,11 +203,11 @@ W.StoryLevel3 = {
         // Room 5: great hall ceiling spikes
         {x: 4150, y: 68, w: 60, direction: 'down'},
         {x: 4450, y: 68, w: 60, direction: 'down'},
-        // Room 7: dungeon descent pit spikes (floor Y=452)
-        {x: 6200, y: 436, w: 60},
-        // Room 8: dungeon cell floor spikes (floor Y=452)
-        {x: 6850, y: 436, w: 48},
-        {x: 7150, y: 436, w: 48},
+        // Room 7: dungeon descent pit spikes (floor Y=372)
+        {x: 6200, y: 356, w: 60},
+        // Room 8: dungeon cell floor spikes (floor Y=372)
+        {x: 6850, y: 356, w: 48},
+        {x: 7150, y: 356, w: 48},
         // Room 11: sky bridge gap spikes
         {x: 9920, y: 384, w: 36},
         {x: 10160, y: 384, w: 36},
@@ -230,11 +230,11 @@ W.StoryLevel3 = {
         {type:'nilfSoldier', x:4650, y:148},
         // Room 6 — Kitchen/Storage: floor Y=372, enemy Y=320
         {type:'nobleman', x:5300, y:320},
-        // Room 7 — Dungeon Descent: floor Y=452, enemy Y=400
-        {type:'wraith', x:6350, y:400},
-        // Room 8 — Dungeon Cells: floor Y=452, enemy Y=400
-        {type:'wraith', x:6850, y:400},
-        {type:'wraith', x:7400, y:400},
+        // Room 7 — Dungeon Descent: floor Y=372, enemy Y=320
+        {type:'wraith', x:6350, y:320},
+        // Room 8 — Dungeon Cells: floor Y=372, enemy Y=320
+        {type:'wraith', x:6850, y:320},
+        {type:'wraith', x:7400, y:320},
         // Room 10 — Tower Climb: top floor at room.y+60=100, enemy Y=48
         {type:'nilfSoldier', x:9150, y:48},
         // Room 11 — Sky Bridge: floor Y=132, enemy Y=80
@@ -258,8 +258,8 @@ W.StoryLevel4 = {
     platforms: [],
     rooms: [
         // Room 1: Trench Entrance (x:0-960) — drop to trench
-        // y:60, h:380, floor Y=412, entry ledge + trench shelf
-        {x:0, y:60, w:960, h:380, theme:'battlefield',
+        // y:60, h:340, floor Y=372, entry ledge + trench shelf
+        {x:0, y:60, w:960, h:340, theme:'battlefield',
             doors:[{side:'right', offset:240, size:60}],
             floors:[
                 {y:280, w:200, h:40, x:28},     // entry ledge before drop
@@ -271,9 +271,9 @@ W.StoryLevel4 = {
                 {type:'roots', x:700, y:300},
                 {type:'cobweb', x:16, y:240}
             ]},
-        // Room 2: Trench Corridor (x:960-1920) — sunken, y:280 h:160
-        // floor Y=412, enemy Y≈360
-        {x:960, y:280, w:960, h:160, theme:'battlefield',
+        // Room 2: Trench Corridor (x:960-1920) — sunken, y:260 h:140
+        // floor Y=372, enemy Y≈320
+        {x:960, y:260, w:960, h:140, theme:'battlefield',
             doors:[{side:'left', offset:100, size:40}, {side:'right', offset:100, size:40}],
             floors:[
                 {y:60, w:200, h:40, x:190},     // shelf 1 over spikes
@@ -285,8 +285,8 @@ W.StoryLevel4 = {
                 {type:'cobweb', x:440, y:28}
             ]},
         // Room 3: Surface Breakout (x:1920-2880) — climb from trench
-        // y:60, h:380, floor Y=412, ascending floors to surface
-        {x:1920, y:60, w:960, h:380, theme:'battlefield',
+        // y:60, h:340, floor Y=372, ascending floors to surface
+        {x:1920, y:60, w:960, h:340, theme:'battlefield',
             doors:[{side:'left', offset:240, size:60}, {side:'right', offset:200, size:60}],
             floors:[
                 {y:240, w:300, h:40, x:40},     // floor 2 (climb from trench)
@@ -330,7 +330,10 @@ W.StoryLevel4 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:4800, y:60, w:960, h:340, theme:'battlefield',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:180, w:300, h:40, x:60},        // rubble ledge left
+                {y:150, w:280, h:40, x:620}        // rubble ledge right
+            ],
             features:[
                 {type:'torch', x:100, y:160},
                 {type:'roots', x:250, y:260},
@@ -341,15 +344,17 @@ W.StoryLevel4 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:5760, y:60, w:960, h:340, theme:'battlefield',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:200, size:60}],
-            floors:[],
+            floors:[
+                {y:170, w:400, h:40, x:280}        // central platform
+            ],
             features:[
                 {type:'torch', x:100, y:160},
                 {type:'cobweb', x:340, y:60},
                 {type:'roots', x:640, y:260}
             ]},
         // Room 8: Ritual Chamber (x:6720-7680) — sunken pit
-        // y:60, h:400, floor Y=432, entry ledge + pit shelves
-        {x:6720, y:60, w:960, h:400, theme:'battlefield',
+        // y:60, h:340, floor Y=372, entry ledge + pit shelves
+        {x:6720, y:60, w:960, h:340, theme:'battlefield',
             doors:[{side:'left', offset:200, size:60}, {side:'right', offset:0, size:60}],
             floors:[
                 {y:280, w:100, h:40, x:28},     // entry ledge
@@ -378,7 +383,9 @@ W.StoryLevel4 = {
         // y:60, h:340, floor Y=372, enemy Y≈320
         {x:8640, y:60, w:960, h:340, theme:'battlefield',
             doors:[{side:'left', offset:80, size:60}],
-            floors:[],
+            floors:[
+                {y:160, w:360, h:40, x:300}        // elevated arena platform
+            ],
             features:[
                 {type:'torch', x:100, y:160},
                 {type:'torch', x:760, y:160},
@@ -399,13 +406,13 @@ W.StoryLevel4 = {
         }
     ],
     spikes: [
-        // Room 1: trench floor spikes (floor Y=412)
-        {x: 500, y: 396, w: 60},
-        {x: 780, y: 396, w: 48},
-        // Room 2: trench corridor spikes (floor Y=412)
-        {x: 1050, y: 396, w: 60},
-        {x: 1350, y: 396, w: 60},
-        {x: 1680, y: 396, w: 48},
+        // Room 1: trench floor spikes (floor Y=372)
+        {x: 500, y: 356, w: 60},
+        {x: 780, y: 356, w: 48},
+        // Room 2: trench corridor spikes (floor Y=372)
+        {x: 1050, y: 356, w: 60},
+        {x: 1350, y: 356, w: 60},
+        {x: 1680, y: 356, w: 48},
         // Room 5: descent hazards (floor Y=372)
         {x: 4450, y: 356, w: 48},
         // Room 6: no man's land floor spikes (floor Y=372)
@@ -416,11 +423,11 @@ W.StoryLevel4 = {
         {x: 7300, y: 88, w: 60, direction: 'down'},
     ],
     enemies: [
-        // Room 1: Trench entrance — floor Y=412, enemy Y≈360
-        {type:'nekker', x:500, y:360},
-        {type:'nekker', x:750, y:360},
-        // Room 2: Trench corridor — floor Y=412, enemy Y≈360
-        {type:'wraith', x:1400, y:360},
+        // Room 1: Trench entrance — floor Y=372, enemy Y≈320
+        {type:'nekker', x:500, y:320},
+        {type:'nekker', x:750, y:320},
+        // Room 2: Trench corridor — floor Y=372, enemy Y≈320
+        {type:'wraith', x:1400, y:320},
         // Room 3: Surface breakout — upper floor at room.y+160=220, enemy Y≈170
         {type:'ghoul', x:2400, y:170},
         {type:'ghoul', x:2650, y:170},
@@ -435,9 +442,9 @@ W.StoryLevel4 = {
         {type:'wildHunt', x:5350, y:320},
         // Room 7: Ritual approach — floor Y=372, enemy Y≈320
         {type:'wraith', x:6150, y:320},
-        // Room 8: Ritual chamber — floor Y=432, enemy Y≈380
-        {type:'wildHunt', x:7000, y:380},
-        {type:'wildHunt', x:7300, y:380},
+        // Room 8: Ritual chamber — floor Y=372, enemy Y≈320
+        {type:'wildHunt', x:7000, y:320},
+        {type:'wildHunt', x:7300, y:320},
         // Rooms 9-10: Boss arena — floor Y=372, enemy Y≈320
         {type:'wildHunt', x:8200, y:320},
         {type:'wildHunt', x:8700, y:320},
