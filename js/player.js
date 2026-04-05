@@ -122,23 +122,31 @@ function drawGeraltBody(ctx, legAnim, breathe, attackTimer, activeSword, state, 
     var swordGlowColor = activeSword === 'silver' ? silverGlow : ironGlow;
 
     if (state === States.ATTACK) {
+        // The OTHER sword stays on back
+        var otherColor = activeSword === 'silver' ? ironColor : silverColor;
+        var otherHilt = activeSword === 'silver' ? GOLD : '#888';
+        ctx.save();
+        ctx.translate(-5, -42);
+        ctx.rotate(-0.25);
+        ctx.fillStyle = otherColor;
+        drawRoundRect(ctx, -1, -20, 2, 20, 1);
+        ctx.fillStyle = otherHilt;
+        drawRoundRect(ctx, -2.5, -1, 5, 2, 1);
+        ctx.restore();
+
+        // Active sword in hand — swinging
         var angle = -Math.PI / 4 + (attackTimer / 15) * Math.PI * 0.8;
         ctx.save();
         ctx.translate(5, -28);
         ctx.rotate(angle);
-        // Blade
         ctx.fillStyle = swordColor;
         drawRoundRect(ctx, -1.5, -30, 3, 30, 1);
-        // Blade edge highlight
         ctx.fillStyle = swordGlowColor;
         ctx.fillRect(-1.5, -30, 1, 8);
-        // Guard
         ctx.fillStyle = activeSword === 'silver' ? '#888' : GOLD;
         drawRoundRect(ctx, -4, -2, 8, 3, 1);
-        // Grip
         ctx.fillStyle = activeSword === 'silver' ? '#2a2a3a' : '#3a2a1a';
         drawRoundRect(ctx, -1.5, 1, 3, 7, 1);
-        // Pommel
         ctx.fillStyle = activeSword === 'silver' ? '#999' : GOLD;
         ctx.beginPath();
         ctx.arc(0, 9, 2, 0, Math.PI * 2);
@@ -149,7 +157,6 @@ function drawGeraltBody(ctx, legAnim, breathe, attackTimer, activeSword, state, 
         ctx.save();
         ctx.translate(-4, -42);
         ctx.rotate(-0.2);
-        // Silver sword
         ctx.fillStyle = silverColor;
         drawRoundRect(ctx, -1, -22, 2, 22, 1);
         ctx.fillStyle = '#888';
@@ -158,7 +165,6 @@ function drawGeraltBody(ctx, legAnim, breathe, attackTimer, activeSword, state, 
         ctx.save();
         ctx.translate(-6, -40);
         ctx.rotate(-0.3);
-        // Iron sword
         ctx.fillStyle = ironColor;
         drawRoundRect(ctx, -1, -20, 2, 20, 1);
         ctx.fillStyle = GOLD;
