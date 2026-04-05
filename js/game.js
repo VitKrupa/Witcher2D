@@ -91,6 +91,14 @@
             this.setupStartScreen();
             W.Mobile.init();
 
+            // Bind change age link
+            var changeAgeLink = document.getElementById('changeAgeLink');
+            if (changeAgeLink) {
+                var self = this;
+                changeAgeLink.addEventListener('click', function(e) { e.preventDefault(); self.changeAge(); });
+                changeAgeLink.addEventListener('touchend', function(e) { e.preventDefault(); self.changeAge(); });
+            }
+
             // Check sessionStorage for previous age confirmation
             var savedAge = sessionStorage.getItem('witcher2d_age');
             if (savedAge) {
