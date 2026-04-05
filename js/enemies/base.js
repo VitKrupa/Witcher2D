@@ -158,29 +158,22 @@ W.Enemy = class {
         }
     }
 
-    // Helper: draw a thick rounded limb between two points
-    _drawLimb(ctx, x1, y1, x2, y2, width, color) {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = width;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-    }
-
-    // Helper: draw a two-segment limb (upper + lower) with a knee/elbow joint
-    _drawJointedLimb(ctx, x1, y1, midX, midY, x2, y2, width, color) {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = width;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(midX, midY);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-    }
-
     drawBody(ctx) { /* override in subclass */ }
+};
+
+// Shared rounded-rectangle helper (Lovable style)
+W.drawRoundRect = function(ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+    ctx.fill();
 };
 })();
