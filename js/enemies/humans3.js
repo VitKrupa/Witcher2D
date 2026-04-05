@@ -23,134 +23,95 @@ W.NoblemanThug = class extends W.Enemy {
         }
     }
     drawBody(ctx) {
+        const dr = W.drawRoundRect;
         if (this._t === undefined) this._t = 0;
         this._t += 0.14;
-        const x = this.x, y = this.y;
         const t = this._t;
-        const isChasing = this.state === 'chase';
-        const isAttacking = this.state === 'attack';
         const isHit = this.state === 'hit';
-        const attackProgress = isAttacking ? (1 - this.stateTimer / 20) : 0;
+        const isHurt = isHit;
+        const tunicColor = isHurt ? '#7a4a8a' : '#5a2a6a';
+        const skinColor = isHurt ? '#eac098' : '#dab088';
+        const goldColor = '#c8a032';
 
-        // Walk cycle - quick nimble movement
-        const walkCycle = t * 3;
-        const stride = isChasing ? Math.sin(walkCycle) : 0;
-        const bodyBob = isChasing ? Math.abs(Math.sin(walkCycle)) * 2.5 : Math.sin(t * 0.5) * 0.8;
-        const breathe = Math.sin(t * 0.5) * 0.5;
-        const atkLean = isAttacking ? attackProgress * 4 : 0;
-
-        // Dodge state
-        const isDodging = this.dodgeCooldown > 60;
-        const dodgeSpin = isDodging ? Math.sin((80 - this.dodgeCooldown) * 0.3) * 0.5 : 0;
+        const cx = this.x + this.w / 2;
+        const bottomY = this.y + this.h;
+        const bobAnim = Math.sin(t * 0.1) * 1.5;
 
         ctx.save();
-        if (this.facing === -1) { ctx.translate(x + this.w / 2, 0); ctx.scale(-1, 1); ctx.translate(-(x + this.w / 2), 0); }
+        ctx.translate(cx, bottomY);
+        ctx.scale(this.facing, 1);
 
-        if (isHit && Math.floor(t * 10) % 2 === 0) ctx.globalAlpha = 0.5;
+        if (isHit && Math.floor(t * 10) % 2 === 0) ctx.globalAlpha *= 0.5;
 
-        if (isDodging) {
-            ctx.translate(x + this.w / 2, y + this.h / 2);
-            ctx.rotate(dodgeSpin);
-            ctx.translate(-(x + this.w / 2), -(y + this.h / 2));
-        }
+        // Shadow
+        ctx.fillStyle = '#00000025';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 8, 2.5, 0, 0, Math.PI * 2);
+        ctx.fill();
 
-        const by = y - bodyBob;
-
-        // --- Legs as jointed limbs ---
-        const hipLX = x + 9, hipRX = x + 18, hipY = by + 32;
-        const footStride = stride * 7;
-        const kneeBendL = (1 - Math.abs(stride)) * 3.5;
-        const kneeBendR = (1 - Math.abs(-stride)) * 3.5;
-        const footLY = by + 45 - Math.max(0, stride) * 2.5;
-        const footRY = by + 45 - Math.max(0, -stride) * 2.5;
-
-        const legColor = '#2a1a3a';
-        this._drawJointedLimb(ctx, hipLX, hipY, hipLX + footStride * 0.3, hipY + 6 + kneeBendL, hipLX + footStride, footLY, 6, legColor);
-        this._drawJointedLimb(ctx, hipRX, hipY, hipRX - footStride * 0.3, hipY + 6 + kneeBendR, hipRX - footStride, footRY, 6, legColor);
-
+        // Legs (dark purple)
+        ctx.fillStyle = '#2a1a3a';
+        dr(ctx, -5, -14, 4, 14, 1);
+        dr(ctx, 1, -14, 4, 14, 1);
         // Expensive boots with gold trim
         ctx.fillStyle = '#3a2020';
-        ctx.fillRect(hipLX + footStride - 3, footLY, 8, 5);
-        ctx.fillRect(hipRX - footStride - 3, footRY, 8, 5);
-        ctx.fillStyle = '#c8a032';
-        ctx.fillRect(hipLX + footStride - 3, footLY, 8, 1);
-        ctx.fillRect(hipRX - footStride - 3, footRY, 8, 1);
+        dr(ctx, -6, -2, 5, 3, 1);
+        dr(ctx, 1, -2, 5, 3, 1);
+        ctx.fillStyle = goldColor;
+        dr(ctx, -6, -2, 5, 1, 1);
+        dr(ctx, 1, -2, 5, 1, 1);
 
-        // --- Fancy purple tunic ---
-        ctx.fillStyle = C.NOBLEMAN_PURPLE || '#5a2a6a';
-        ctx.fillRect(x + 4 + atkLean, by + 16, 20, 16 + breathe);
-        ctx.fillStyle = '#c8a032';
-        ctx.fillRect(x + 4 + atkLean, by + 16, 20, 2);
-        ctx.fillRect(x + 4 + atkLean, by + 30, 20, 2);
-        ctx.fillRect(x + 12 + atkLean, by + 18, 4, 12);
+        // Fancy purple tunic
+        ctx.fillStyle = tunicColor;
+        dr(ctx, -8, -32 + bobAnim, 16, 20, 2);
+        // Gold trim top and bottom
+        ctx.fillStyle = goldColor;
+        dr(ctx, -8, -32 + bobAnim, 16, 2, 1);
+        dr(ctx, -8, -14 + bobAnim, 16, 2, 1);
+        // Gold center stripe
+        dr(ctx, -1, -30 + bobAnim, 3, 14, 1);
+        // Tunic detail panels
         ctx.fillStyle = '#4a1a5a';
-        ctx.fillRect(x + 6 + atkLean, by + 22, 2, 6);
-        ctx.fillRect(x + 20 + atkLean, by + 22, 2, 6);
+        dr(ctx, -6, -26 + bobAnim, 2, 6, 1);
+        dr(ctx, 4, -26 + bobAnim, 2, 6, 1);
 
-        // --- Left arm with dagger (opposite to legs) ---
-        const armSwingL = isChasing ? -stride * 4 : Math.sin(t * 0.6) * 1;
-        const leftDaggerStrike = isAttacking ? Math.sin(attackProgress * Math.PI * 2) * 8 : 0;
-        const shLX = x + 2 + atkLean, shLY = by + 19;
-        this._drawJointedLimb(ctx, shLX, shLY, shLX - 1 + armSwingL * 0.3, shLY + 5 - leftDaggerStrike * 0.2, shLX - 1 + armSwingL, shLY + 11 - leftDaggerStrike * 0.3, 5, '#4a1a5a');
+        // Head
+        ctx.fillStyle = skinColor;
+        dr(ctx, -5, -40 + bobAnim, 10, 10, 3);
 
-        // Left dagger
-        const lHandX = shLX - 1 + armSwingL;
-        const lHandY = shLY + 11 - leftDaggerStrike * 0.3;
-        ctx.fillStyle = isAttacking && leftDaggerStrike > 3 ? '#fff' : '#ccc';
-        ctx.fillRect(lHandX - 1, lHandY - 8 - leftDaggerStrike * 0.2, 2, 10);
-        ctx.fillStyle = '#664422';
-        ctx.fillRect(lHandX - 2, lHandY - 1, 4, 3);
-
-        // --- Right arm with dagger (opposite phase) ---
-        const armSwingR = isChasing ? stride * 4 : -Math.sin(t * 0.6) * 1;
-        const rightDaggerStrike = isAttacking ? Math.sin(attackProgress * Math.PI * 2 + Math.PI) * 8 : 0;
-        const shRX = x + 25 + atkLean, shRY = by + 19;
-        this._drawJointedLimb(ctx, shRX, shRY, shRX + 1 + armSwingR * 0.3, shRY + 5 - rightDaggerStrike * 0.2, shRX + 1 + armSwingR, shRY + 11 - rightDaggerStrike * 0.3, 5, '#4a1a5a');
-
-        // Right dagger
-        const rHandX = shRX + 1 + armSwingR;
-        const rHandY = shRY + 11 - rightDaggerStrike * 0.3;
-        ctx.fillStyle = isAttacking && rightDaggerStrike > 3 ? '#fff' : '#ccc';
-        ctx.fillRect(rHandX - 1, rHandY - 8 - rightDaggerStrike * 0.2, 2, 10);
-        ctx.fillStyle = '#664422';
-        ctx.fillRect(rHandX - 2, rHandY - 1, 4, 3);
-
-        // Dagger flash effect
-        if (isAttacking) {
-            ctx.globalAlpha = 0.3;
-            ctx.fillStyle = '#fff';
-            if (leftDaggerStrike > 4) ctx.fillRect(lHandX - 3, lHandY - 10 - leftDaggerStrike * 0.2, 6, 3);
-            if (rightDaggerStrike > 4) ctx.fillRect(rHandX - 3, rHandY - 10 - rightDaggerStrike * 0.2, 6, 3);
-            ctx.globalAlpha = (isHit && Math.floor(t * 10) % 2 === 0) ? 0.5 : 1;
-        }
-
-        // --- Head ---
-        const headBob = isChasing ? Math.sin(walkCycle) * 1 : Math.sin(t * 0.5) * 0.3;
         // Slicked hair
         ctx.fillStyle = '#1a1a1a';
-        ctx.fillRect(x + 6 + atkLean, by + headBob, 16, 6);
+        dr(ctx, -5, -42 + bobAnim, 10, 5, 2);
         ctx.fillStyle = '#2a2a2a';
-        ctx.fillRect(x + 8 + atkLean, by + 1 + headBob, 6, 2);
+        dr(ctx, -3, -42 + bobAnim, 4, 3, 1);
 
-        // Face
-        ctx.fillStyle = '#dab088';
-        ctx.fillRect(x + 7 + atkLean, by + 5 + headBob, 14, 11);
-
-        // Arrogant eyes
+        // Arrogant eyes (one raised brow)
         ctx.fillStyle = '#333';
-        ctx.fillRect(x + 9 + atkLean, by + 8 + headBob, 3, 2);
-        ctx.fillRect(x + 16 + atkLean, by + 8 + headBob, 3, 2);
+        dr(ctx, -3, -37 + bobAnim, 2, 2, 1);
+        dr(ctx, 2, -37 + bobAnim, 2, 2, 1);
+        // Raised eyebrow
         ctx.fillStyle = '#1a1a1a';
-        ctx.fillRect(x + 16 + atkLean, by + 7 + headBob, 3, 1);
-
-        // Smirk
-        ctx.fillStyle = '#b08868';
-        ctx.fillRect(x + 11 + atkLean, by + 13 + headBob, 6, 1);
-        ctx.fillRect(x + 16 + atkLean, by + 12 + headBob, 2, 1);
+        dr(ctx, 2, -38 + bobAnim, 3, 1, 1);
 
         // Thin mustache
         ctx.fillStyle = '#2a2a2a';
-        ctx.fillRect(x + 10 + atkLean, by + 12 + headBob, 8, 1);
+        dr(ctx, -2, -33 + bobAnim, 5, 1, 1);
+
+        // Smirk
+        ctx.fillStyle = '#b08868';
+        dr(ctx, -1, -32 + bobAnim, 4, 1, 1);
+
+        // Left dagger
+        ctx.fillStyle = '#ccc';
+        dr(ctx, -9, -28 + bobAnim, 2, 14, 1);
+        ctx.fillStyle = '#664422';
+        dr(ctx, -10, -16 + bobAnim, 4, 2, 1);
+
+        // Right dagger
+        ctx.fillStyle = '#ccc';
+        dr(ctx, 7, -28 + bobAnim, 2, 14, 1);
+        ctx.fillStyle = '#664422';
+        dr(ctx, 6, -16 + bobAnim, 4, 2, 1);
 
         ctx.restore();
     }
