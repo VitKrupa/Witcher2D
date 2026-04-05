@@ -659,9 +659,9 @@
             // World-space drawing
             this.camera.apply(ctx);
 
-            // Background (parallax) - undo camera Y offset so background renders in screen-space for Y
+            // Background (screen-space — undo camera transform temporarily)
             ctx.save();
-            ctx.translate(0, this.camera.offsetY);
+            ctx.translate(this.camera.offsetX, 0);
             this.level.drawBackground(ctx, this.camera.offsetX);
             ctx.restore();
 
