@@ -50,13 +50,9 @@ W.Camera = class Camera {
         var visW = W.CANVAS_W / this.zoom;
         var visH = W.CANVAS_H / this.zoom;
         var targetOffsetX = target.x - visW / 2;
-        var targetOffsetY = target.y - visH * 0.6;
-
         this.offsetX = W.lerp(this.offsetX, targetOffsetX, 0.08);
-        this.offsetY = W.lerp(this.offsetY, targetOffsetY, 0.05);
-
         this.offsetX = W.clamp(this.offsetX, 0, Math.max(0, levelWidth - visW));
-        this.offsetY = W.clamp(this.offsetY, -100, 200);
+        this.offsetY = 0; // fixed vertical — rooms designed for static view
     }
 
     /**
@@ -100,7 +96,7 @@ W.Camera = class Camera {
         ctx.save();
         ctx.translate(
             -this.offsetX + this.shakeX,
-            -this.offsetY + this.shakeY
+            this.shakeY
         );
     }
 
